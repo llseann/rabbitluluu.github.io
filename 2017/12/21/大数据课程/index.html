@@ -17,7 +17,7 @@
 <!--<![endif]-->
 
 <head>
-  <title>大数据课程 | Rabbitlulu</title>
+  <title>大数据学习日志 | Rabbitlulu</title>
   <!-- Meta data -->
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -175,11 +175,59 @@
       </time>
     
 </span>
-                <h1>大数据课程</h1>
+                <h1>大数据学习日志</h1>
             </div>
         </div>
         <div class="col-md-8 col-md-offset-2">
-      		
+      		<p>#Zookeeper简介</p>
+<pre><code>&gt; 开源的针对大型分布式系统的可靠协调系统
+
+&gt; 设计目标：将复杂且容易出错的分布式式一致性服务封装起来，构成一个高效可靠的原语集，并以简单易用的接口提供给用户使用。
+
+&gt; 功能：发布/订阅，分布式协调/通知，配置管理，集群管理，主从协调，分布式锁等。
+</code></pre><p>#Zookeeper特性：</p>
+<pre><code>最终一致性：保证最终数据能够达到一致。（重要功能）
+
+顺序性：从同一个客户端发起的事务请求，最终会严格地按照其发送顺序被应用到Zookeeper中。
+
+可靠性：一旦服务器成功的应用一个事务，并完成了客户端的响应，那么该服务所引起的服务端状态变更将会被一直保留下去。
+
+实时性：Zookeeper不能保证两个客户端能同时得到刚更新的数据，如果需要最新数据，应该在读数据之前调用sync()接口。
+
+原子性：一次数据更新要么成功，要么失败。
+
+单一视图：无论客户端连接到哪个服务器，看到的数据模型都是一致的。
+</code></pre><p>#基本架构：</p>
+<p>##Zookeeper角色：</p>
+<pre><code>Leader（领导者）
+
+Follower（跟随者）
+
+Observer（观察者）
+</code></pre><p>#选举方式（分两种）全新启动期和运行期间</p>
+<p>##全新启动期：</p>
+<p>##运行期间：（更正：步骤2改为（3,123））</p>
+<p>#数据模型Znode</p>
+<pre><code>Zookeeper特有数据节点Znode，视图类似于linux的文件系统，是系统中最小的数据单元。并且可以保存数据，通过挂在子节点构成数状层次化空间
+</code></pre><p>#节点类型</p>
+<p>###节点有三种：<br>                    持久节点  </p>
+<pre><code>临时节点  
+
+顺序节点
+</code></pre><p>###组合节点类型：</p>
+<pre><code>持久节点
+
+持久顺序节点
+
+临时节点
+
+临时顺序节点
+</code></pre><p>#搭建中遇到的问题</p>
+<p>1、软连接创建之后使用ll查看存在闪烁情况，检查路径后使用rm移除错误的连接重新创建解决问题。</p>
+<p>2、创建完成后，在三台机器上面启动zookeeper，使用status查看提示进程未启动，检查了防火墙状态。查看日志发现报错大意是myid=5的zookeeper并未启动，原因是因为在zoo.cfg中写入了5台server。在所有机器的进程都启动后，发现只有1,2,4,5能查看到当前角色。进入node03，查看启动日志，发现myid手误打成了33，更正后重新启动，所有节点都能正确查看到角色。</p>
+<p><em>问题排除建议</em>：检查防火墙，检查myid是否正确创建。遇到问题查看日志，里面或许存在蛛丝马迹。</p>
+<p><strong>未完待续….</strong></p>
+
             <div class="clearfix"></div>
             <hr class="nogutter">
         </div>
