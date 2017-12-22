@@ -17,7 +17,7 @@
 <!--<![endif]-->
 
 <head>
-  <title>Archives: 2017/12 | Rabbitlulu</title>
+  <title>Linux(2)一切皆文件 | Rabbitlulu</title>
   <!-- Meta data -->
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -59,7 +59,7 @@
 </head>
 
 <!--
-<body class="home-template">
+<body class="post-template">
 -->
 <body id="index" class="lightnav animsition">
 
@@ -164,78 +164,198 @@
         <!-- ============================ Header & Logo bar =========================== -->
 
 
-      <!-- ============================ Hero Image =========================== -->
-
-<section id="hero" class="scrollme">
-    <div class="container-fluid element-img" style="background: url(/img/bg_img.jpg) no-repeat center center fixed;background-size: cover">
-        <div class="row">
-            <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 vertical-align cover boost text-center">
-                <div class="center-me animateme" data-when="exit" data-from="0" data-to="0.6" data-opacity="0" data-translatey="100">
-                    <div>
-                        
-                        <h2><span>Keep looking.Don't settle</span></h2>
-                        <p></p>
-                        
-                        <h2></h2>
-                        <p>Steve Jobs</p>
-                        
-
-                    </div>
-                </div>
-            </div>
-            <!-- // .col-md-12 -->
-        </div>
-        <div class="herofade beige-dk"></div>
-    </div>
-</section>
-
-<!-- Height spacing helper -->
-<div class="heightblock"></div>
-<!-- // End height spacing helper -->
-
-<!-- ============================ END Hero Image =========================== -->
-
-
-
-
-<section id="services">
+      
+<section id="intro">
     <div class="container">
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="row boxes">
-                    
-                    
-                        
-                        
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
-                            
-                              <h4 class="title"><a href="/2017/12/22/Linux-2-一切皆文件/">Linux(2)一切皆文件</a></h4>
-                            
-                            <p><time datetime="2017-12-22T09:27:54.000Z"><a href="/2017/12/22/Linux-2-一切皆文件/">2017-12-22</a></time></p>
-                        </div>
-                    
-                        
-                        
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
-                            
-                              <h4 class="title"><a href="/2017/12/21/大数据学习/">大数据学习日志</a></h4>
-                            
-                            <p><time datetime="2017-12-21T05:43:50.000Z"><a href="/2017/12/21/大数据学习/">2017-12-21</a></time></p>
-                        </div>
-                    
-                </div>
-            </div>    
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2017-12-22T09:27:54.000Z" itemprop="datePublished">
+          2017-12-22
+      </time>
+    
+    
+    | 
+    <a href='/tags/Linux/'>Linux</a>
+    
+    
+</span>
+                <h1>Linux(2)一切皆文件</h1>
+            </div>
         </div>
-    </div>
-</section> 
+        <div class="col-md-8 col-md-offset-2">
+      		<h1 id="一、用户和组的概念"><a href="#一、用户和组的概念" class="headerlink" title="一、用户和组的概念"></a>一、用户和组的概念</h1><h4 id="新用户创建"><a href="#新用户创建" class="headerlink" title="新用户创建"></a>新用户创建</h4><blockquote>
+<p>useradd [-options] usename</p>
+</blockquote>
+<ul>
+<li>-g     基本组，指定用户所属用户组</li>
+<li>-G    指定用户所属附加组</li>
+<li><p>-d     指定用户主目录，若不存在则使用-m创建，缺省则在/home</p>
+<h4 id="用户删除"><a href="#用户删除" class="headerlink" title="用户删除"></a>用户删除</h4><blockquote>
+<p>userdel [-options] usename</p>
+</blockquote>
+</li>
+<li><p>-r   将用户的工作目录一并删除</p>
+<h4 id="修改模式"><a href="#修改模式" class="headerlink" title="修改模式"></a>修改模式</h4><blockquote>
+<p>usermod [-option] usename<br><em>无用户名则修改当前用户名</em></p>
+<h4 id="添加新组"><a href="#添加新组" class="headerlink" title="添加新组"></a>添加新组</h4><p>groupadd [-options] groupname</p>
+</blockquote>
+</li>
+<li>-g  指定gid,一般与-o连用<h1 id="二、Linux文件属性和权限"><a href="#二、Linux文件属性和权限" class="headerlink" title="二、Linux文件属性和权限"></a>二、Linux文件属性和权限</h1>如下文件信息<blockquote>
+<p>-rw-r–r–.1 root root 413 Dec 22 2017 install.log<br>拥有者有读取、写入权限<br>组拥有读取权限<br>其他人拥有读取权限</p>
+</blockquote>
+</li>
+</ul>
+<p><strong>组成成分type/owner/group/others</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">组成</th>
+<th style="text-align:center">type</th>
+<th style="text-align:center">owner</th>
+<th style="text-align:center">group</th>
+<th style="text-align:center">others</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">占位数</td>
+<td style="text-align:center">1位</td>
+<td style="text-align:center">3位</td>
+<td style="text-align:center">3位</td>
+<td style="text-align:center">3位</td>
+</tr>
+</tbody>
+</table>
+<p><strong>第一位：</strong>代表文件类型</p>
+<ul>
+<li>d：目录文件</li>
+<li>l：符号链接，相当于快捷方式</li>
+<li>s：套接字</li>
+<li>b：块设备文件，二进制形式</li>
+<li>c：字符设备文件</li>
+<li>p：命名管道文件</li>
+<li>-：普通文件<br><strong>第二至四位</strong>:文件的所有者对文件的权限<br><strong>第五至七位</strong>：代表组对文件的权限<br><strong>第八至十位</strong>：其他人对文件的权限</li>
+</ul>
+<p>####改变文件属性<br><strong>带上-R都是对目录进行操作</strong></p>
+<blockquote>
+<p>chgrp :改变文件所属群组</p>
+</blockquote>
+<ul>
+<li>chgrp [-R] 组名 文件名 </li>
+</ul>
+<blockquote>
+<p>chown :改变文件拥有者</p>
+</blockquote>
+<ul>
+<li>chown [-R] 用户账号 文件或目彔</li>
+</ul>
+<blockquote>
+<p>chmod :改变文件的权限</p>
+</blockquote>
+<ul>
+<li>chmod [-R] MODE 文件或目彔</li>
+</ul>
+<p><strong>法1：</strong></p>
+<ul>
+<li>r:4 可读权限</li>
+<li>w:2 可写权限</li>
+<li>x:1 可执行权限<blockquote>
+<p>如：chmod 755 demo.txt<br>7=4+2+1=r+w+x<br>5=4+1=r+x<br>5=4+1=r+x</p>
+</blockquote>
+</li>
+</ul>
+<p><strong>法2：</strong></p>
+<ul>
+<li>u：文件所有者</li>
+<li>g：所属组</li>
+<li>o：其他人</li>
+<li>a：所有用户</li>
+<li>+：添加权限</li>
+<li>-：移除权限</li>
+<li>=：设置权限<blockquote>
+<p>如:chmod u=rw,go=r demo.txt<br>给owner设置r,w权限<br>给所属组和其他人设置读取权限</p>
+</blockquote>
+</li>
+</ul>
+<h1 id="Linux文件与目彔的CRUD"><a href="#Linux文件与目彔的CRUD" class="headerlink" title="Linux文件与目彔的CRUD"></a>Linux文件与目彔的CRUD</h1><blockquote>
+<p>ls：列出目录和文件</p>
+</blockquote>
+<ul>
+<li>-a 列出目彔下的所有文件,包括以.开头的隐含文件</li>
+<li>-h 以可读的方式列出文件大小</li>
+<li>-l 列出文件的详细信息</li>
+<li>-R 同时列出所有子目彔层</li>
+<li>-t 以文件修改时间排序</li>
+</ul>
+<blockquote>
+<p>cd：切换目录</p>
+</blockquote>
+<ul>
+<li>cd ~等价于cd</li>
+<li>cd - 回到上一次所处目录</li>
+</ul>
+<blockquote>
+<p>touch：创建文件或修改文件时间戳</p>
+</blockquote>
+<ol>
+<li>如果文件不存在，则创建该文件</li>
+<li>如果文件存在，则改变时间</li>
+<li>改变文件时间：touch -t 201710100523 filename(修改文件时间为2017年10月10日5点23)</li>
+</ol>
+<blockquote>
+<p>mv：移动或更名现有的文件或目彔</p>
+</blockquote>
+<ul>
+<li>-b 若需覆盖文件,则覆盖前先行备份</li>
+<li>-f 若目标文件存在,则直接覆盖</li>
+<li>-i 覆盖前先行询问用户</li>
+<li>-u 操作时，若目标文件较新，则不覆盖，即：updata，只能用新的覆盖旧文件</li>
+</ul>
+<blockquote>
+<p>mkdir：创建目录</p>
+</blockquote>
+<ul>
+<li>-m:创建目录的同时设定权限</li>
+<li>-p:直接创建目录如果不存在递归创建（层级目彔），创建a/b/c这种使用</li>
+</ul>
+<blockquote>
+<p>cp：拷贝文件或目录</p>
+</blockquote>
+<ul>
+<li>-r :递归拷贝，常用于目录</li>
+<li>\cp：强制覆盖，不提醒</li>
+</ul>
+<blockquote>
+<p>rm：删除文件或目录</p>
+</blockquote>
+<ul>
+<li>-f：无警告消息</li>
+<li>-i：删前询问</li>
+<li>-r：递归删除，常常用来删除目录</li>
+</ul>
+<p><em>Keep looking.Don’t settle</em></p>
 
-<section id="statement">
-    <div class="container text-center wow fadeInUp" data-wow-delay="0.5s">
-        <div class="row">
-            <p>万般喜乐，纷至沓来。</p>
+            <div class="clearfix"></div>
+            <hr class="nogutter">
         </div>
+        <nav class="pagination" role="pagination">
+    
+    
+    <a class="pull-right" href="/2017/12/21/大数据学习/">
+        大数据学习日志 →
+    </a>
+    
+</nav>
+
+        <div class="duoshuo">
+
+
+</div>
     </div>
 </section>
+
+
       
 <!-- ============================ Footer =========================== -->
 
