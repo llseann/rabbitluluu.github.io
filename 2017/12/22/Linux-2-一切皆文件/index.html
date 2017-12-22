@@ -186,47 +186,26 @@
         <div class="col-md-8 col-md-offset-2">
       		<h1 id="一、用户和组的概念"><a href="#一、用户和组的概念" class="headerlink" title="一、用户和组的概念"></a>一、用户和组的概念</h1><h4 id="新用户创建"><a href="#新用户创建" class="headerlink" title="新用户创建"></a>新用户创建</h4><blockquote>
 <p>useradd [-options] usename</p>
-</blockquote>
 <ul>
 <li>-g     基本组，指定用户所属用户组</li>
 <li>-G    指定用户所属附加组</li>
-<li><p>-d     指定用户主目录，若不存在则使用-m创建，缺省则在/home</p>
-<h4 id="用户删除"><a href="#用户删除" class="headerlink" title="用户删除"></a>用户删除</h4><blockquote>
-<p>userdel [-options] usename</p>
+<li>-d     指定用户主目录，若不存在则使用-m创建，缺省则在/home</li>
+</ul>
 </blockquote>
-</li>
-<li><p>-r   将用户的工作目录一并删除</p>
+<h4 id="用户删除"><a href="#用户删除" class="headerlink" title="用户删除"></a>用户删除</h4><blockquote>
+<p>userdel [-options] usename<br> -r   将用户的工作目录一并删除</p>
+</blockquote>
 <h4 id="修改模式"><a href="#修改模式" class="headerlink" title="修改模式"></a>修改模式</h4><blockquote>
 <p>usermod [-option] usename<br><em>无用户名则修改当前用户名</em></p>
-<h4 id="添加新组"><a href="#添加新组" class="headerlink" title="添加新组"></a>添加新组</h4><p>groupadd [-options] groupname</p>
 </blockquote>
-</li>
-<li>-g  指定gid,一般与-o连用<h1 id="二、Linux文件属性和权限"><a href="#二、Linux文件属性和权限" class="headerlink" title="二、Linux文件属性和权限"></a>二、Linux文件属性和权限</h1>如下文件信息<blockquote>
+<h4 id="添加新组"><a href="#添加新组" class="headerlink" title="添加新组"></a>添加新组</h4><blockquote>
+<p>groupadd [-options] groupname<br> -g  指定gid,一般与-o连用</p>
+</blockquote>
+<h1 id="二、Linux文件属性和权限"><a href="#二、Linux文件属性和权限" class="headerlink" title="二、Linux文件属性和权限"></a>二、Linux文件属性和权限</h1><p>如下文件信息</p>
+<blockquote>
 <p>-rw-r–r–.1 root root 413 Dec 22 2017 install.log<br>拥有者有读取、写入权限<br>组拥有读取权限<br>其他人拥有读取权限</p>
 </blockquote>
-</li>
-</ul>
-<p><strong>组成成分type/owner/group/others</strong></p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">组成</th>
-<th style="text-align:center">type</th>
-<th style="text-align:center">owner</th>
-<th style="text-align:center">group</th>
-<th style="text-align:center">others</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">占位数</td>
-<td style="text-align:center">1位</td>
-<td style="text-align:center">3位</td>
-<td style="text-align:center">3位</td>
-<td style="text-align:center">3位</td>
-</tr>
-</tbody>
-</table>
+<p><strong>组成成分type/owner/group/others</strong><br>占位数/1位/3位/3位/3位</p>
 <p><strong>第一位：</strong>代表文件类型</p>
 <ul>
 <li>d：目录文件</li>
@@ -235,9 +214,12 @@
 <li>b：块设备文件，二进制形式</li>
 <li>c：字符设备文件</li>
 <li>p：命名管道文件</li>
-<li>-：普通文件<br><strong>第二至四位</strong>:文件的所有者对文件的权限<br><strong>第五至七位</strong>：代表组对文件的权限<br><strong>第八至十位</strong>：其他人对文件的权限</li>
+<li>-：普通文件</li>
 </ul>
-<p>####改变文件属性<br><strong>带上-R都是对目录进行操作</strong></p>
+<p><strong>第二至四位</strong>:文件的所有者对文件的权限</p>
+<p><strong>第五至七位</strong>：代表组对文件的权限</p>
+<p><strong>第八至十位</strong>：其他人对文件的权限</p>
+<h4 id="改变文件属性"><a href="#改变文件属性" class="headerlink" title="改变文件属性"></a>改变文件属性</h4><p><strong>带上-R都是对目录进行操作</strong></p>
 <blockquote>
 <p>chgrp :改变文件所属群组</p>
 </blockquote>
@@ -278,7 +260,7 @@
 </blockquote>
 </li>
 </ul>
-<h1 id="Linux文件与目彔的CRUD"><a href="#Linux文件与目彔的CRUD" class="headerlink" title="Linux文件与目彔的CRUD"></a>Linux文件与目彔的CRUD</h1><blockquote>
+<h1 id="三、Linux文件与目录的CRUD"><a href="#三、Linux文件与目录的CRUD" class="headerlink" title="三、Linux文件与目录的CRUD"></a>三、Linux文件与目录的CRUD</h1><blockquote>
 <p>ls：列出目录和文件</p>
 </blockquote>
 <ul>
@@ -304,7 +286,7 @@
 <li>改变文件时间：touch -t 201710100523 filename(修改文件时间为2017年10月10日5点23)</li>
 </ol>
 <blockquote>
-<p>mv：移动或更名现有的文件或目彔</p>
+<p>mv：移动或更名现有的文件或目录</p>
 </blockquote>
 <ul>
 <li>-b 若需覆盖文件,则覆盖前先行备份</li>

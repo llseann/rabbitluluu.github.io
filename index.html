@@ -223,18 +223,19 @@
                         一、用户和组的概念新用户创建
 useradd [-options] usename
 
-
 -g     基本组，指定用户所属用户组
 -G    指定用户所属附加组
 -d     指定用户主目录，若不存在则使用-m创建，缺省则在/home
+
+
 用户删除
-userdel [-options] usename
+userdel [-options] usename -r   将用户的工作目录一并删除
 
-
--r   将用户的工作目录一并删除
 修改模式
 usermod [-option] usename无用户名则修改当前用户名
-添加新组gro
+
+添加新组
+g
                       
                     </p>
                     
