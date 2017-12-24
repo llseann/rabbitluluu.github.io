@@ -17,7 +17,7 @@
 <!--<![endif]-->
 
 <head>
-  <title>Archives: 2017/12 | Rabbitlulu</title>
+  <title>HDFS概述 | Rabbitlulu</title>
   <!-- Meta data -->
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -59,7 +59,7 @@
 </head>
 
 <!--
-<body class="home-template">
+<body class="post-template">
 -->
 <body id="index" class="lightnav animsition">
 
@@ -164,96 +164,132 @@
         <!-- ============================ Header & Logo bar =========================== -->
 
 
-      <!-- ============================ Hero Image =========================== -->
-
-<section id="hero" class="scrollme">
-    <div class="container-fluid element-img" style="background: url(/img/bg_img.jpg) no-repeat center center fixed;background-size: cover">
-        <div class="row">
-            <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 vertical-align cover boost text-center">
-                <div class="center-me animateme" data-when="exit" data-from="0" data-to="0.6" data-opacity="0" data-translatey="100">
-                    <div>
-                        
-                        <h2><span>Keep looking.Don't settle</span></h2>
-                        <p></p>
-                        
-                        <h2></h2>
-                        <p>Steve Jobs</p>
-                        
-
-                    </div>
-                </div>
-            </div>
-            <!-- // .col-md-12 -->
-        </div>
-        <div class="herofade beige-dk"></div>
-    </div>
-</section>
-
-<!-- Height spacing helper -->
-<div class="heightblock"></div>
-<!-- // End height spacing helper -->
-
-<!-- ============================ END Hero Image =========================== -->
-
-
-
-
-<section id="services">
+      
+<section id="intro">
     <div class="container">
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="row boxes">
-                    
-                    
-                        
-                        
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
-                            
-                              <h4 class="title"><a href="/2017/12/24/HDFS概述/">HDFS概述</a></h4>
-                            
-                            <p><time datetime="2017-12-24T10:24:44.000Z"><a href="/2017/12/24/HDFS概述/">2017-12-24</a></time></p>
-                        </div>
-                    
-                        
-                        
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
-                            
-                              <h4 class="title"><a href="/2017/12/24/YARN概述/">YARN概述</a></h4>
-                            
-                            <p><time datetime="2017-12-24T10:23:50.000Z"><a href="/2017/12/24/YARN概述/">2017-12-24</a></time></p>
-                        </div>
-                    
-                        
-                        
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
-                            
-                              <h4 class="title"><a href="/2017/12/22/Linux-2-一切皆文件/">Linux(2)一切皆文件</a></h4>
-                            
-                            <p><time datetime="2017-12-22T09:27:54.000Z"><a href="/2017/12/22/Linux-2-一切皆文件/">2017-12-22</a></time></p>
-                        </div>
-                    
-                        
-                        
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
-                            
-                              <h4 class="title"><a href="/2017/12/21/大数据学习/">大数据学习日志</a></h4>
-                            
-                            <p><time datetime="2017-12-21T05:43:50.000Z"><a href="/2017/12/21/大数据学习/">2017-12-21</a></time></p>
-                        </div>
-                    
-                </div>
-            </div>    
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2017-12-24T10:24:44.000Z" itemprop="datePublished">
+          2017-12-24
+      </time>
+    
+    
+    | 
+    <a href='/tags/Hadoop/'>Hadoop</a>
+    
+    
+</span>
+                <h1>HDFS概述</h1>
+            </div>
         </div>
-    </div>
-</section> 
+        <div class="col-md-8 col-md-offset-2">
+      		<h1 id="HDFS优缺点"><a href="#HDFS优缺点" class="headerlink" title="HDFS优缺点"></a>HDFS优缺点</h1><h2 id="HDFS优点"><a href="#HDFS优点" class="headerlink" title="HDFS优点"></a>HDFS优点</h2><p><strong>高容错性</strong></p>
+<ul>
+<li>数据自动保存多个副本</li>
+<li>副本丢失后，自动恢复</li>
+</ul>
+<p><strong>适合大数据批处理</strong></p>
+<ul>
+<li>移动计算不移动数据</li>
+<li>数据位置暴露给计算框架</li>
+<li>GB、 TB甚至PB级别数据</li>
+<li>百万规模以上的文件数量</li>
+<li>10K节点规模</li>
+</ul>
+<p><strong>流式文件访问</strong></p>
+<ul>
+<li>一次写入，多次读取</li>
+<li>保证数据一致性</li>
+</ul>
+<p><strong>构建成本低、安全可靠</strong></p>
+<ul>
+<li>构建在廉价机器上</li>
+<li>通过多副本提高可靠性</li>
+<li>提供了容错和恢复机制</li>
+</ul>
+<h2 id="HDFS缺点"><a href="#HDFS缺点" class="headerlink" title="HDFS缺点"></a>HDFS缺点</h2><p><strong>不适合低延迟数据访问</strong></p>
+<p><strong>不适合大量小文件存储</strong></p>
+<ul>
+<li>占用NameNode大量内存空间</li>
+<li>磁盘寻道时间超过读取时间</li>
+</ul>
+<p><strong>不适合并发写入</strong></p>
+<ul>
+<li>一个文件只能有一个写入者</li>
+</ul>
+<p><strong>不提供文件随机修改</strong></p>
+<ul>
+<li>只支持追加</li>
+</ul>
+<h1 id="HDFS基本架构与原理"><a href="#HDFS基本架构与原理" class="headerlink" title="HDFS基本架构与原理"></a>HDFS基本架构与原理</h1><h2 id="HDFS架构图解"><a href="#HDFS架构图解" class="headerlink" title="HDFS架构图解"></a>HDFS架构图解</h2><p><img src="http://upload-images.jianshu.io/upload_images/9642239-70a1ac0e93b43181.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="HDFS架构.jpg"></p>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><h3 id="NameNode（Active）"><a href="#NameNode（Active）" class="headerlink" title="NameNode（Active）"></a>NameNode（Active）</h3><ul>
+<li>Master节点，只有一个</li>
+<li>管理HDFS文件系统的</li>
+<li>命名空间</li>
+<li>维护文件元数据信息</li>
+<li>管理副本策略（默认3个副本）</li>
+<li>处理客户端读写请求</li>
+</ul>
+<h3 id="NameNode（Standby）"><a href="#NameNode（Standby）" class="headerlink" title="NameNode（Standby）"></a>NameNode（Standby）</h3><ul>
+<li>NameNode（Active）的热备节点，（就是个备胎）</li>
+<li>周期性同步edits编辑日志，定期合并fsimage与edits到本地磁盘</li>
+<li>当NameNode（Active）出现故障则会快速上位，成为新的Active节点</li>
+</ul>
+<h3 id="NameNode元数据"><a href="#NameNode元数据" class="headerlink" title="NameNode元数据"></a>NameNode元数据</h3><ul>
+<li><strong>edits</strong>：编辑日志，客户端对目录和文件的写操作首先被记到edits日志中，如：创建文件、删除文件等</li>
+<li><strong>fsimage</strong>：文件系统元数据检查点镜像文件，保存了文件系统中所有的目录和文件信息，如：一个目录下有哪些子目录、子文件，文件名，文件副本数，文件由哪些块组成等</li>
+</ul>
+<h3 id="DataNode"><a href="#DataNode" class="headerlink" title="DataNode"></a>DataNode</h3><ul>
+<li>Slave工作节点，可以启动多个</li>
+<li>存储数据块和数据校验和</li>
+<li>执行客户端的读写请求操作</li>
+<li>通过心跳机制定期向NameNode汇报运行状态和所有块列表信息</li>
+<li>在集群启动时DataNode向NameNode提供存储的Block块列表信息</li>
+</ul>
+<h3 id="Block块"><a href="#Block块" class="headerlink" title="Block块"></a>Block块</h3><ul>
+<li>文件写入到HDFS会被切分成若干个Block块</li>
+<li>数据块大小固定，默认128MB，可自定义修改</li>
+<li>HDFS最小存储单元</li>
+<li>若一个文件的大小小于设置的数据块大小，则不会占用整个块的空间</li>
+<li>默认情况下每个Block有三个副本</li>
+</ul>
+<h3 id="Client"><a href="#Client" class="headerlink" title="Client"></a>Client</h3><ul>
+<li>文件切分</li>
+<li>与NameNode交互获取文件元数据信息</li>
+<li>与DataNode交互，读取或写入数据</li>
+<li>管理HDFS</li>
+</ul>
+<h2 id="问题："><a href="#问题：" class="headerlink" title="问题："></a><strong>问题：</strong></h2><blockquote>
+<p>HDFS  为什么不适合存储小文件?</p>
+<ol>
+<li>元数据信息存储在NameNode内存中，内存大小有限</li>
+<li>NameNode存储Block数目有限<br>• 一个block元信息消耗大约150byte内存<br>• 存储1亿个block，大约需要20GB内存<br>• 如果一个文件大小为10K，则1亿个文件大小仅有1TB，却消耗NameNode 20GB内存</li>
+<li>存取大量小文件消耗大量的磁盘寻道时间</li>
+</ol>
+</blockquote>
+<p>未完待续。。。</p>
 
-<section id="statement">
-    <div class="container text-center wow fadeInUp" data-wow-delay="0.5s">
-        <div class="row">
-            <p>万般喜乐，纷至沓来。</p>
+            <div class="clearfix"></div>
+            <hr class="nogutter">
         </div>
+        <nav class="pagination" role="pagination">
+    
+    
+    <a class="pull-right" href="/2017/12/24/YARN概述/">
+        YARN概述 →
+    </a>
+    
+</nav>
+
+        <div class="duoshuo">
+
+
+</div>
     </div>
 </section>
+
+
       
 <!-- ============================ Footer =========================== -->
 
