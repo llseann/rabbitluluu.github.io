@@ -17,7 +17,7 @@
 <!--<![endif]-->
 
 <head>
-  <title>Tag: Linux | Rabbitlulu</title>
+  <title>Shell的世界-初识Vim | Rabbitlulu</title>
   <!-- Meta data -->
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -59,7 +59,7 @@
 </head>
 
 <!--
-<body class="home-template">
+<body class="post-template">
 -->
 <body id="index" class="lightnav animsition">
 
@@ -164,78 +164,115 @@
         <!-- ============================ Header & Logo bar =========================== -->
 
 
-      <!-- ============================ Hero Image =========================== -->
-
-<section id="hero" class="scrollme">
-    <div class="container-fluid element-img" style="background: url(/img/bg_img.jpg) no-repeat center center fixed;background-size: cover">
-        <div class="row">
-            <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 vertical-align cover boost text-center">
-                <div class="center-me animateme" data-when="exit" data-from="0" data-to="0.6" data-opacity="0" data-translatey="100">
-                    <div>
-                        
-                        <h2><span>Keep looking.Don't settle</span></h2>
-                        <p></p>
-                        
-                        <h2></h2>
-                        <p>Steve Jobs</p>
-                        
-
-                    </div>
-                </div>
-            </div>
-            <!-- // .col-md-12 -->
-        </div>
-        <div class="herofade beige-dk"></div>
-    </div>
-</section>
-
-<!-- Height spacing helper -->
-<div class="heightblock"></div>
-<!-- // End height spacing helper -->
-
-<!-- ============================ END Hero Image =========================== -->
-
-
-
-
-<section id="services">
+      
+<section id="intro">
     <div class="container">
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="row boxes">
-                    
-                    
-                        
-                        
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
-                            
-                              <h4 class="title"><a href="/2018/01/13/Shell的世界-初识Vim/">Shell的世界-初识Vim</a></h4>
-                            
-                            <p><time datetime="2018-01-13T12:40:30.000Z"><a href="/2018/01/13/Shell的世界-初识Vim/">2018-01-13</a></time></p>
-                        </div>
-                    
-                        
-                        
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
-                            
-                              <h4 class="title"><a href="/2017/12/22/Linux-2-一切皆文件/">Linux(2)一切皆文件</a></h4>
-                            
-                            <p><time datetime="2017-12-22T09:27:54.000Z"><a href="/2017/12/22/Linux-2-一切皆文件/">2017-12-22</a></time></p>
-                        </div>
-                    
-                </div>
-            </div>    
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2018-01-13T12:40:30.000Z" itemprop="datePublished">
+          2018-01-13
+      </time>
+    
+    
+    | 
+    <a href='/tags/Linux/'>Linux</a>
+    
+    
+</span>
+                <h1>Shell的世界-初识Vim</h1>
+            </div>
         </div>
-    </div>
-</section> 
+        <div class="col-md-8 col-md-offset-2">
+      		<h2 id="vim三种模式"><a href="#vim三种模式" class="headerlink" title="vim三种模式"></a>vim三种模式</h2><blockquote>
+<p>一般模式</p>
+</blockquote>
+<ol>
+<li>以vim打开一个文件就直接进入一般模式 (默认模式)。</li>
+<li>可以使用上下左右来移动光标,也可以使用删除字符或删除整行来</li>
+<li>处理文件内容, 也可以使用复制、 粘贴来处理文件数据。</li>
+</ol>
+<blockquote>
+<p>编辑模式</p>
+</blockquote>
+<ol>
+<li>在一般模式中可以删除、 复制、 粘贴等等等,但是却无法编辑文件内容的</li>
+<li>按下i,I,o,O,a,A,r,R等任何一个字母后进入编辑模式。</li>
+<li>按下以上按键后,在画面的左下方会出现INSERT或REPLACE的字样,此时才可以进行编辑。</li>
+<li>编辑模式下可以输入文件内容。</li>
+<li>而如果要回到一般模式时, 按下<esc>按键即可。</esc></li>
+</ol>
+<blockquote>
+<p>命令模式</p>
+</blockquote>
+<ol>
+<li>在一般模式当中,输入: / ? 三个中的任何一个按钮,就可以将光标移动到最底下那一行。</li>
+<li>在这个模式当中,可以提供查询、 替换等功能。 同时，存盘、 替换字符、 离开vi、 显示行号等等命令都是在此模式进行。</li>
+</ol>
+<h2 id="三种模式快捷键"><a href="#三种模式快捷键" class="headerlink" title="三种模式快捷键"></a>三种模式快捷键</h2><blockquote>
+<p>一般模式</p>
+</blockquote>
+<ul>
+<li>[Ctrl]+[f] 屏幕向下移动一页</li>
+<li>[Ctrl]+[b] 屏幕向上移动一页</li>
+<li>G 到此文件最后一行</li>
+<li>nG移动到第n行</li>
+<li>gg 相当于1G，即到行首</li>
+<li>n[Enter] 光标下移n行</li>
+<li>/word 向下查找单词“ word”</li>
+<li>?word 向上查找单词“ word”</li>
+<li>:s/word1/word2/g在当前行查找word1替换成word2</li>
+<li>:%s/word1/word2/g 在当前文件查找word1替换成word2</li>
+<li>:n1,n2s/word1/word2/g 在n1到n2行查找word1替换成word2</li>
+<li>:1,$s/word1/word2/g 在1到最后一行查找word1替换成word2</li>
+</ul>
+<blockquote>
+<p>编辑模式</p>
+</blockquote>
+<ul>
+<li>i 从光标所在处插入</li>
+<li>l 从所在行第一个非空白字符处插入</li>
+<li>a 从光标所在下一个字符处插入</li>
+<li>A 从光标所在行最后一个字符处插入</li>
+<li>o 在光标所在处下一行插入新的一行</li>
+<li>O 在光标所在处上一行插入新的一行</li>
+<li>r 替换光标所在处字符一行</li>
+<li>R 一直替换光标所在处文字直到按下Esc</li>
+</ul>
+<blockquote>
+<p>命令模式</p>
+</blockquote>
+<ul>
+<li>:w[filename] 另存为filename</li>
+<li>:r[filename] 读取filename到光标所在行后面</li>
+<li>:n1,n2 w[filename] 将n1到n2行另存为filename</li>
+<li>:! command 临时切换到命令行模式下执行command，如 :! ls /tmp</li>
+<li>:q! 不保存离开</li>
+<li>:wq! 保存后离开</li>
+<li>:set nu 显示行号</li>
+<li>:set nonu 取消显示行号</li>
+</ul>
 
-<section id="statement">
-    <div class="container text-center wow fadeInUp" data-wow-delay="0.5s">
-        <div class="row">
-            <p>万般喜乐，纷至沓来。</p>
+            <div class="clearfix"></div>
+            <hr class="nogutter">
         </div>
+        <nav class="pagination" role="pagination">
+    
+    
+    <a class="pull-right" href="/2017/12/24/HDFS概述/">
+        HDFS概述 →
+    </a>
+    
+</nav>
+
+        <div class="duoshuo">
+
+
+</div>
     </div>
 </section>
+
+
       
 <!-- ============================ Footer =========================== -->
 
