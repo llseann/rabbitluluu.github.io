@@ -152,18 +152,18 @@
 
 
 
-<meta name="description" content="This is a test of my blog!!!">
+<meta name="description" content="条件判断语句if …. then语句单条件判断格式：123if [ 条件判断 ]; then    条件成立执行，命令;fi 将if反过来写,就成为fi 结束if语句 &amp;amp;&amp;amp; 代表 AND|| 代表 or实例：123456#!/bin/bashread -p &amp;quot;Please input (Y/N): &amp;quot; ynif [ &amp;quot;$yn&amp;quot; == &amp;quo">
 <meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux-Shell脚本(2)">
 <meta property="og:url" content="rabbitluluu.github.io/2018/02/08/Linux-Shell脚本(2)/index.html">
 <meta property="og:site_name" content="Rabbitlulu">
-<meta property="og:description" content="This is a test of my blog!!!">
+<meta property="og:description" content="条件判断语句if …. then语句单条件判断格式：123if [ 条件判断 ]; then    条件成立执行，命令;fi 将if反过来写,就成为fi 结束if语句 &amp;amp;&amp;amp; 代表 AND|| 代表 or实例：123456#!/bin/bashread -p &amp;quot;Please input (Y/N): &amp;quot; ynif [ &amp;quot;$yn&amp;quot; == &amp;quo">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-02-08T15:38:44.013Z">
+<meta property="og:updated_time" content="2018-02-09T05:14:07.355Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux-Shell脚本(2)">
-<meta name="twitter:description" content="This is a test of my blog!!!">
+<meta name="twitter:description" content="条件判断语句if …. then语句单条件判断格式：123if [ 条件判断 ]; then    条件成立执行，命令;fi 将if反过来写,就成为fi 结束if语句 &amp;amp;&amp;amp; 代表 AND|| 代表 or实例：123456#!/bin/bashread -p &amp;quot;Please input (Y/N): &amp;quot; ynif [ &amp;quot;$yn&amp;quot; == &amp;quo">
 
 
 
@@ -381,8 +381,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-02-08T23:38:44+08:00">
-                2018-02-08
+              <time title="更新于" itemprop="dateModified" datetime="2018-02-09T13:14:07+08:00">
+                2018-02-09
               </time>
             
           </span>
@@ -420,7 +420,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  7
+                  871
                 </span>
               
 
@@ -445,7 +445,33 @@
       
 
       
-        <p>This is a test of my blog!!!</p>
+        <h1 id="条件判断语句"><a href="#条件判断语句" class="headerlink" title="条件判断语句"></a>条件判断语句</h1><h2 id="if-…-then语句"><a href="#if-…-then语句" class="headerlink" title="if …. then语句"></a>if …. then语句</h2><h3 id="单条件判断"><a href="#单条件判断" class="headerlink" title="单条件判断"></a>单条件判断</h3><p>格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">if [ 条件判断 ]; then</div><div class="line">    条件成立执行，命令;</div><div class="line">fi 将if反过来写,就成为fi 结束if语句</div></pre></td></tr></table></figure></p>
+<p>&amp;&amp; 代表 AND<br>|| 代表 or<br>实例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">read -p &quot;Please input (Y/N): &quot; yn</div><div class="line">if [ &quot;$yn&quot; == &quot;Y&quot; ] || [ &quot;$yn&quot; == &quot;y&quot; ]; then</div><div class="line">echo &quot;OK, continue&quot;</div><div class="line">exit 0</div><div class="line">fi</div></pre></td></tr></table></figure></p>
+<h3 id="多条件判断"><a href="#多条件判断" class="headerlink" title="多条件判断"></a>多条件判断</h3><p>格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">if [ 条件1 ]; then</div><div class="line">    条件1成立执行，命令;</div><div class="line">elif [ 条件2 ]; then</div><div class="line">    条件2成立执行，命令;</div><div class="line">else</div><div class="line">    条件都不成立指定;</div><div class="line">fi</div></pre></td></tr></table></figure></p>
+<p>实例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">read -p &quot;Please input (Y/N): &quot; yn</div><div class="line">if [ &quot;$yn&quot; == &quot;Y&quot; ] || [ &quot;$yn&quot; == &quot;y&quot; ]; then</div><div class="line">    echo &quot;OK, continue&quot;</div><div class="line">elif [ &quot;$yn&quot; == &quot;N&quot; ] || [ &quot;$yn&quot; == &quot;n&quot; ]; then</div><div class="line">    echo &quot;Oh, interrupt!&quot;</div><div class="line">else</div><div class="line">    echo &quot;I don&apos;t know what your choice is&quot;</div><div class="line">fi</div></pre></td></tr></table></figure></p>
+<h2 id="case-…-esac语句"><a href="#case-…-esac语句" class="headerlink" title="case ….. esac语句"></a>case ….. esac语句</h2><p>格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">case $变量名称 in</div><div class="line">&quot;第一个变量内容&quot;)</div><div class="line">程序段</div><div class="line">;;</div><div class="line">&quot;第二个变量内容&quot;)</div><div class="line">程序段</div><div class="line">;;</div><div class="line">*)    #不满足前两种情况就会进入*）</div><div class="line">exit 1</div><div class="line">;;</div><div class="line">esac  #类似于if...fi  case以esac结束</div></pre></td></tr></table></figure></p>
+<p>实例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">#运行时得传入参数</div><div class="line">case $1 in</div><div class="line">&quot;hello&quot;)</div><div class="line">    echo &quot;Hello, how are you ?&quot;</div><div class="line">;;</div><div class="line">&quot;&quot;)</div><div class="line">    echo &quot;You MUST input parameters, ex&gt; &#123;$0 someword&#125;&quot;</div><div class="line">;;</div><div class="line">*)</div><div class="line">    echo &quot;Usage $0 &#123;hello&#125;&quot;</div><div class="line">;;</div><div class="line">esac</div></pre></td></tr></table></figure></p>
+<h2 id="函数语句"><a href="#函数语句" class="headerlink" title="函数语句"></a>函数语句</h2><p>格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">function fname() &#123;</div><div class="line">命令</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>实例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">#需要传入参数</div><div class="line">function printc()&#123;</div><div class="line">    echo -n &quot;Your choice is &quot;</div><div class="line">&#125;</div><div class="line">echo &quot;This program will print your selection !&quot;</div><div class="line">case $1 in</div><div class="line">&quot;one&quot;)</div><div class="line">    printc; echo $1 | tr &apos;a-z&apos; &apos;A-Z&apos;</div><div class="line">;;</div><div class="line">&quot;two&quot;)</div><div class="line">    printc; echo $1 | tr &apos;a-z&apos; &apos;A-Z&apos;</div><div class="line">;;</div><div class="line">&quot;three&quot;)</div><div class="line">    printc; echo $1 | tr &apos;a-z&apos; &apos;A-Z&apos;</div><div class="line">;;</div><div class="line">*)</div><div class="line">    echo &quot;Usage $0 &#123;one|two|three&#125;&quot;</div><div class="line">;;</div><div class="line">esac</div></pre></td></tr></table></figure></p>
+<h1 id="循环语句"><a href="#循环语句" class="headerlink" title="循环语句"></a>循环语句</h1><h2 id="while循环"><a href="#while循环" class="headerlink" title="while循环"></a>while循环</h2><p>格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">while [ condition ]</div><div class="line">do</div><div class="line">  命令</div><div class="line">done</div></pre></td></tr></table></figure></p>
+<p>实例1：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line"># 输入大写YES或者小写yes结束循环语句</div><div class="line">while [ &quot;$yn&quot; != &quot;yes&quot; -a &quot;$yn&quot; != &quot;YES&quot; ]</div><div class="line">do</div><div class="line">    read -p &quot;Please input yes/YES to stop this program: &quot; yn</div><div class="line">done</div><div class="line">    echo &quot;OK! you input the correct answer.&quot;</div></pre></td></tr></table></figure></p>
+<p>实例2：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">#实现1+2+3...+100的累加</div><div class="line">sum=0 # 总数</div><div class="line">i=0 # 1, 2, 3....</div><div class="line">while [ &quot;$i&quot; != &quot;100&quot; ]</div><div class="line">do</div><div class="line">    i=$(($i+1)) # 每次 i 都会增加 1</div><div class="line">    sum=$(($sum+$i)) # 每次都会加总一次! done</div><div class="line">echo &quot;The result of &apos;1+2+3+...+100&apos; is ==&gt; $sum&quot;</div></pre></td></tr></table></figure></p>
+<h2 id="until循环语句"><a href="#until循环语句" class="headerlink" title="until循环语句"></a>until循环语句</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">until [ condition ]</div><div class="line">do</div><div class="line">    命令</div><div class="line">done</div></pre></td></tr></table></figure>
+<p>实例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">until [ &quot;$yn&quot; == &quot;yes&quot; -o &quot;$yn&quot; == &quot;YES&quot; ]</div><div class="line">do</div><div class="line">    read -p &quot;Please input yes/YES to stop this program: &quot; yn</div><div class="line">done</div><div class="line">echo &quot;OK! you input the correct answer.&quot;</div></pre></td></tr></table></figure></p>
+<h2 id="for循环语句"><a href="#for循环语句" class="headerlink" title="for循环语句"></a>for循环语句</h2><h3 id="罗列被循环的参数"><a href="#罗列被循环的参数" class="headerlink" title="罗列被循环的参数"></a>罗列被循环的参数</h3><p>格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">for var in con1 con2 con3 ...</div><div class="line">do</div><div class="line">    命令</div><div class="line">done</div><div class="line"># var从con1...到con3到...依次取值</div></pre></td></tr></table></figure></p>
+<p>实例1：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">for animal in dog cat elephant</div><div class="line">do</div><div class="line">echo &quot;There are $&#123;animal&#125;s.... &quot;</div><div class="line">done</div></pre></td></tr></table></figure></p>
+<p>实例2：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line"># 1. 先看看这个目录是否存在</div><div class="line">read -p &quot;Please input a directory: &quot; dir</div><div class="line">    if [ &quot;$dir&quot; == &quot;&quot; -o ! -d &quot;$dir&quot; ]; then</div><div class="line">    echo &quot;The $dir is NOT exist in your system.&quot;</div><div class="line">exit 1</div><div class="line">fi</div><div class="line"># 2. 开始测试~</div><div class="line">filelist=$(ls $dir) # 列出所有在该目录下的文件名</div><div class="line">for filename in $filelist</div><div class="line">do</div><div class="line">    perm=&quot;&quot;</div><div class="line">    test -r &quot;$dir/$filename&quot; &amp;&amp; perm=&quot;$perm readable&quot;</div><div class="line">    test -w &quot;$dir/$filename&quot; &amp;&amp; perm=&quot;$perm writable&quot;</div><div class="line">    test -x &quot;$dir/$filename&quot; &amp;&amp; perm=&quot;$perm executable&quot;</div><div class="line">    echo &quot;The file $dir/$filename&apos;s permission is $perm &quot;</div><div class="line">done</div></pre></td></tr></table></figure></p>
+<h3 id="有规律的取数字值"><a href="#有规律的取数字值" class="headerlink" title="有规律的取数字值"></a>有规律的取数字值</h3><p>格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">for ((初始值;条件;执行步长))</div><div class="line">do</div><div class="line">    命令</div><div class="line">done</div></pre></td></tr></table></figure></p>
+<p>实例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">read -p &quot;Please input a number, I will count for 1+2+...+your_input: &quot; nu</div><div class="line">sum=0</div><div class="line">for (( i=1; i&lt;=$nu; i=i+1 )) do</div><div class="line">    sum=$(($sum+$i))</div><div class="line">done</div><div class="line">echo &quot;The result of &apos;1+2+3+...+$nu&apos; is ==&gt; $sum&quot;</div></pre></td></tr></table></figure></p>
+<h2 id="脚本检查"><a href="#脚本检查" class="headerlink" title="脚本检查"></a>脚本检查</h2><p>格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sh [-nvx] scripts.sh</div></pre></td></tr></table></figure></p>
+<ul>
+<li>-n:不执行script,仅查询语法的问题;</li>
+<li>-v:在执行script前,先将scripts的内容输出到屏幕上;</li>
+<li>-x:将使用到的script内容显示到屏幕上,这是很有用的参数;可以看出每步骤的运行结果，比较实用<h1 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h1><blockquote>
+<p>题目：计算距离下次生日还有多少天</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">read -p &quot;Pleas input your birthday (MMDD, ex&gt; 0709): &quot; bir</div><div class="line">now=`date +%m%d`</div><div class="line">if [ &quot;$bir&quot; == &quot;$now&quot; ]; then</div><div class="line">    echo &quot;Happy Birthday to you!!!&quot;</div><div class="line">elif [ &quot;$bir&quot; -gt &quot;$now&quot; ]; then</div><div class="line">    year=`date +%Y`</div><div class="line">    total_d=$(($((`date --date=&quot;$year$bir&quot; +%s`-`date +%s`))/60/60/24))</div><div class="line">    echo &quot;Your birthday will be $total_d later&quot;</div><div class="line">else</div><div class="line">    year=$((`date +%Y`+1))</div><div class="line">    total_d=$(($((`date --date=&quot;$year$bir&quot; +%s`-`date +%s`))/60/60/24))</div><div class="line">    echo &quot;Your birthday will be $total_d later&quot;</div><div class="line">fi</div></pre></td></tr></table></figure></blockquote>
+</li>
+</ul>
 
       
     </div>
@@ -567,8 +593,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -673,6 +708,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#条件判断语句"><span class="nav-number">1.</span> <span class="nav-text">条件判断语句</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#if-…-then语句"><span class="nav-number">1.1.</span> <span class="nav-text">if …. then语句</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#单条件判断"><span class="nav-number">1.1.1.</span> <span class="nav-text">单条件判断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多条件判断"><span class="nav-number">1.1.2.</span> <span class="nav-text">多条件判断</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#case-…-esac语句"><span class="nav-number">1.2.</span> <span class="nav-text">case ….. esac语句</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数语句"><span class="nav-number">1.3.</span> <span class="nav-text">函数语句</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#循环语句"><span class="nav-number">2.</span> <span class="nav-text">循环语句</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#while循环"><span class="nav-number">2.1.</span> <span class="nav-text">while循环</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#until循环语句"><span class="nav-number">2.2.</span> <span class="nav-text">until循环语句</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#for循环语句"><span class="nav-number">2.3.</span> <span class="nav-text">for循环语句</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#罗列被循环的参数"><span class="nav-number">2.3.1.</span> <span class="nav-text">罗列被循环的参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#有规律的取数字值"><span class="nav-number">2.3.2.</span> <span class="nav-text">有规律的取数字值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#脚本检查"><span class="nav-number">2.4.</span> <span class="nav-text">脚本检查</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#例子"><span class="nav-number">3.</span> <span class="nav-text">例子</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -701,7 +752,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">5.2k</span>
+    <span title="Site words total count">6.0k</span>
   
 </div>
 
