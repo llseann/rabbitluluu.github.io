@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="rabbitluluu.github.io/"/>
-  <updated>2018-02-08T11:24:29.564Z</updated>
+  <updated>2018-02-08T15:38:44.013Z</updated>
   <id>rabbitluluu.github.io/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux-Shell脚本(2)</title>
+    <link href="rabbitluluu.github.io/2018/02/08/Linux-Shell%E8%84%9A%E6%9C%AC(2)/"/>
+    <id>rabbitluluu.github.io/2018/02/08/Linux-Shell脚本(2)/</id>
+    <published>2018-02-08T15:35:54.000Z</published>
+    <updated>2018-02-08T15:38:44.013Z</updated>
+    
+    <content type="html"><![CDATA[<p>This is a test of my blog!!!</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;This is a test of my blog!!!&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+      <category term="Linux" scheme="rabbitluluu.github.io/tags/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux-Shell脚本(1)</title>
