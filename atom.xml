@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="rabbitluluu.github.io/"/>
-  <updated>2018-02-09T05:14:07.355Z</updated>
+  <updated>2018-02-09T05:18:57.054Z</updated>
   <id>rabbitluluu.github.io/</id>
   
   <author>
@@ -15,6 +15,20 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Hive查询语句</title>
+    <link href="rabbitluluu.github.io/2018/02/09/Hive%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5/"/>
+    <id>rabbitluluu.github.io/2018/02/09/Hive查询语句/</id>
+    <published>2018-02-09T05:18:57.000Z</published>
+    <updated>2018-02-09T05:18:57.054Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>Linux-Shell脚本(2)</title>
@@ -59,31 +73,6 @@
     
     
       <category term="Linux" scheme="rabbitluluu.github.io/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>XMind 破解全教程（全）</title>
-    <link href="rabbitluluu.github.io/2018/01/22/XMind-%E7%A0%B4%E8%A7%A3%E5%85%A8%E6%95%99%E7%A8%8B%EF%BC%88%E5%85%A8%EF%BC%89/"/>
-    <id>rabbitluluu.github.io/2018/01/22/XMind-破解全教程（全）/</id>
-    <published>2018-01-22T05:39:57.000Z</published>
-    <updated>2018-01-23T06:13:57.184Z</updated>
-    
-    <content type="html"><![CDATA[<p><strong>本文仅供学习使用，土豪误入，有钱请支持正版！！！</strong></p><h3 id="破解过程"><a href="#破解过程" class="headerlink" title="破解过程"></a>破解过程</h3><ol><li>将 “XMindCrack.jar“ 复制到安装目录</li><li>以文本格式打开安装目录中 “XMind.ini“</li><li>在 “XMind.ini“ 最后追加 “-javaagent:./XMindCrack.jar“</li><li>在 “hosts“ 中添加 “0.0.0.0 www.xmind.net”，目的为了阻止访问官网<br>（WIN7 hosts默认路径C:\Windows\System32\drivers\etc）</li><li>打开Xmind输入注册码和邮箱（随意写）</li></ol><p><em>成功激活界面</em><br><img src="http://upload-images.jianshu.io/upload_images/9642239-533516dfbbfd3560.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="XMind.jpg"></p><h3 id="附件"><a href="#附件" class="headerlink" title="附件"></a>附件</h3><p>附件下载地址：<a href="https://pan.baidu.com/s/1dGl6ELb" target="_blank" rel="external">附件</a>  密码：cadh</p><p><strong>ps:若提示序列号无效，则替换序列号中数字，字母可解决问题。hosts中对应路由不能删除，否则失效</strong></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;&lt;strong&gt;本文仅供学习使用，土豪误入，有钱请支持正版！！！&lt;/strong&gt;&lt;/p&gt;
-&lt;h3 id=&quot;破解过程&quot;&gt;&lt;a href=&quot;#破解过程&quot; class=&quot;headerlink&quot; title=&quot;破解过程&quot;&gt;&lt;/a&gt;破解过程&lt;/h3&gt;&lt;ol&gt;
-&lt;li&gt;将 “XMin
-      
-    
-    </summary>
-    
-    
-      <category term="Software" scheme="rabbitluluu.github.io/tags/Software/"/>
     
   </entry>
   
