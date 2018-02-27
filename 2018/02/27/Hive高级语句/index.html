@@ -160,7 +160,7 @@
 <meta property="og:site_name" content="Rabbitlulu">
 <meta property="og:description" content="创建内部管理表在数据库rel中创建学生信息表字段信息：学号、姓名、年龄、地域 切换使用rel数据库：123456789101112use rel;create table student_info(student_id string comment &amp;apos;学号&amp;apos;,name string comment &amp;apos;姓名&amp;apos;,age int comment &amp;apos;年龄&amp;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-02-27T07:40:05.767Z">
+<meta property="og:updated_time" content="2018-02-27T07:43:30.700Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hive高级语句">
 <meta name="twitter:description" content="创建内部管理表在数据库rel中创建学生信息表字段信息：学号、姓名、年龄、地域 切换使用rel数据库：123456789101112use rel;create table student_info(student_id string comment &amp;apos;学号&amp;apos;,name string comment &amp;apos;姓名&amp;apos;,age int comment &amp;apos;年龄&amp;">
@@ -391,7 +391,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-02-27T15:40:05+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2018-02-27T15:43:30+08:00">
                 2018-02-27
               </time>
             
@@ -430,7 +430,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3,186
+                  3,198
                 </span>
               
 
@@ -579,12 +579,15 @@
 <ol>
 <li>先开发一个java类，继承UDF，并重载evaluate方法</li>
 <li>打成jar包上传到服务器</li>
-<li>在使用的时候将jar包添加到hive的classpath<figure class="highlight plain"><figcaption><span>jar</span><a href="/home/zkpk/apps/hive_test_data/HiveUdfPro-1.0-SNAPSHOT.jar;```">link</a></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">4. 创建临时函数与开发好的java class关联</div></pre></td></tr></table></figure>
+<li><p>在使用的时候将jar包添加到hive的classpath</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">add jar /home/zkpk/apps/hive_test_data/HiveUdfPro-1.0-SNAPSHOT.jar;</div></pre></td></tr></table></figure>
 </li>
+<li><p>创建临时函数与开发好的java class关联</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">create temporary function age_partition as &apos;cn.chinahadoop.udf.AgePartitionFunction&apos;; </div><div class="line">#根据自己包位置写</div></pre></td></tr></table></figure>
+</li>
+<li><p>即可在hql中使用自定义的函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">select gender,</div><div class="line">age_partition(age),</div><div class="line">max(core) max_core</div><div class="line">from rel.user_core_info </div><div class="line">group by gender,</div><div class="line">age_partition(age);</div></pre></td></tr></table></figure></li>
 </ol>
-<p>create temporary function age_partition as ‘cn.chinahadoop.udf.AgePartitionFunction’; </p>
-<p>#根据自己包位置写<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">5. 即可在hql中使用自定义的函数</div></pre></td></tr></table></figure></p>
-<p>select gender,<br>age_partition(age),<br>max(core) max_core<br>from rel.user_core_info<br>group by gender,<br>age_partition(age);```</p>
 
       
     </div>
@@ -865,7 +868,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">9.0k</span>
+    <span title="Site words total count">9.1k</span>
   
 </div>
 
