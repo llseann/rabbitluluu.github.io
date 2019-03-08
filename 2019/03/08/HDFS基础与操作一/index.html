@@ -152,19 +152,19 @@
 
 
 
-<meta name="description" content="课程回顾：   （1）免密码登录–ssh 所有的拷贝 包括自己。    （2）Hadoop 全分布式安装。—重复格式化 scp拷贝（没有删掉原来的文件。）    （3）HDFS的体系架构–namenode datanode secondarydatanode。    （4）看日志：/opt/moudle/hadoop-2.7.3/logs vi  shift+G  1、HDFS-Web Conso">
+<meta name="description" content="1、HDFS-Web Console（1）Overview–展示HDFS的基本信息1Safemode is off.---高级特性。 （2）DataNodes-数据节点信息1增加和删除数据节点（Decomissioning--&amp;gt;Dead） （3）Datanode Volume Failures–数据节点 硬件错误（4）Snapshot—高级特性1快照实现数据的备份，防止数据的误操作和丢失。默">
 <meta name="keywords" content="HDFS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HDFS基础与操作一">
 <meta property="og:url" content="rabbitluluu.github.io/2019/03/08/HDFS基础与操作一/index.html">
 <meta property="og:site_name" content="Sean">
-<meta property="og:description" content="课程回顾：   （1）免密码登录–ssh 所有的拷贝 包括自己。    （2）Hadoop 全分布式安装。—重复格式化 scp拷贝（没有删掉原来的文件。）    （3）HDFS的体系架构–namenode datanode secondarydatanode。    （4）看日志：/opt/moudle/hadoop-2.7.3/logs vi  shift+G  1、HDFS-Web Conso">
+<meta property="og:description" content="1、HDFS-Web Console（1）Overview–展示HDFS的基本信息1Safemode is off.---高级特性。 （2）DataNodes-数据节点信息1增加和删除数据节点（Decomissioning--&amp;gt;Dead） （3）Datanode Volume Failures–数据节点 硬件错误（4）Snapshot—高级特性1快照实现数据的备份，防止数据的误操作和丢失。默">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="h:/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E9%AA%8C%E6%89%8B%E5%86%8C/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AF%BE%E7%A8%8B/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/startup.png">
-<meta property="og:updated_time" content="2019-03-08T07:42:56.600Z">
+<meta property="og:updated_time" content="2019-03-08T07:53:57.728Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HDFS基础与操作一">
-<meta name="twitter:description" content="课程回顾：   （1）免密码登录–ssh 所有的拷贝 包括自己。    （2）Hadoop 全分布式安装。—重复格式化 scp拷贝（没有删掉原来的文件。）    （3）HDFS的体系架构–namenode datanode secondarydatanode。    （4）看日志：/opt/moudle/hadoop-2.7.3/logs vi  shift+G  1、HDFS-Web Conso">
+<meta name="twitter:description" content="1、HDFS-Web Console（1）Overview–展示HDFS的基本信息1Safemode is off.---高级特性。 （2）DataNodes-数据节点信息1增加和删除数据节点（Decomissioning--&amp;gt;Dead） （3）Datanode Volume Failures–数据节点 硬件错误（4）Snapshot—高级特性1快照实现数据的备份，防止数据的误操作和丢失。默">
 <meta name="twitter:image" content="h:/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E9%AA%8C%E6%89%8B%E5%86%8C/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AF%BE%E7%A8%8B/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/startup.png">
 
 
@@ -393,7 +393,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-03-08T15:42:56+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2019-03-08T15:53:57+08:00">
                 2019-03-08
               </time>
             
@@ -432,7 +432,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  874
+                  805
                 </span>
               
 
@@ -457,12 +457,7 @@
       
 
       
-        <p>课程回顾：<br>   （1）免密码登录–ssh 所有的拷贝 包括自己。</p>
-<p>   （2）Hadoop 全分布式安装。—重复格式化 scp拷贝（没有删掉原来的文件。）</p>
-<p>   （3）HDFS的体系架构–namenode datanode secondarydatanode。</p>
-<p>   （4）看日志：/opt/moudle/hadoop-2.7.3/logs vi  shift+G</p>
-<hr>
-<h2 id="1、HDFS-Web-Console"><a href="#1、HDFS-Web-Console" class="headerlink" title="1、HDFS-Web Console"></a>1、HDFS-Web Console</h2><h3 id="（1）Overview–展示HDFS的基本信息"><a href="#（1）Overview–展示HDFS的基本信息" class="headerlink" title="（1）Overview–展示HDFS的基本信息"></a>（1）Overview–展示HDFS的基本信息</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Safemode is off.---高级特性。</div></pre></td></tr></table></figure>
+        <h2 id="1、HDFS-Web-Console"><a href="#1、HDFS-Web-Console" class="headerlink" title="1、HDFS-Web Console"></a>1、HDFS-Web Console</h2><h3 id="（1）Overview–展示HDFS的基本信息"><a href="#（1）Overview–展示HDFS的基本信息" class="headerlink" title="（1）Overview–展示HDFS的基本信息"></a>（1）Overview–展示HDFS的基本信息</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Safemode is off.---高级特性。</div></pre></td></tr></table></figure>
 <h3 id="（2）DataNodes-数据节点信息"><a href="#（2）DataNodes-数据节点信息" class="headerlink" title="（2）DataNodes-数据节点信息"></a>（2）DataNodes-数据节点信息</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">增加和删除数据节点（Decomissioning--&gt;Dead）</div></pre></td></tr></table></figure>
 <h3 id="（3）Datanode-Volume-Failures–数据节点-硬件错误"><a href="#（3）Datanode-Volume-Failures–数据节点-硬件错误" class="headerlink" title="（3）Datanode Volume Failures–数据节点 硬件错误"></a>（3）Datanode Volume Failures–数据节点 硬件错误</h3><h3 id="（4）Snapshot—高级特性"><a href="#（4）Snapshot—高级特性" class="headerlink" title="（4）Snapshot—高级特性"></a>（4）Snapshot—高级特性</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">快照实现数据的备份，防止数据的误操作和丢失。默认是关闭的。</div></pre></td></tr></table></figure>
 <h3 id="（5）Startup-Progress–启动过程"><a href="#（5）Startup-Progress–启动过程" class="headerlink" title="（5）Startup Progress–启动过程"></a>（5）Startup Progress–启动过程</h3><p>   <img src="H:/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E9%AA%8C%E6%89%8B%E5%86%8C/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AF%BE%E7%A8%8B/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/startup.png" alt=""></p>
@@ -773,7 +768,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">15.3k</span>
+    <span title="Site words total count">15.1k</span>
   
 </div>
 

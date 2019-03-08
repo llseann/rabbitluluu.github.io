@@ -152,20 +152,20 @@
 
 
 
-<meta name="description" content="课程回顾：   （1）什么是大数据–4V       存储、计算和分析    （2）数据仓库–大数据 Share Nothing    （3）OLTP OLAP    （4）Google的三驾马车–GFS（HDFS） MR  bigtable（Hbase）  1、Hadoop的安装准备工作1Hadoop名字来源--douge cutting （1）安装好linux操作系统（IP配置） （2）关闭防">
+<meta name="description" content="1、Hadoop的安装准备工作1Hadoop名字来源--douge cutting （1）安装好linux操作系统（IP配置） （2）关闭防火墙 1systemctl stop（disable） firewalld.service (3) 安装Jdk–winscp 上传 opt/software 解压到 opt/moudle(4) Hadoop安装包—虚拟机的克隆 scp（拷贝） 12345678">
 <meta name="keywords" content="Hadoop">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hadoop安装过程">
 <meta property="og:url" content="rabbitluluu.github.io/2019/03/08/Hadoop安装过程/index.html">
 <meta property="og:site_name" content="Sean">
-<meta property="og:description" content="课程回顾：   （1）什么是大数据–4V       存储、计算和分析    （2）数据仓库–大数据 Share Nothing    （3）OLTP OLAP    （4）Google的三驾马车–GFS（HDFS） MR  bigtable（Hbase）  1、Hadoop的安装准备工作1Hadoop名字来源--douge cutting （1）安装好linux操作系统（IP配置） （2）关闭防">
+<meta property="og:description" content="1、Hadoop的安装准备工作1Hadoop名字来源--douge cutting （1）安装好linux操作系统（IP配置） （2）关闭防火墙 1systemctl stop（disable） firewalld.service (3) 安装Jdk–winscp 上传 opt/software 解压到 opt/moudle(4) Hadoop安装包—虚拟机的克隆 scp（拷贝） 12345678">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="h:/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E9%AA%8C%E6%89%8B%E5%86%8C/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AF%BE%E7%A8%8B/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/2.png">
 <meta property="og:image" content="h:/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E9%AA%8C%E6%89%8B%E5%86%8C/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AF%BE%E7%A8%8B/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/3.png">
-<meta property="og:updated_time" content="2019-03-08T07:37:52.857Z">
+<meta property="og:updated_time" content="2019-03-08T07:54:58.167Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hadoop安装过程">
-<meta name="twitter:description" content="课程回顾：   （1）什么是大数据–4V       存储、计算和分析    （2）数据仓库–大数据 Share Nothing    （3）OLTP OLAP    （4）Google的三驾马车–GFS（HDFS） MR  bigtable（Hbase）  1、Hadoop的安装准备工作1Hadoop名字来源--douge cutting （1）安装好linux操作系统（IP配置） （2）关闭防">
+<meta name="twitter:description" content="1、Hadoop的安装准备工作1Hadoop名字来源--douge cutting （1）安装好linux操作系统（IP配置） （2）关闭防火墙 1systemctl stop（disable） firewalld.service (3) 安装Jdk–winscp 上传 opt/software 解压到 opt/moudle(4) Hadoop安装包—虚拟机的克隆 scp（拷贝） 12345678">
 <meta name="twitter:image" content="h:/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E9%AA%8C%E6%89%8B%E5%86%8C/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AF%BE%E7%A8%8B/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/2.png">
 
 
@@ -394,7 +394,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-03-08T15:37:52+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2019-03-08T15:54:58+08:00">
                 2019-03-08
               </time>
             
@@ -433,7 +433,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,801
+                  1,757
                 </span>
               
 
@@ -458,12 +458,7 @@
       
 
       
-        <p>课程回顾：<br>   （1）什么是大数据–4V<br>       存储、计算和分析</p>
-<p>   （2）数据仓库–大数据 Share Nothing</p>
-<p>   （3）OLTP OLAP</p>
-<p>   （4）Google的三驾马车–GFS（HDFS） MR  bigtable（Hbase）</p>
-<hr>
-<h1 id="1、Hadoop的安装准备工作"><a href="#1、Hadoop的安装准备工作" class="headerlink" title="1、Hadoop的安装准备工作"></a>1、Hadoop的安装准备工作</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Hadoop名字来源--douge cutting</div></pre></td></tr></table></figure>
+        <h1 id="1、Hadoop的安装准备工作"><a href="#1、Hadoop的安装准备工作" class="headerlink" title="1、Hadoop的安装准备工作"></a>1、Hadoop的安装准备工作</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Hadoop名字来源--douge cutting</div></pre></td></tr></table></figure>
 <p>（1）安装好linux操作系统（IP配置）</p>
 <p>（2）关闭防火墙</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl stop（disable） firewalld.service</div></pre></td></tr></table></figure>
@@ -816,7 +811,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">15.3k</span>
+    <span title="Site words total count">15.1k</span>
   
 </div>
 
