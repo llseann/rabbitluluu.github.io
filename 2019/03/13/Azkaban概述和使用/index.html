@@ -6,16 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="rabbitluluu.github.io">
-  <title>标签 | Sean</title>
+  <title>Azkaban概述和使用 | Sean</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="标签">
-<meta property="og:url" content="rabbitluluu.github.io/tags/index.html">
+  <meta name="description" content="1、 Azkaban概述Azkaban是在LinkedIn上创建的批处理工作流作业调度程序，用于运行Hadoop作业。Azkaban通过作业依赖性解决订单，并提供易于使用的Web用户界面来维护和跟踪您的工作流程。 工作流作业： flume-&amp;gt;hdfs-&amp;gt;mr-&amp;gt;hive建表-&amp;gt;导入load data脚本 自动化调度 2、 环境搭建 创建相关mysql库并导入脚本  123c">
+<meta name="keywords" content="Azkaban">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Azkaban概述和使用">
+<meta property="og:url" content="rabbitluluu.github.io/2019/03/13/Azkaban概述和使用/index.html">
 <meta property="og:site_name" content="Sean">
+<meta property="og:description" content="1、 Azkaban概述Azkaban是在LinkedIn上创建的批处理工作流作业调度程序，用于运行Hadoop作业。Azkaban通过作业依赖性解决订单，并提供易于使用的Web用户界面来维护和跟踪您的工作流程。 工作流作业： flume-&amp;gt;hdfs-&amp;gt;mr-&amp;gt;hive建表-&amp;gt;导入load data脚本 自动化调度 2、 环境搭建 创建相关mysql库并导入脚本  123c">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-02-08T05:47:30.241Z">
+<meta property="og:updated_time" content="2019-03-13T01:59:33.605Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="标签">
+<meta name="twitter:title" content="Azkaban概述和使用">
+<meta name="twitter:description" content="1、 Azkaban概述Azkaban是在LinkedIn上创建的批处理工作流作业调度程序，用于运行Hadoop作业。Azkaban通过作业依赖性解决订单，并提供易于使用的Web用户界面来维护和跟踪您的工作流程。 工作流作业： flume-&amp;gt;hdfs-&amp;gt;mr-&amp;gt;hive建表-&amp;gt;导入load data脚本 自动化调度 2、 环境搭建 创建相关mysql库并导入脚本  123c">
   
     <link rel="alternative" href="/atom.xml" title="Sean" type="application/atom+xml">
   
@@ -153,27 +157,89 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="page-undefined" class="article article-type-page " itemscope itemprop="blogPost">
+            <article id="post-Azkaban概述和使用" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      标签
+      Azkaban概述和使用
     </h1>
   
 
         
-        <a href="/tags/index.html" class="archive-article-date">
-  	<time datetime="2018-02-08T05:47:30.241Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-08</time>
+        <a href="/2019/03/13/Azkaban概述和使用/" class="archive-article-date">
+  	<time datetime="2019-03-13T01:58:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-13</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h1 id="1、-Azkaban概述"><a href="#1、-Azkaban概述" class="headerlink" title="1、 Azkaban概述"></a>1、 Azkaban概述</h1><p><strong>Azkaban</strong>是在LinkedIn上创建的批处理工作流作业调度程序，用于运行Hadoop作业。Azkaban通过作业<strong>依赖</strong>性解决订单，并提供易于使用的Web用户界面来维护和跟踪您的工作流程。</p>
+<p>工作流作业：</p>
+<p>flume-&gt;hdfs-&gt;mr-&gt;hive建表-&gt;导入load data脚本</p>
+<p><strong>自动化</strong>调度</p>
+<h1 id="2、-环境搭建"><a href="#2、-环境搭建" class="headerlink" title="2、 环境搭建"></a>2、 环境搭建</h1><ol>
+<li>创建相关mysql库并导入脚本</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">create database azkaban;</div><div class="line">use azkaban;</div><div class="line">source /root/hd/azkaban/azkaban-2.5.0/create-all-sql-2.5.0.sql;</div></pre></td></tr></table></figure>
+<ol>
+<li><p>生成证书</p>
+<p><code>keytool -keystore keystore -alias jetty -genkey -keyalg RSA</code></p>
+<p>牢记密码后续要用</p>
+<p>并将其拷贝到server中</p>
+</li>
+<li><p>时间同步配置</p>
+<p>开启发送指令到所有窗口，保证集群时间同步，任务调度，所以和本地时间保持一致</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo date -s &apos;当前时间&apos;</div><div class="line">hwclock -w</div></pre></td></tr></table></figure>
+</li>
+<li><p>修改server配置文件<code>azkaban.properties</code>和<code>azkaban-users.xml</code></p>
+<p>前者修改mysql相关配置和时区</p>
+<p>后者添加账户密码<code>&lt;user username=&quot;admin&quot; password=&quot;admin&quot; roles=&quot;admin,metrics&quot;/&gt;</code>权限为管理员</p>
+</li>
+<li><p>修改excutor端配置文件<code>azkaban.properties</code>时区设置和mysql相关配置</p>
+</li>
+</ol>
+<h1 id="3、azkaban实例"><a href="#3、azkaban实例" class="headerlink" title="3、azkaban实例"></a>3、azkaban实例</h1><font color="red">注意1，启动时需在主目录下，否则会有如下错误</font>
+
+<p><code>Exception in thread &quot;main&quot; java.io.FileNotFoundException: conf/global.properties (No such file or directory)</code></p>
+<font color="red">注意2，打包只能打成zip包，否则会无法识别</font>
+
+<font color="red">注意3，指令写一行，不换行</font>
+
+<font color="red">注意4，脚本不识别环境变量，需要将其启动脚本的绝对路径写全</font>
+
+<ol>
+<li><p>实例1：启动yarn集群</p>
+<p><code>type=command
+command=/opt/modules/hadoop-2.8.4/sbin/start-yarn.sh</code></p>
+</li>
+<li><p>实例2：启动mr程序</p>
+<p><code>type=command
+command=/opt/modules/hadoop-2.8.4/bin/hadoop jar /opt/modules/hadoop-2.8.4/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.8.4.jar wordcount /input/wc /output/wc2</code></p>
+</li>
+<li><p>实例3：设置任务依赖</p>
+<p><strong>job_a.job:</strong></p>
+<p><code>type=command
+command=echo &#39;gakki&#39;</code></p>
+<p><strong>job_b.job:</strong></p>
+<p><code>type=command
+dependencies=job_a.job
+command=echo &#39;is my love&#39;</code></p>
+</li>
+<li><p>实例4：创建hive表并从本地导入数据</p>
+<p><strong>hive.sql：</strong></p>
+<p><code>use default;
+create table azhive(id int, name string, int num) row format delimited fields terminated by &#39;\t&#39;;
+load data inpath &#39;/temp/dept.txt&#39; into table azhive;</code></p>
+<p><strong>hive-f.job：</strong></p>
+<p><code>type=command
+command=//opt/modules/hive/bin/hive -f &quot;hive.sql&quot;</code></p>
+</li>
+</ol>
+
       
 
       
@@ -212,6 +278,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Azkaban</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -262,7 +339,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http:rabbitluluu.github.io/tags/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http:rabbitluluu.github.io/2019/03/13/Azkaban概述和使用/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -274,6 +351,16 @@
 </article>
 
   
+<nav id="article-nav">
+  
+  
+    <a href="/2019/03/13/Sqoop概述和使用/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Sqoop概述和使用</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -292,6 +379,37 @@
 </aside>
 
 
+
+  
+  
+  
+
+  
+  
+  
+  <!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC80MzA3NC8xOTYyMA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+  
+
+  
+
+  
 
 
           </div>
@@ -314,7 +432,7 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,

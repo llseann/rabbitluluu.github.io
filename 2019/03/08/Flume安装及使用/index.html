@@ -17,7 +17,8 @@
 <meta property="og:description" content="1、概述​    Flume是一种分布式，可靠且可用的服务，用于有效地收集，聚合和移动大量日志数据。它具有基于流数据流的简单灵活的架构。它具有可靠的可靠性机制和许多故障转移和恢复机制，具有强大的容错性。它使用简单的可扩展数据模型，允许在线分析应用程序。  数据采集（爬虫\日志数据\flume） 数据存储（hdfs/hive/hbase(nosql)） 数据计算（mapreduce/hive/spa">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/DevGuide_image00.png">
-<meta property="og:updated_time" content="2019-03-08T10:15:24.011Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/%E5%A4%9Asink%E6%83%85%E6%99%AF.jpg">
+<meta property="og:updated_time" content="2019-03-13T01:57:05.826Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Flume安装及使用">
 <meta name="twitter:description" content="1、概述​    Flume是一种分布式，可靠且可用的服务，用于有效地收集，聚合和移动大量日志数据。它具有基于流数据流的简单灵活的架构。它具有可靠的可靠性机制和许多故障转移和恢复机制，具有强大的容错性。它使用简单的可扩展数据模型，允许在线分析应用程序。  数据采集（爬虫\日志数据\flume） 数据存储（hdfs/hive/hbase(nosql)） 数据计算（mapreduce/hive/spa">
@@ -209,7 +210,18 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span> Name the components on this agent agent别名设置</div><div class="line">a1.sources = r1</div><div class="line">a1.sinks = k1</div><div class="line">a1.channels = c1</div><div class="line"><span class="meta"></span></div><div class="line"># Describe/configure the source  设置数据源监听本地文件配置</div><div class="line"><span class="meta">#</span> exec 执行一个命令的方式去查看文件 tail -F 实时查看</div><div class="line">a1.sources.r1.type = exec</div><div class="line"><span class="meta">#</span> 要执行的脚本command tail -F 默认10行 man tail  查看帮助</div><div class="line">a1.sources.r1.command = tail -F /tmp/root/hive.log</div><div class="line"><span class="meta">#</span> 执行这个command使用的是哪个脚本 -c 指定使用什么命令</div><div class="line"><span class="meta">#</span> whereis bash</div><div class="line"><span class="meta">#</span> bash: /usr/bin/bash /usr/share/man/man1/bash.1.gz </div><div class="line">a1.sources.r1.shell = /usr/bin/bash -c</div><div class="line"><span class="meta"></span></div><div class="line"># Describe the sink </div><div class="line">a1.sinks.k1.type = hdfs</div><div class="line">a1.sinks.k1.hdfs.path = hdfs://node01:9000/flume/%Y%m%d/%H</div><div class="line"><span class="meta">#</span>上传文件的前缀</div><div class="line">a1.sinks.k1.hdfs.filePrefix = logs-</div><div class="line"><span class="meta">#</span>是否按照时间滚动文件夹</div><div class="line">a1.sinks.k1.hdfs.round = true</div><div class="line"><span class="meta">#</span>多少时间单位创建一个新的文件夹  秒 （默认30s）</div><div class="line">a1.sinks.k1.hdfs.roundValue = 1</div><div class="line"><span class="meta">#</span>重新定义时间单位（每小时滚动一个文件夹）</div><div class="line">a1.sinks.k1.hdfs.roundUnit = minute</div><div class="line"><span class="meta">#</span>是否使用本地时间戳</div><div class="line">a1.sinks.k1.hdfs.useLocalTimeStamp = true</div><div class="line"><span class="meta">#</span>积攒多少个 Event 才 flush 到 HDFS 一次</div><div class="line">a1.sinks.k1.hdfs.batchSize = 500</div><div class="line"><span class="meta">#</span>设置文件类型，可支持压缩</div><div class="line">a1.sinks.k1.hdfs.fileType = DataStream</div><div class="line"><span class="meta">#</span>多久生成一个新的文件 秒</div><div class="line">a1.sinks.k1.hdfs.rollInterval = 30</div><div class="line"><span class="meta">#</span>设置每个文件的滚动大小 字节（最好128M）</div><div class="line">a1.sinks.k1.hdfs.rollSize = 134217700</div><div class="line"><span class="meta">#</span>文件的滚动与 Event 数量无关</div><div class="line">a1.sinks.k1.hdfs.rollCount = 0</div><div class="line"><span class="meta">#</span>最小冗余数(备份数 生成滚动功能则生效roll hadoop本身有此功能 无需配置) 1份 不冗余</div><div class="line">a1.sinks.k1.hdfs.minBlockReplicas = 1</div><div class="line"><span class="meta"></span></div><div class="line"># Use a channel which buffers events in memory </div><div class="line">a1.channels.c1.type = memory </div><div class="line">a1.channels.c1.capacity = 1000</div><div class="line">a1.channels.c1.transactionCapacity = 100</div><div class="line"><span class="meta"></span></div><div class="line"># Bind the source and sink to the channel</div><div class="line">a1.sources.r1.channels = c1</div><div class="line">a1.sinks.k1.channel = c1</div></pre></td></tr></table></figure>
 <p>启动指令：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">bin/flume-ng agent </div><div class="line">--conf conf/ </div><div class="line">--name a1 </div><div class="line">--conf-file conf/flumejob_hdfs.conf</div></pre></td></tr></table></figure>
-
+<h2 id="4-3、-案例三：flume监听文件夹"><a href="#4-3、-案例三：flume监听文件夹" class="headerlink" title="4.3、 案例三：flume监听文件夹"></a>4.3、 案例三：flume监听文件夹</h2><p>配置文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span> 定义别名</div><div class="line">a1.sources = r1</div><div class="line">a1.sinks = k1</div><div class="line">a1.channels = c1</div><div class="line"><span class="meta"></span></div><div class="line"># Describe/configure the source</div><div class="line">a1.sources.r1.type = spooldir</div><div class="line"><span class="meta">#</span> 监控的文件夹</div><div class="line">a1.sources.r1.spoolDir = /root/temp/testdir</div><div class="line"><span class="meta">#</span> 上传成功后显示后缀名 </div><div class="line">a1.sources.r1.fileSuffix = .COMPLETED</div><div class="line"><span class="meta">#</span> 如论如何 加绝对路径的文件名 默认false</div><div class="line">a1.sources.r1.fileHeader = true</div><div class="line"><span class="meta">#</span>忽略所有以.tmp 结尾的文件（正在被写入），不上传</div><div class="line"><span class="meta">#</span> ^以任何开头 出现无限次 以.tmp结尾的</div><div class="line">a1.sources.r1.ignorePattern = ([^ ]*\.tmp)</div><div class="line"><span class="meta"></span></div><div class="line"># Describe the sink 下沉到hdfs</div><div class="line">a1.sinks.k1.type = hdfs</div><div class="line">a1.sinks.k1.hdfs.path = hdfs://node01:9000/flume/testdir/%Y%m%d/%H</div><div class="line"><span class="meta">#</span>上传文件的前缀</div><div class="line">a1.sinks.k1.hdfs.filePrefix = testdir-</div><div class="line"><span class="meta">#</span>是否按照时间滚动文件夹</div><div class="line">a1.sinks.k1.hdfs.round = true</div><div class="line"><span class="meta">#</span>多少时间单位创建一个新的文件夹</div><div class="line">a1.sinks.k1.hdfs.roundValue = 1</div><div class="line"><span class="meta">#</span>重新定义时间单位</div><div class="line">a1.sinks.k1.hdfs.roundUnit = hour</div><div class="line"><span class="meta">#</span>是否使用本地时间戳</div><div class="line">a1.sinks.k1.hdfs.useLocalTimeStamp = true</div><div class="line"><span class="meta">#</span>积攒多少个 Event 才 flush 到 HDFS 一次</div><div class="line">a1.sinks.k1.hdfs.batchSize = 100</div><div class="line"><span class="meta">#</span>设置文件类型，可支持压缩</div><div class="line">a1.sinks.k1.hdfs.fileType = DataStream</div><div class="line"><span class="meta">#</span>多久生成一个新的文件</div><div class="line">a1.sinks.k1.hdfs.rollInterval = 600</div><div class="line"><span class="meta">#</span>设置每个文件的滚动大小大概是 128M </div><div class="line">a1.sinks.k1.hdfs.rollSize = 134217700</div><div class="line"><span class="meta">#</span>文件的滚动与 Event 数量无关</div><div class="line">a1.sinks.k1.hdfs.rollCount = 0</div><div class="line"><span class="meta">#</span>最小副本数</div><div class="line">a1.sinks.k1.hdfs.minBlockReplicas = 1</div><div class="line"><span class="meta"></span></div><div class="line"># Use a channel which buffers events in memory </div><div class="line">a1.channels.c1.type = memory </div><div class="line">a1.channels.c1.capacity = 1000</div><div class="line">a1.channels.c1.transactionCapacity = 100</div><div class="line"><span class="meta"></span></div><div class="line"># Bind the source and sink to the channel</div><div class="line">a1.sources.r1.channels = c1 </div><div class="line">a1.sinks.k1.channel = c1</div></pre></td></tr></table></figure>
+<p>启动指令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">bin/flume-ng agent </div><div class="line">--conf conf/ </div><div class="line">--name a1 </div><div class="line">--conf-file conf/flumejob_dir.conf</div></pre></td></tr></table></figure>
+<h2 id="4-4、案例四：多sink情景，同时监听hive日志到hdfs和local"><a href="#4-4、案例四：多sink情景，同时监听hive日志到hdfs和local" class="headerlink" title="4.4、案例四：多sink情景，同时监听hive日志到hdfs和local"></a>4.4、案例四：多sink情景，同时监听hive日志到hdfs和local</h2><p><img src="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/%E5%A4%9Asink%E6%83%85%E6%99%AF.jpg" alt="情景"></p>
+<p>配置文件flumejob_1.conf</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span> name the components on this agent 别名设置</div><div class="line">a1.sources = r1</div><div class="line">a1.sinks = k1 k2 </div><div class="line">a1.channels = c1 c2</div><div class="line"><span class="meta"></span></div><div class="line"># 将数据流复制给多个 channel</div><div class="line">a1.sources.r1.selector.type = replicating</div><div class="line"><span class="meta"></span></div><div class="line"># Describe/configure the source </div><div class="line">a1.sources.r1.type = exec</div><div class="line">a1.sources.r1.command = tail -F /tmp/root/hive.log</div><div class="line">a1.sources.r1.shell = /bin/bash -c</div><div class="line"><span class="meta"></span></div><div class="line"># Describe the sink</div><div class="line"><span class="meta">#</span> 分两个端口发送数据 </div><div class="line">a1.sinks.k1.type = avro </div><div class="line">a1.sinks.k1.hostname = node01</div><div class="line">a1.sinks.k1.port = 4141</div><div class="line"></div><div class="line">a1.sinks.k2.type = avro </div><div class="line">a1.sinks.k2.hostname = node01</div><div class="line">a1.sinks.k2.port = 4142</div><div class="line"><span class="meta"></span></div><div class="line"># Describe the channel </div><div class="line">a1.channels.c1.type = memory </div><div class="line">a1.channels.c1.capacity = 1000</div><div class="line">a1.channels.c1.transactionCapacity = 100</div><div class="line"></div><div class="line">a1.channels.c2.type = memory </div><div class="line">a1.channels.c2.capacity = 1000</div><div class="line">a1.channels.c2.transactionCapacity = 100</div><div class="line"><span class="meta"></span></div><div class="line"># Bind the source and sink to the channel </div><div class="line">a1.sources.r1.channels = c1 c2 </div><div class="line">a1.sinks.k1.channel = c1</div><div class="line">a1.sinks.k2.channel = c2</div></pre></td></tr></table></figure>
+<p>配置文件flumejob_2.conf</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span> Name the components on this agent </div><div class="line">a2.sources = r1</div><div class="line">a2.sinks = k1 </div><div class="line">a2.channels = c1</div><div class="line"><span class="meta"></span></div><div class="line"># Describe/configure the source</div><div class="line">a2.sources.r1.type = avro </div><div class="line"><span class="meta">#</span> 端口抓取数据</div><div class="line">a2.sources.r1.bind = node01</div><div class="line">a2.sources.r1.port = 4141</div><div class="line"><span class="meta"></span></div><div class="line"># Describe the sink </div><div class="line">a2.sinks.k1.type = hdfs</div><div class="line">a2.sinks.k1.hdfs.path = hdfs://node01:9000/flume2/%Y%m%d/%H</div><div class="line"><span class="meta"></span></div><div class="line">#上传文件的前缀</div><div class="line">a2.sinks.k1.hdfs.filePrefix = flume2-</div><div class="line"><span class="meta">#</span>是否按照时间滚动文件夹</div><div class="line">a2.sinks.k1.hdfs.round = true</div><div class="line"><span class="meta">#</span>多少时间单位创建一个新的文件夹</div><div class="line">a2.sinks.k1.hdfs.roundValue = 1</div><div class="line"><span class="meta">#</span>重新定义时间单位</div><div class="line">a2.sinks.k1.hdfs.roundUnit = hour</div><div class="line"><span class="meta">#</span>是否使用本地时间戳</div><div class="line">a2.sinks.k1.hdfs.useLocalTimeStamp = true</div><div class="line"><span class="meta">#</span>积攒多少个 Event 才 flush 到 HDFS 一次</div><div class="line">a2.sinks.k1.hdfs.batchSize = 100</div><div class="line"><span class="meta"></span></div><div class="line">#设置文件类型，可支持压缩</div><div class="line">a2.sinks.k1.hdfs.fileType = DataStream</div><div class="line"><span class="meta">#</span>多久生成一个新的文件</div><div class="line">a2.sinks.k1.hdfs.rollInterval = 600</div><div class="line"><span class="meta">#</span>设置每个文件的滚动大小大概是 128M </div><div class="line">a2.sinks.k1.hdfs.rollSize = 134217700</div><div class="line"><span class="meta">#</span>文件的滚动与 Event 数量无关</div><div class="line">a2.sinks.k1.hdfs.rollCount = 0</div><div class="line"><span class="meta">#</span>最小副本数</div><div class="line">a2.sinks.k1.hdfs.minBlockReplicas = 1</div><div class="line"><span class="meta"></span></div><div class="line"># Describe the channel </div><div class="line">a2.channels.c1.type = memory </div><div class="line">a2.channels.c1.capacity = 1000</div><div class="line">a2.channels.c1.transactionCapacity = 100</div><div class="line"><span class="meta"></span></div><div class="line"># Bind the source and sink to the channel </div><div class="line">a2.sources.r1.channels = c1</div><div class="line">a2.sinks.k1.channel = c1</div></pre></td></tr></table></figure>
+<p>配置文件flumejob_3.conf</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span> Name the components on this agent </div><div class="line">a3.sources = r1</div><div class="line">a3.sinks = k1 </div><div class="line">a3.channels = c1</div><div class="line"><span class="meta"></span></div><div class="line"># Describe/configure the source </div><div class="line">a3.sources.r1.type = avro</div><div class="line">a3.sources.r1.bind = node01</div><div class="line">a3.sources.r1.port = 4142</div><div class="line"><span class="meta"></span></div><div class="line"># Describe the sink </div><div class="line">a3.sinks.k1.type = file_roll</div><div class="line">a3.sinks.k1.sink.directory = /root/flume2</div><div class="line"><span class="meta"></span></div><div class="line"># Describe the channel </div><div class="line">a3.channels.c1.type = memory </div><div class="line">a3.channels.c1.capacity = 1000</div><div class="line">a3.channels.c1.transactionCapacity = 100</div><div class="line"><span class="meta"></span></div><div class="line"># Bind the source and sink to the channel </div><div class="line">a3.sources.r1.channels = c1</div><div class="line">a3.sinks.k1.channel = c1</div></pre></td></tr></table></figure>
+<font color="red"><strong>注意：有启动顺序</strong></font>
       
 
       
@@ -323,6 +335,15 @@
   
 <nav id="article-nav">
   
+    <a href="/2019/03/13/Sqoop概述和使用/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Sqoop概述和使用
+        
+      </div>
+    </a>
+  
   
     <a href="/2019/03/08/Hive基础指令三/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">Hive基础指令三</div>
@@ -355,25 +376,30 @@
   
 
   
-
   
-
   
-  <div id="gitment-ctn"></div> 
-<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
-<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
-<script>
-var gitment = new Gitment({
-  id: "rabbitluluu.github.io/2019/03/08/Flume安装及使用/",
-  owner: 'rabbitluluu',
-  repo: 'rabbitluluu.github.io',
-  oauth: {
-    client_id: '50f4d4fab5315205c204',
-    client_secret: 'b039ff6794d3705f8f2ff9ccdc7c56728a870860',
-  },
-})
-gitment.render('gitment-ctn')
+  <!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC80MzA3NC8xOTYyMA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
 </script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+  
+
+  
+
   
 
 
@@ -471,11 +497,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">MapReduce</a>
+                <a href="javascript:void(0)" class="js-tag color3">Azkaban</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">HDFS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">MapReduce</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -491,15 +521,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Sqoop</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Mapreduce</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Yarn</a>
+                <a href="javascript:void(0)" class="js-tag color5">Zookeeper</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Zookeeper</a>
+                <a href="javascript:void(0)" class="js-tag color5">Yarn</a>
               </li>
             
             <div class="clearfix"></div>

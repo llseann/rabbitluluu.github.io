@@ -6,16 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="rabbitluluu.github.io">
-  <title>标签 | Sean</title>
+  <title>Sqoop概述和使用 | Sean</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="标签">
-<meta property="og:url" content="rabbitluluu.github.io/tags/index.html">
+  <meta name="description" content="1、sqoop概述flume数据采集 采集日志数据 sqoop数据迁移 hdfs–&amp;gt;mysql azkaban任务调度 流程：flume–&amp;gt;hdfs–&amp;gt;shell–&amp;gt;hive–&amp;gt;sql–&amp;gt;BI sqoop数据迁移==mapreduce，处理离线数据 整个过程就是数据导入处理导出过程，直接使用map清洗 方法介绍： 1234567891011121314codeg">
+<meta name="keywords" content="Sqoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sqoop概述和使用">
+<meta property="og:url" content="rabbitluluu.github.io/2019/03/13/Sqoop概述和使用/index.html">
 <meta property="og:site_name" content="Sean">
+<meta property="og:description" content="1、sqoop概述flume数据采集 采集日志数据 sqoop数据迁移 hdfs–&amp;gt;mysql azkaban任务调度 流程：flume–&amp;gt;hdfs–&amp;gt;shell–&amp;gt;hive–&amp;gt;sql–&amp;gt;BI sqoop数据迁移==mapreduce，处理离线数据 整个过程就是数据导入处理导出过程，直接使用map清洗 方法介绍： 1234567891011121314codeg">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-02-08T05:47:30.241Z">
+<meta property="og:updated_time" content="2019-03-13T01:58:43.499Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="标签">
+<meta name="twitter:title" content="Sqoop概述和使用">
+<meta name="twitter:description" content="1、sqoop概述flume数据采集 采集日志数据 sqoop数据迁移 hdfs–&amp;gt;mysql azkaban任务调度 流程：flume–&amp;gt;hdfs–&amp;gt;shell–&amp;gt;hive–&amp;gt;sql–&amp;gt;BI sqoop数据迁移==mapreduce，处理离线数据 整个过程就是数据导入处理导出过程，直接使用map清洗 方法介绍： 1234567891011121314codeg">
   
     <link rel="alternative" href="/atom.xml" title="Sean" type="application/atom+xml">
   
@@ -153,27 +157,74 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="page-undefined" class="article article-type-page " itemscope itemprop="blogPost">
+            <article id="post-Sqoop概述和使用" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      标签
+      Sqoop概述和使用
     </h1>
   
 
         
-        <a href="/tags/index.html" class="archive-article-date">
-  	<time datetime="2018-02-08T05:47:30.241Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-08</time>
+        <a href="/2019/03/13/Sqoop概述和使用/" class="archive-article-date">
+  	<time datetime="2019-03-13T01:57:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-13</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h1 id="1、sqoop概述"><a href="#1、sqoop概述" class="headerlink" title="1、sqoop概述"></a>1、sqoop概述</h1><p>flume数据采集 采集日志数据</p>
+<p>sqoop数据迁移 hdfs–&gt;mysql</p>
+<p>azkaban任务调度</p>
+<p>流程：flume–&gt;hdfs–&gt;shell–&gt;hive–&gt;sql–&gt;BI</p>
+<p>sqoop数据迁移==mapreduce，处理离线数据</p>
+<p>整个过程就是数据导入处理导出过程，直接使用map清洗</p>
+<p>方法介绍：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">codegen            Generate code to interact with database records</div><div class="line">create-hive-table  Import a table definition into Hive</div><div class="line">eval               Evaluate a SQL statement and display the results</div><div class="line">export             Export an HDFS directory to a database table</div><div class="line">help               List available commands</div><div class="line">import             Import a table from a database to HDFS</div><div class="line">import-all-tables  Import tables from a database to HDFS</div><div class="line">import-mainframe   Import datasets from a mainframe server to HDFS</div><div class="line">job                Work with saved jobs</div><div class="line">list-databases     List available databases on a server</div><div class="line">list-tables        List available tables in a database</div><div class="line">merge              Merge results of incremental imports</div><div class="line">metastore          Run a standalone Sqoop metastore</div><div class="line">version            Display version information</div></pre></td></tr></table></figure>
+<h1 id="2、-安装部署"><a href="#2、-安装部署" class="headerlink" title="2、 安装部署"></a>2、 安装部署</h1><ol>
+<li><p>上传</p>
+</li>
+<li><p>下载</p>
+</li>
+<li><p>解压</p>
+</li>
+<li><p>重命名配置文件模板</p>
+<p><code>mv sqoop-env-template.sh  sqoop-env.sh</code></p>
+</li>
+<li><p>修改配置文件</p>
+</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span>Set path to where bin/hadoop is available</div><div class="line">set HADOOP_COMMON_HOME=</div><div class="line"><span class="meta"></span></div><div class="line">#Set path to where hadoop-*-core.jar is available</div><div class="line">set HADOOP_MAPRED_HOME=</div><div class="line"><span class="meta"></span></div><div class="line">#set the path to where bin/hbase is available</div><div class="line"><span class="meta">#</span>set HBASE_HOME=</div><div class="line"><span class="meta"></span></div><div class="line">#Set the path to where bin/hive is available</div><div class="line">set HIVE_HOME=</div><div class="line"><span class="meta"></span></div><div class="line">#Set the path for where zookeper config dir is</div><div class="line">set ZOOCFGDIR=</div></pre></td></tr></table></figure>
+<h1 id="3、-指令使用"><a href="#3、-指令使用" class="headerlink" title="3、 指令使用"></a>3、 指令使用</h1><p>import带入：mysql–&gt;hdfs</p>
+<p>export导出：hdfs–&gt;mysql</p>
+<h2 id="3-1、使用示例1：从mysql导入hdfs"><a href="#3-1、使用示例1：从mysql导入hdfs" class="headerlink" title="3.1、使用示例1：从mysql导入hdfs"></a>3.1、使用示例1：从mysql导入hdfs</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">bin/sqoop import </div><div class="line">--connect jdbc:mysql://node01:3306/sqoop  //指定mysql地址和数据库名</div><div class="line">--username root 						  //指定用户名</div><div class="line">--password root 						  //指定密码</div><div class="line">--table emp 							  //指定表名</div><div class="line">--target-dir /sqoop/data 				  //指定hdfs路径</div><div class="line">--num-mappers 1 						  //启动的map个数</div><div class="line">--fields-terminated-by "\t"        		  //设置数据的切分格式</div></pre></td></tr></table></figure>
+<h2 id="3-2-、使用示例2：使用query对数据进行过滤"><a href="#3-2-、使用示例2：使用query对数据进行过滤" class="headerlink" title="3.2 、使用示例2：使用query对数据进行过滤"></a>3.2 、使用示例2：使用query对数据进行过滤</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">bin/sqoop import </div><div class="line">--connect jdbc:mysql://node01:3306/sqoop </div><div class="line">--username root </div><div class="line">--password root </div><div class="line">--target-dir /sqoop/selectimport </div><div class="line">--num-mappers 1 </div><div class="line">--fields-terminated-by "\t" </div><div class="line">--query 'select * from emp where deptno &gt;= 20 and $CONDITIONS'</div></pre></td></tr></table></figure>
+<p>检索deptno大于等于20的信息写入hdfs，此时运行一个map程序</p>
+<p><code>$CONDITIONS</code>关键字起到索引作用，让map数据处理时不会重复</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">bin/sqoop import </div><div class="line">--connect jdbc:mysql://node01:3306/sqoop </div><div class="line">--username root --password root </div><div class="line">--target-dir /sqoop/selectimport </div><div class="line">--num-mappers 2 </div><div class="line">--fields-terminated-by "\t" </div><div class="line">--query 'select * from emp where deptno &gt;= 20 and $CONDITIONS' </div><div class="line">--split-by empno</div></pre></td></tr></table></figure>
+<p>设置两个map程序，但需要指明按照哪一项进行切分–split-by </p>
+<h2 id="3-3-、使用示例3：导入到hive"><a href="#3-3-、使用示例3：导入到hive" class="headerlink" title="3.3 、使用示例3：导入到hive"></a>3.3 、使用示例3：导入到hive</h2><font color="red">倘若遇到报错import failed错误，可以通过添加环境变量来解决</font>
+
+<p>解决办法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">export HADOOP_CLASSPATH=$HADOOP_CLASSPATH:/opt/modules/hive/lib/*</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">bin/sqoop import </div><div class="line">--connect jdbc:mysql://node01:3306/sqoop </div><div class="line">--username root </div><div class="line">--password root </div><div class="line">--table user </div><div class="line">--num-mappers 1 </div><div class="line">--hive-import </div><div class="line">--fields-terminated-by "\t" </div><div class="line">--hive-overwrite </div><div class="line">--hive-table user_sqoop</div></pre></td></tr></table></figure>
+<h2 id="3-4、-使用示例4：hive导出mysql"><a href="#3-4、-使用示例4：hive导出mysql" class="headerlink" title="3.4、 使用示例4：hive导出mysql"></a>3.4、 使用示例4：hive导出mysql</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">bin/sqoop export </div><div class="line">--connect jdbc:mysql://node01:3306/sqoop </div><div class="line">--username root</div><div class="line">--password root </div><div class="line">--table user </div><div class="line">--num-mappers 1 </div><div class="line">--export-dir /user/hive/warehouse/user_sqoop </div><div class="line">--input-fields-terminated-by "\t";</div></pre></td></tr></table></figure>
+<p>常用参数：</p>
+<p>import：导入数据到集群</p>
+<p>export：从集群导出数据</p>
+<p>create-hive-table：创建hive表</p>
+<p>import-all-tables：导入所有库中表到hdfs集群</p>
+<p>list-databases：列出所有数据库</p>
+<p>list-tables：列出所有数据库表</p>
+<p>merge：合并hdfs中的不同文件</p>
+<p>codegen：获取某张表数据生成JavaBean并打包</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">bin/sqoop codegen </div><div class="line">--connect jdbc:mysql://node01:3306/sqoop </div><div class="line">--username root </div><div class="line">--password root </div><div class="line">--table user </div><div class="line">--bindir /root/sqoopjar/userBean </div><div class="line">--class-name UserBean </div><div class="line">--fields-terminated-by "\t"</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">bin/sqoop merge </div><div class="line">--new-data /testmerge/new </div><div class="line">--onto /testmerge/old </div><div class="line">--target-dir /testmerge/merged </div><div class="line">--jar-file /root/sqoopjar/userBean/UserBean.jar </div><div class="line">--class-name UserBean </div><div class="line">--merge-key id</div></pre></td></tr></table></figure>
+
       
 
       
@@ -212,6 +263,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Sqoop</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -262,7 +324,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http:rabbitluluu.github.io/tags/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http:rabbitluluu.github.io/2019/03/13/Sqoop概述和使用/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -274,6 +336,25 @@
 </article>
 
   
+<nav id="article-nav">
+  
+    <a href="/2019/03/13/Azkaban概述和使用/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Azkaban概述和使用
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/08/Flume安装及使用/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Flume安装及使用</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -292,6 +373,37 @@
 </aside>
 
 
+
+  
+  
+  
+
+  
+  
+  
+  <!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC80MzA3NC8xOTYyMA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+  
+
+  
+
+  
 
 
           </div>
@@ -314,7 +426,7 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
