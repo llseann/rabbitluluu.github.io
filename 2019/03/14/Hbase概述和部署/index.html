@@ -6,15 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="rabbitluluu.github.io">
-  <title>Archives: 2017/7 | Sean</title>
+  <title>Hbase概述和部署 | Sean</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Sean">
-<meta property="og:url" content="rabbitluluu.github.io/archives/2017/07/index.html">
+  <meta name="description" content="1、概述Apache HBase™是Hadoop数据库，是一个分布式，可扩展的大数据存储。 ​    当需要对大数据进行随机，实时读/写访问时，请使用Apache HBase™。该项目的目标是托管非常大的表 - 数十亿行X百万列 - 在商品硬件集群上。Apache HBase是一个开源的，分布式的，版本化的非关系数据库，模仿Google的Bigtable： Chang等人的结构化数据分布式存储系统">
+<meta name="keywords" content="Hbase">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hbase概述和部署">
+<meta property="og:url" content="rabbitluluu.github.io/2019/03/14/Hbase概述和部署/index.html">
 <meta property="og:site_name" content="Sean">
+<meta property="og:description" content="1、概述Apache HBase™是Hadoop数据库，是一个分布式，可扩展的大数据存储。 ​    当需要对大数据进行随机，实时读/写访问时，请使用Apache HBase™。该项目的目标是托管非常大的表 - 数十亿行X百万列 - 在商品硬件集群上。Apache HBase是一个开源的，分布式的，版本化的非关系数据库，模仿Google的Bigtable： Chang等人的结构化数据分布式存储系统">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/%E5%9B%BE%E7%89%872%EF%BC%9AHbase%E6%9E%B6%E6%9E%84%E5%9B%BE.png">
+<meta property="og:updated_time" content="2019-03-14T09:28:35.628Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Sean">
+<meta name="twitter:title" content="Hbase概述和部署">
+<meta name="twitter:description" content="1、概述Apache HBase™是Hadoop数据库，是一个分布式，可扩展的大数据存储。 ​    当需要对大数据进行随机，实时读/写访问时，请使用Apache HBase™。该项目的目标是托管非常大的表 - 数十亿行X百万列 - 在商品硬件集群上。Apache HBase是一个开源的，分布式的，版本化的非关系数据库，模仿Google的Bigtable： Chang等人的结构化数据分布式存储系统">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/%E5%9B%BE%E7%89%872%EF%BC%9AHbase%E6%9E%B6%E6%9E%84%E5%9B%BE.png">
   
     <link rel="alternative" href="/atom.xml" title="Sean" type="application/atom+xml">
   
@@ -152,49 +159,256 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Hbase概述和部署" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/24/初来乍到，请多关照/" class="archive-article-date">
-  	<time datetime="2017-07-24T14:52:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-24</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/07/24/初来乍到，请多关照/">初来乍到，请多关照</a>
+    <h1 class="article-title" itemprop="name">
+      Hbase概述和部署
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
+        
+        <a href="/2019/03/14/Hbase概述和部署/" class="archive-article-date">
+  	<time datetime="2019-03-14T09:27:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1、概述"><a href="#1、概述" class="headerlink" title="1、概述"></a>1、概述</h1><p><a href="http://www.apache.org/" target="_blank" rel="external">Apache</a> HBase™是<a href="http://hadoop.apache.org/" target="_blank" rel="external">Hadoop</a>数据库，是一个分布式，可扩展的大数据存储。</p>
+<p>​    当需要对大数据进行随机，实时读/写访问时，请使用Apache HBase™。该项目的目标是托管非常大的表 - 数十亿行X百万列 - 在商品硬件集群上。Apache HBase是一个开源的，分布式的，版本化的非关系数据库，模仿Google的<a href="http://research.google.com/archive/bigtable.html" target="_blank" rel="external">Bigtable：</a> Chang等人的<a href="http://research.google.com/archive/bigtable.html" target="_blank" rel="external">结构化数据分布式存储系统</a>。正如Bigtable利用Google文件系统提供的分布式数据存储一样，Apache HBase在Hadoop和HDFS之上提供类似Bigtable的功能。</p>
+<h1 id="2、集群角色"><a href="#2、集群角色" class="headerlink" title="2、集群角色"></a>2、集群角色</h1><p>hdfs：Namenode + DataNode</p>
+<p>yarn：ResourceManager + NodeManger</p>
+<p>hbase：HMaser + Regionserver</p>
+<p>HMaser作用：</p>
+<ul>
+<li>对Regionserver监控</li>
+<li>处理一些元数据的变更</li>
+<li>对Regionserver进行故障转移</li>
+<li>空闲时对数据进行负载均衡</li>
+<li>对region进行管理</li>
+<li>发布位置到客户端</li>
+</ul>
+<p>Regionserver作用：</p>
+<ul>
+<li>存储hbase的实际数据</li>
+<li>刷新缓存数据到hdfs</li>
+<li>处理Region</li>
+<li>可以进行压缩</li>
+<li>对Hlog进行维护</li>
+<li>对region进行分片</li>
+</ul>
+<h1 id="3、集群安装"><a href="#3、集群安装" class="headerlink" title="3、集群安装"></a>3、集群安装</h1><ol>
+<li><p>安装好zookeeper集群</p>
+</li>
+<li><p>安装好hadoop集群</p>
+</li>
+<li><p>解压，修改配置<code>hbase-env.sh</code> 和 <code>hbase-site.xml</code></p>
+<p>hbase-env.sh:</p>
+<p>export JAVA_HOME=/opt/modules/jdk1.8.0_141</p>
+<p>export HBASE_MANAGES_ZK=false</p>
+<p>hbase-site.xml:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">   &lt;property&gt;</div><div class="line">	&lt;name&gt;hbase.rootdir&lt;/name&gt;</div><div class="line">	&lt;value&gt;hdfs://node01:9000/hbase&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">   </div><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;hbase.cluster.distributed&lt;/name&gt;</div><div class="line">	&lt;value&gt;true&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">   </div><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;hbase.master.port&lt;/name&gt;</div><div class="line">	&lt;value&gt;16000&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">   </div><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;hbase.zookeeper.quorum&lt;/name&gt;</div><div class="line">	&lt;value&gt;node01:2181,node02:2181,node03:2181,node04:2181&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">   </div><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;hbase.zookeeper.property.dataDir&lt;/name&gt;</div><div class="line">	&lt;value&gt;/opt/modules/zookeeper-3.4.10/zkData&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<ol>
+<li>拷贝core-site.xml 和 hdfs-site.xml 到conf下，或者制作软连接<br><code>ln -s /opt/modules/hadoop-2.8.4/etc/hadoop/core-site.xml</code></li>
+</ol>
+<p>​       <code>ln -s /opt/modules/hadoop-2.8.4/etc/hadoop/hdfs-site.xml</code></p>
+<ol>
+<li><p>拷贝安装包到其他机器</p>
+</li>
+<li><p>启动测试：</p>
+<p>​    启动Hmaster：bin/hbase-daemon.sh start master</p>
+<p>​    启动Regionserver：bin/hbase-daemon.sh start regionserver</p>
+<p>操作后查看进程出现hmaster和regionserver，且在webUI（端口16010）中可以查看到节点即配置成功</p>
+<font color="red">特别注意：hmaster启动指令中不叫Hmaster！！！！！！</font>
 
+</li>
+</ol>
+<h1 id="4、集群架构解析"><a href="#4、集群架构解析" class="headerlink" title="4、集群架构解析"></a>4、集群架构解析</h1><p>架构图：</p>
+<p><img src="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/%E5%9B%BE%E7%89%872%EF%BC%9AHbase%E6%9E%B6%E6%9E%84%E5%9B%BE.png" alt="hbase架构"></p>
+</li>
+</ol>
+<p>名词解释：</p>
+<p>​    HLog：预写入日志，记录hbase修改记录，倘若系统故障，可以通过log文件进行重建，进行数据恢复。</p>
+<p>​    HRegion：表的分片，根据Rowkey（行键）进行划分</p>
+<p>​    Store：一个store对应hbase中的一个列族</p>
+<p>​    StoreFile和HFile：HFile是真正的物理存储文件，StoreFile是逻辑概念</p>
+<p>​    MemStore：接受来自HLog的数据，相当于内存，满了之后数据存到HFile，可以有效的提高查询效率</p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>嘿嘿嘿<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/ali.png">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/wx.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Hbase</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http:rabbitluluu.github.io/2019/03/14/Hbase概述和部署/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2019/03/13/Azkaban概述和使用/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Azkaban概述和使用</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+  
+  
+  <!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC80MzA3NC8xOTYyMA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+  
+
+  
+
+  
 
 
           </div>
@@ -217,8 +431,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

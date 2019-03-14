@@ -154,6 +154,148 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Hadoop安装过程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/08/Hadoop安装过程/">Hadoop安装过程</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/08/Hadoop安装过程/" class="archive-article-date">
+  	<time datetime="2019-03-08T07:37:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1、Hadoop的安装准备工作"><a href="#1、Hadoop的安装准备工作" class="headerlink" title="1、Hadoop的安装准备工作"></a>1、Hadoop的安装准备工作</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Hadoop名字来源--douge cutting</div></pre></td></tr></table></figure>
+<p>（1）安装好linux操作系统（IP配置）</p>
+<p>（2）关闭防火墙</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl stop（disable） firewalld.service</div></pre></td></tr></table></figure>
+<p>(3) 安装Jdk–winscp 上传 opt/software 解压到 opt/moudle<br>(4) Hadoop安装包—虚拟机的克隆 scp（拷贝）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"> a、提前准备好 mkdir /opt/moudle</div><div class="line">   tar -zxvf hadoop-2.7.3.tar.gz -C  /opt/moudle/</div><div class="line"></div><div class="line"> b、vi ~/.bash_profile 增加下面内容</div><div class="line">   HADOOP_HOME=/opt/moudle/hadoop-2.7.3</div><div class="line">   export HADOOP_HOME</div><div class="line">   PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH</div><div class="line">   export PATH</div><div class="line"></div><div class="line">c、 环境变量生效</div><div class="line">   source ~/.bash_profile</div><div class="line">    通过 输入 start 按两下tab 看是否有内容</div></pre></td></tr></table></figure>
+<p><strong> 虚拟机克隆  </strong></p>
+<p>  (1)保证虚拟机处于关闭状态</p>
+<p>  (2)右键-&gt;管理-&gt;克隆 当前状态 完整克隆–&gt;</p>
+<p>  (3)hostname–修改<br>       ip修改 –reboot</p>
+<h1 id="Hadoop（HDFS-Yarn）-本地-伪分布-全分布"><a href="#Hadoop（HDFS-Yarn）-本地-伪分布-全分布" class="headerlink" title="Hadoop（HDFS+Yarn） 本地 伪分布 全分布"></a>Hadoop（HDFS+Yarn） 本地 伪分布 全分布</h1><h2 id="2、Hadoop安装—本地安装"><a href="#2、Hadoop安装—本地安装" class="headerlink" title="2、Hadoop安装—本地安装"></a>2、Hadoop安装—本地安装</h2><p>   （1）特点：没有HDFS和Yarn 只能够测试MR程序是否成功， 作为一个普通的java程序。</p>
+<p>   （2）修改文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">vi hadoop-env.sh</div><div class="line">set number </div><div class="line">修改25行（行数不一 hadoop版本不一致）</div><div class="line">JAVA_HOME=/opt/moudle/jdk1.8.0_181</div><div class="line"> </div><div class="line">cd /root/</div><div class="line">mkdir temp</div><div class="line">touch a.txt</div><div class="line">vi a.txt</div></pre></td></tr></table></figure>
+<p><strong> mapred-site.xml 默认没有，我克隆的文件里面有 这个文件没有被覆盖指定了yarn资源 </strong></p>
+<h2 id="3、Hadoop安装—本地安装伪分布模式"><a href="#3、Hadoop安装—本地安装伪分布模式" class="headerlink" title="3、Hadoop安装—本地安装伪分布模式"></a>3、Hadoop安装—本地安装伪分布模式</h2><h3 id="（1）特点：在一台机器上模拟一个分布式环境具备hadoop的所有功能。"><a href="#（1）特点：在一台机器上模拟一个分布式环境具备hadoop的所有功能。" class="headerlink" title="（1）特点：在一台机器上模拟一个分布式环境具备hadoop的所有功能。"></a>（1）特点：在一台机器上模拟一个分布式环境具备hadoop的所有功能。</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">HDFS：NameNode+DataNode+SecondarynameNode</div><div class="line">Yarn：ResourceManager+NodeManager</div></pre></td></tr></table></figure>
+<h3 id="（2）修改的文件："><a href="#（2）修改的文件：" class="headerlink" title="（2）修改的文件："></a>（2）修改的文件：</h3><p>   <strong>step1:hadoop-env.sh</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">JAVA_HOME=/opt/moudle/jdk1.8.0_181</div></pre></td></tr></table></figure>
+<p>   <strong>step2:hdfs-site.xml</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;!--注释配置数据块的冗余度，默认是3--&gt;</div><div class="line">&lt;property&gt;</div><div class="line">   &lt;name&gt;dfs.replication&lt;/name&gt;</div><div class="line">   &lt;value&gt;1&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;!--注释配置HDFS的权限检查，默认是true--&gt;</div><div class="line">&lt;!--</div><div class="line">&lt;property&gt;</div><div class="line">   &lt;name&gt;dfs.permissions&lt;/name&gt;</div><div class="line">   &lt;value&gt;false&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">--&gt;</div></pre></td></tr></table></figure>
+<p>   <strong>step3:core-site.xml</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;!--配置HDFS主节点，namenode的地址,9000是RPC通信端口--&gt;</div><div class="line">  &lt;property&gt;</div><div class="line">     &lt;name&gt;fs.defaultFS&lt;/name&gt;</div><div class="line">     &lt;value&gt;hdfs://bigdata124:9000&lt;/value&gt;</div><div class="line">  &lt;/property&gt; </div><div class="line">&lt;!--配置HDFS数据块和元数据保存的目录,一定要修改--&gt;</div><div class="line">   &lt;property&gt;</div><div class="line">     &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</div><div class="line">     &lt;value&gt;/opt/moudle/hadoop-2.7.3/tmp&lt;/value&gt;</div><div class="line">  &lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>   <strong>step4：mapred-site.xml(默认没有)</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"> cp mapred-site.xml.template  mapred-site.xml</div><div class="line"></div><div class="line"> &lt;!--配置MR程序运行的框架--&gt;</div><div class="line">  &lt;property&gt;	</div><div class="line">	&lt;name&gt;mapreduce.framework.name&lt;/name&gt;</div><div class="line">	&lt;value&gt;yarn&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>   <strong>step5：yarn-site.xml</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">  &lt;!--配置Yarn的节点--&gt;</div><div class="line">  &lt;property&gt;	</div><div class="line">	&lt;name&gt;yarn.resourcemanager.hostname&lt;/name&gt;</div><div class="line">	&lt;value&gt;bigdata124&lt;/value&gt;</div><div class="line">&lt;/property&gt;	</div><div class="line">   &lt;!--NodeManager执行MR任务的方式是Shuffle洗牌--&gt;</div><div class="line">&lt;property&gt;	</div><div class="line">	&lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;</div><div class="line">	&lt;value&gt;mapreduce_shuffle&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>  <strong>step 6：通过HDFS namenode 格式化</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">在第4步中，hadoop.tmp.dir--格式化</div><div class="line">命令：hdfs namenode -format</div><div class="line">验证：是否格式化成功：</div><div class="line">Storage directory /opt/moudle/hadoop-2.7.3/tmp/dfs/name has been successfully formatted.</div></pre></td></tr></table></figure>
+<p> <strong>ps:重复格式化：hadoop.tmp.dir   先停止集群，需要删除原来的tmp文件。 rm -rf 重新格式化 启动集群</strong></p>
+<p> <strong>最后启动，通过start-all.sh启动</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">验证（5个）：5314 SecondaryNameNode</div><div class="line">5586 NodeManager</div><div class="line">5476 ResourceManager</div><div class="line">5126 DataNode</div><div class="line">5022 NameNode</div><div class="line">web访问:http://10.1.255.124:8088 yarn</div><div class="line">        http://10.1.255.124:50070 HDFS</div></pre></td></tr></table></figure>
+<h2 id="4、免密码登录的原理和配置"><a href="#4、免密码登录的原理和配置" class="headerlink" title="4、免密码登录的原理和配置"></a>4、免密码登录的原理和配置</h2><p>  ssh不对称加密算法（加密和解密是两个文件）。（对称加密： 加密和解密文件是同一个）<br>  <img src="H:/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E9%AA%8C%E6%89%8B%E5%86%8C/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AF%BE%E7%A8%8B/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/2.png" alt=""></p>
+<h3 id="（1）公钥–锁：给出去-给其他机器。"><a href="#（1）公钥–锁：给出去-给其他机器。" class="headerlink" title="（1）公钥–锁：给出去 给其他机器。"></a>（1）公钥–锁：给出去 给其他机器。</h3><h3 id="（2）私钥–钥匙：自己留着，解密。"><a href="#（2）私钥–钥匙：自己留着，解密。" class="headerlink" title="（2）私钥–钥匙：自己留着，解密。"></a>（2）私钥–钥匙：自己留着，解密。</h3><ol>
+<li>ssh-keygen -t rsa     (3次回车)</li>
+<li>ssh-copy-id -i ~/.ssh/id_rsa.pub  root@node01(自己也要拷贝给自己)</li>
+</ol>
+<h2 id="5、Hadoop安装—全分布模式-（重点）"><a href="#5、Hadoop安装—全分布模式-（重点）" class="headerlink" title="5、Hadoop安装—全分布模式    （重点）"></a>5、Hadoop安装—全分布模式    （重点）</h2><h3 id="1-规划："><a href="#1-规划：" class="headerlink" title="(1)规划："></a>(1)规划：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">10.1.255.121 bigdata121 ：主节点</div><div class="line">10.1.255.122 bigdata122 ：从节点</div><div class="line">10.1.255.123 bigdata123 ：从节点</div></pre></td></tr></table></figure>
+<p>   <img src="H:/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E9%AA%8C%E6%89%8B%E5%86%8C/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AF%BE%E7%A8%8B/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/3.png" alt=""></p>
+<h3 id="2-准备工作"><a href="#2-准备工作" class="headerlink" title="(2)准备工作:"></a>(2)准备工作:</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- step 1: jdk、防火墙、ssh免密码登录（3次拷贝）、在etc/hosts 添加主机名。</div><div class="line"></div><div class="line"> ps:对于同时操作多台机器可通过 工具-》发送键输入到所有会话 在选项卡排列 实现 水平排列</div><div class="line"> </div><div class="line">- step 2：时间同步（如果能够上网） 使用网络时间（GUI设置）默认的都是一致的。</div><div class="line">	不能上网： date -s 2019-01-10(同时操作多台机器) 集群紊乱</div><div class="line">              ntp：在机器里面指定一个服务器 作为时钟服务器。</div><div class="line"> </div><div class="line">- step 3: 修改配置文件（）</div></pre></td></tr></table></figure>
+<p><strong>主要在node01操作，其他机器通过scp拷贝。</strong></p>
+<p>  <strong>1:hadoop-env.sh</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">JAVA_HOME=/opt/moudle/jdk1.8.0_181</div></pre></td></tr></table></figure>
+<p>  <strong>2:hdfs-site.xml</strong>  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;!--注释配置数据块的冗余度，默认是3--&gt;</div><div class="line">&lt;property&gt;</div><div class="line">   &lt;name&gt;dfs.replication&lt;/name&gt;</div><div class="line">   &lt;value&gt;2&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;!--注释配置HDFS的权限检查，默认是true--&gt;</div><div class="line">&lt;!--</div><div class="line">&lt;property&gt;</div><div class="line">   &lt;name&gt;dfs.permissions&lt;/name&gt;</div><div class="line">   &lt;value&gt;false&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">--&gt;</div></pre></td></tr></table></figure>
+<p>   <strong>3:core-site.xml</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;!--配置HDFS主节点，namenode的地址,9000是RPC通信端口--&gt;</div><div class="line">  &lt;property&gt;</div><div class="line">     &lt;name&gt;fs.defaultFS&lt;/name&gt;</div><div class="line">     &lt;value&gt;hdfs://bigdata124:9000&lt;/value&gt;</div><div class="line">  &lt;/property&gt; </div><div class="line">&lt;!--配置HDFS数据块和元数据保存的目录,一定要修改--&gt;</div><div class="line">   &lt;property&gt;</div><div class="line">     &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</div><div class="line">     &lt;value&gt;/opt/moudle/hadoop-2.7.3/tmp&lt;/value&gt;</div><div class="line">  &lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>   <strong>4：mapred-site.xml(默认没有)</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">  cp mapred-site.xml.template  mapred-site.xml</div><div class="line"> &lt;!--配置MR程序运行的框架--&gt;</div><div class="line">  &lt;property&gt;	</div><div class="line">	&lt;name&gt;mapreduce.framework.name&lt;/name&gt;</div><div class="line">	&lt;value&gt;yarn&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>   <strong>5：yarn-site.xml</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">  &lt;!--配置Yarn的节点--&gt;</div><div class="line">  &lt;property&gt;	</div><div class="line">	&lt;name&gt;yarn.resourcemanager.hostname&lt;/name&gt;</div><div class="line">	&lt;value&gt;bigdata124&lt;/value&gt;</div><div class="line">&lt;/property&gt;	</div><div class="line">   &lt;!--NodeManager执行MR任务的方式是Shuffle洗牌--&gt;</div><div class="line">&lt;property&gt;	</div><div class="line">	&lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;</div><div class="line">	&lt;value&gt;mapreduce_shuffle&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>   <strong>6：slaves(和自己的从节点机器名字一致)</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">node02</div><div class="line">node03</div></pre></td></tr></table></figure>
+<p>   <strong>7：通过HDFS namenode 格式化</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">hdfs namenode -format</div><div class="line">成功的标志： Storage directory /opt/moudle/hadoop-2.7.3/tmp/dfs/name has been successfully formatted.</div></pre></td></tr></table></figure>
+<p>   <strong>8：通过scp拷贝</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">scp -r /opt/moudle/hadoop-2.7.3/ root@bigdata122:/opt/moudle/</div><div class="line">scp -r /opt/moudle/hadoop-2.7.3/ root@bigdata123:/opt/moudle/</div></pre></td></tr></table></figure>
+<p>   <strong>最后启动，通过start-all.sh启动</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">验证（5个）：5314 SecondaryNameNode</div><div class="line">5586 NodeManager</div><div class="line">5476 ResourceManager</div><div class="line">5126 DataNode</div><div class="line">5022 NameNode</div><div class="line">	web访问:http://10.1.255.124:8088 yarn</div><div class="line">         http://10.1.255.124:50070 HDFS</div><div class="line">学会看 vi /opt/moudle/hadoop-2.7.3/logs/hadoop-root-datanode-bigdata123.log Shift+G 看启动日志。</div></pre></td></tr></table></figure>
+<p>HDFS体系架构（Yarn资源放在后面）</p>
+<h2 id="6、HDFS-NameNode：名称节点"><a href="#6、HDFS-NameNode：名称节点" class="headerlink" title="6、HDFS-NameNode：名称节点"></a>6、HDFS-NameNode：名称节点</h2><p>  (1)职责：对HDFS的节点进行管理，管理员</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">接收客户端（命令行、java）的请求：创建目录、上传数据、下载数据和删除数据。</div><div class="line">管理和维护HDFS的日志和元信息</div></pre></td></tr></table></figure>
+<p>  (2)dfs/name目录解释:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">  a、current：主要存放日志和元信息 存贮路径：/opt/moudle/hadoop-2.7.3/tmp/dfs/name/current</div><div class="line">    edits文件：二进制文件，体现了HDFS的最新状态</div><div class="line"> </div><div class="line">             hdfs oev -i edits_inprogress_0000000000000000003 -o ~/a.xml</div><div class="line">             o:表示 offline </div><div class="line">             inprogress:表示最新的。</div><div class="line">	&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</div><div class="line">	&lt;EDITS&gt;</div><div class="line">	  &lt;EDITS_VERSION&gt;-63&lt;/EDITS_VERSION&gt;</div><div class="line">	  &lt;RECORD&gt;</div><div class="line">	    &lt;OPCODE&gt;OP_START_LOG_SEGMENT&lt;/OPCODE&gt;</div><div class="line">	    &lt;DATA&gt;</div><div class="line">	      &lt;TXID&gt;3&lt;/TXID&gt;</div><div class="line">	    &lt;/DATA&gt;</div><div class="line">	  &lt;/RECORD&gt;</div><div class="line">	  &lt;RECORD&gt;</div><div class="line">	    &lt;OPCODE&gt;OP_MKDIR&lt;/OPCODE&gt;</div><div class="line">	    &lt;DATA&gt;</div><div class="line">	      &lt;TXID&gt;4&lt;/TXID&gt;</div><div class="line">	      &lt;LENGTH&gt;0&lt;/LENGTH&gt;</div><div class="line">	      &lt;INODEID&gt;16386&lt;/INODEID&gt;</div><div class="line">	      &lt;PATH&gt;/input&lt;/PATH&gt;</div><div class="line">	      &lt;TIMESTAMP&gt;1547129194216&lt;/TIMESTAMP&gt;</div><div class="line">	      &lt;PERMISSION_STATUS&gt;</div><div class="line">	        &lt;USERNAME&gt;root&lt;/USERNAME&gt;</div><div class="line">	        &lt;GROUPNAME&gt;supergroup&lt;/GROUPNAME&gt;</div><div class="line">	        &lt;MODE&gt;493&lt;/MODE&gt;</div><div class="line">	      &lt;/PERMISSION_STATUS&gt;</div><div class="line">	    &lt;/DATA&gt;</div><div class="line">	  &lt;/RECORD&gt;</div><div class="line">	&lt;/EDITS&gt;</div><div class="line">  b、元信息文件 fsimage：记录的数据块的位置信息和数据块冗余信息，没有体现HDFS的最新状态，二进制文件</div><div class="line">      hdfs oiv -i fsimage_0000000000000000002 -o ~/b.xml -p XML</div><div class="line"></div><div class="line">(2)in_use.lock 避免同一文件被多使用，只能启动一个namenode</div></pre></td></tr></table></figure>
+<h2 id="7、HDFS-DataNode：数据节点"><a href="#7、HDFS-DataNode：数据节点" class="headerlink" title="7、HDFS-DataNode：数据节点"></a>7、HDFS-DataNode：数据节点</h2><p>  （1）主要用来进行数据的存储。</p>
+<pre><code> 1.x 64M
+2.x 128M( hdfs-site.xml 可以修改 blocksize)
+</code></pre><p>   （2）数据块的表现形式就是一个个的blk文件</p>
+<p>  位置：/opt/moudle/hadoop-2.7.3/tmp/dfs/data/current/BP-### <em>933765109-10.1.255.124-1546784436341</em> ###/current/finalized/subdir0/subdir0<br>   尝试上传一个 大于128M的文件（128<em>1024</em>1024）<br>   Hadoop 3.x 有 纠删码技术，节约存储空间。  </p>
+<h2 id="8、HDFS-SecondaryNameNode：第二名称节点"><a href="#8、HDFS-SecondaryNameNode：第二名称节点" class="headerlink" title="8、HDFS-SecondaryNameNode：第二名称节点"></a>8、HDFS-SecondaryNameNode：第二名称节点</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">（1）进行日志信息的合并，根据checkpoint或者时间间隔（3600s）或者edits文件达到64M。</div><div class="line">（2）edits文件合并到fsimage里面 edits文件可以清空</div></pre></td></tr></table></figure>
+<p>​<br>​    </p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Hadoop</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/08/Hadoop安装过程/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Hive高级语句" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1593,11 +1735,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Flume</a>
+                <a href="javascript:void(0)" class="js-tag color3">Azkaban</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Azkaban</a>
+                <a href="javascript:void(0)" class="js-tag color1">Flume</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1606,6 +1748,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">HDFS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Hbase</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1629,11 +1775,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Zookeeper</a>
+                <a href="javascript:void(0)" class="js-tag color5">Yarn</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Yarn</a>
+                <a href="javascript:void(0)" class="js-tag color5">Zookeeper</a>
               </li>
             
             <div class="clearfix"></div>
