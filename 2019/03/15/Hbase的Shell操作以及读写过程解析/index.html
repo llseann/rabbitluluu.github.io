@@ -6,22 +6,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="rabbitluluu.github.io">
-  <title>Hive安装及配置 | Sean</title>
+  <title>Hbase的Shell操作以及读写过程解析 | Sean</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1、概述官网：http://hive.apache.org/Apache Hive™数据仓库软件有助于使用SQL读取，编写和管理驻留在分布式存储中的大型数据集。可以将结构投影到已存储的数据中。提供了命令行工具和JDBC驱动程序以将用户连接到Hive。hive提供了SQL查询功能 hdfs分布式存储。hive本质HQL转化为MapReduce程序。环境前提：  启动hdfs集群  启动yarn集群">
-<meta name="keywords" content="Hive">
+  <meta name="description" content="1、基本操作 启动终端 bin/hbase shell  显示所有表 list  显示命令介绍 help  显示当前的服务器状态 status &amp;#39;node01&amp;#39; 1 active master, 0 backup masters, 4 servers, 0 dead, 0.5000 average load 1 active master：一个存活的master 0 backup">
+<meta name="keywords" content="Hbase">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hive安装及配置">
-<meta property="og:url" content="rabbitluluu.github.io/2019/03/08/Hive安装及配置/index.html">
+<meta property="og:title" content="Hbase的Shell操作以及读写过程解析">
+<meta property="og:url" content="rabbitluluu.github.io/2019/03/15/Hbase的Shell操作以及读写过程解析/index.html">
 <meta property="og:site_name" content="Sean">
-<meta property="og:description" content="1、概述官网：http://hive.apache.org/Apache Hive™数据仓库软件有助于使用SQL读取，编写和管理驻留在分布式存储中的大型数据集。可以将结构投影到已存储的数据中。提供了命令行工具和JDBC驱动程序以将用户连接到Hive。hive提供了SQL查询功能 hdfs分布式存储。hive本质HQL转化为MapReduce程序。环境前提：  启动hdfs集群  启动yarn集群">
+<meta property="og:description" content="1、基本操作 启动终端 bin/hbase shell  显示所有表 list  显示命令介绍 help  显示当前的服务器状态 status &amp;#39;node01&amp;#39; 1 active master, 0 backup masters, 4 servers, 0 dead, 0.5000 average load 1 active master：一个存活的master 0 backup">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/hive%20%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86.png">
-<meta property="og:updated_time" content="2019-03-08T11:05:30.080Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/Hbase%E8%AF%BB%E5%8F%96%E6%B5%81%E7%A8%8B%EF%BC%88%E6%80%BB%E4%BD%93%EF%BC%89.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/Hbase%E5%85%B7%E4%BD%93%E8%AF%BB%E5%8F%96%E6%B5%81%E7%A8%8B.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/Hbase%E5%86%99%E6%95%B0%E6%8D%AE%E8%BF%87%E7%A8%8B.png">
+<meta property="og:updated_time" content="2019-03-15T04:50:50.331Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hive安装及配置">
-<meta name="twitter:description" content="1、概述官网：http://hive.apache.org/Apache Hive™数据仓库软件有助于使用SQL读取，编写和管理驻留在分布式存储中的大型数据集。可以将结构投影到已存储的数据中。提供了命令行工具和JDBC驱动程序以将用户连接到Hive。hive提供了SQL查询功能 hdfs分布式存储。hive本质HQL转化为MapReduce程序。环境前提：  启动hdfs集群  启动yarn集群">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/hive%20%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86.png">
+<meta name="twitter:title" content="Hbase的Shell操作以及读写过程解析">
+<meta name="twitter:description" content="1、基本操作 启动终端 bin/hbase shell  显示所有表 list  显示命令介绍 help  显示当前的服务器状态 status &amp;#39;node01&amp;#39; 1 active master, 0 backup masters, 4 servers, 0 dead, 0.5000 average load 1 active master：一个存活的master 0 backup">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/Hbase%E8%AF%BB%E5%8F%96%E6%B5%81%E7%A8%8B%EF%BC%88%E6%80%BB%E4%BD%93%EF%BC%89.png">
   
     <link rel="alternative" href="/atom.xml" title="Sean" type="application/atom+xml">
   
@@ -159,78 +161,126 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Hive安装及配置" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-Hbase的Shell操作以及读写过程解析" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Hive安装及配置
+      Hbase的Shell操作以及读写过程解析
     </h1>
   
 
         
-        <a href="/2019/03/08/Hive安装及配置/" class="archive-article-date">
-  	<time datetime="2019-03-08T10:09:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-08</time>
+        <a href="/2019/03/15/Hbase的Shell操作以及读写过程解析/" class="archive-article-date">
+  	<time datetime="2019-03-15T04:50:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-15</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="1、概述"><a href="#1、概述" class="headerlink" title="1、概述"></a>1、概述</h1><p>官网：<a href="http://hive.apache.org/" target="_blank" rel="external">http://hive.apache.org/</a><br>Apache Hive™数据仓库软件有助于使用SQL读取，编写和管理驻留在分布式存储中的<br>大型数据集。可以将结构投影到已存储的数据中。提供了命令行工具和JDBC驱动程序以<br>将用户连接到Hive。<br>hive提供了SQL查询功能 hdfs分布式存储。<br>hive本质HQL转化为MapReduce程序。<br>环境前提：</p>
-<ul>
-<li><p>启动hdfs集群</p>
+        <h1 id="1、基本操作"><a href="#1、基本操作" class="headerlink" title="1、基本操作"></a>1、基本操作</h1><ol>
+<li><p>启动终端</p>
+<p><code>bin/hbase shell</code></p>
 </li>
-<li><p>启动yarn集群</p>
-<p>如果想用hive的话，需要提前安装部署好hadoop集群。</p>
+<li><p>显示所有表</p>
+<p><code>list</code></p>
 </li>
-</ul>
-<h1 id="2、特点"><a href="#2、特点" class="headerlink" title="2、特点"></a>2、特点</h1><p>  <strong>优势：</strong></p>
-<ul>
-<li>操作接口采用类sql语法，select * from stu;<br>简单、上手快！</li>
-<li>hive可以替代mr程序，sqoop。</li>
-<li>hive可以处理海量数据。</li>
-<li>hive支持UDF，自定义函数。</li>
-</ul>
-<p><strong>劣势：</strong></p>
-<ul>
-<li><p>处理数据延迟高，慢。<br>引擎：1.2.2以前版本都是用的mr引擎</p>
-<pre><code>2.x之后用的是spark引擎
-</code></pre></li>
-<li><p>HQL的表达能力有限<br>一些sql无法解决的场景，依然需要我们写mapreduce.</p>
-<h1 id="3、-架构原理"><a href="#3、-架构原理" class="headerlink" title="3、 架构原理"></a>3、 架构原理</h1></li>
-</ul>
-<p><img src="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/hive%20%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86.png" alt=""></p>
-<blockquote>
-<p>sql-&gt;转换-&gt;mapreduce-&gt;job</p>
-</blockquote>
-<h1 id="4、-安装部署"><a href="#4、-安装部署" class="headerlink" title="4、 安装部署"></a>4、 安装部署</h1><ol>
-<li>下载</li>
-<li>上传</li>
-<li>解压</li>
-<li>重命名conf中配置文件<br>mv hive-env.sh.template hive-env.sh</li>
-<li>修改配置文件<br>vi hive-env.sh<br>HADOOP_HOME=/opt/modules/hadoop-2.8.4<br>export HIVE_CONF_DIR=/opt/modules/hive/conf</li>
-<li>启动</li>
+<li><p>显示命令介绍</p>
+<p><code>help</code></p>
+</li>
+<li><p>显示当前的服务器状态</p>
+<p><code>status &#39;node01&#39;</code></p>
+<p><code>1 active master, 0 backup masters, 4 servers, 0 dead, 0.5000 average load</code></p>
+<p>1 active master：一个存活的master</p>
+<p>0 backup masters：0个备份master</p>
+<p>4 servers：4个regionserver</p>
+<p>0 dead：0个宕机</p>
+<p>0.5000 average load：平均加载</p>
+</li>
+<li><p>显示当前用户</p>
+<p><code>whoami</code></p>
+</li>
+<li><p>创建表</p>
+<p><code>create &#39;user&#39;,&#39;info1&#39;,&#39;info2&#39;</code></p>
+</li>
+<li><p>全表扫描</p>
+<p><code>scan &#39;user&#39;</code></p>
+</li>
+<li><p>存入数据(put ‘表名’，’Rowkey’，’列族:列名’，’值’)</p>
+<p><code>put &#39;user&#39;,&#39;1001&#39;,&#39;info1:name&#39;,&#39;sean&#39;</code></p>
+<p><code>put &#39;user&#39;,&#39;1001&#39;,&#39;info1:age&#39;,&#39;22&#39;</code></p>
+</li>
+<li><p>覆盖(hbase中无修改)</p>
+<p><code>put &#39;user&#39;,&#39;1001&#39;,&#39;info2:id&#39;,&#39;112&#39;</code></p>
+<p>一步一步深入，对应上表名，Rowkey，列族，列即可</p>
+</li>
+<li><p>查看表结构</p>
+<p><code>describe &#39;user&#39;</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Table user is ENABLED                                                                   </div><div class="line">user                                                                                             </div><div class="line">COLUMN FAMILIES DESCRIPTION                                                                       </div><div class="line">&#123;NAME =&gt; &apos;info1&apos;, BLOOMFILTER =&gt; &apos;ROW&apos;, VERSIONS =&gt; &apos;1&apos;, IN_MEMORY =&gt; &apos;false&apos;, KEEP_DELETED_CELLS </div><div class="line">=&gt; &apos;FALSE&apos;, DATA_BLOCK_ENCODING =&gt; &apos;NONE&apos;, TTL =&gt; &apos;FOREVER&apos;, COMPRESSION =&gt; &apos;NONE&apos;, MIN_VERSIONS =</div><div class="line">&gt; &apos;0&apos;, BLOCKCACHE =&gt; &apos;true&apos;, BLOCKSIZE =&gt; &apos;65536&apos;, REPLICATION_SCOPE =&gt; &apos;0&apos;&#125;                      </div><div class="line">&#123;NAME =&gt; &apos;info2&apos;, BLOOMFILTER =&gt; &apos;ROW&apos;, VERSIONS =&gt; &apos;1&apos;, IN_MEMORY =&gt; &apos;false&apos;, KEEP_DELETED_CELLS </div><div class="line">=&gt; &apos;FALSE&apos;, DATA_BLOCK_ENCODING =&gt; &apos;NONE&apos;, TTL =&gt; &apos;FOREVER&apos;, COMPRESSION =&gt; &apos;NONE&apos;, MIN_VERSIONS =</div><div class="line">&gt; &apos;0&apos;, BLOCKCACHE =&gt; &apos;true&apos;, BLOCKSIZE =&gt; &apos;65536&apos;, REPLICATION_SCOPE =&gt; &apos;0&apos;&#125;                      </div><div class="line">2 row(s) in 0.1500 seconds</div></pre></td></tr></table></figure>
+</li>
+<li><p>变更表结构信息</p>
+<p><code>alter &#39;user&#39;,{NAME =&gt; &#39;info1&#39;,VERSIONS =&gt; &#39;5&#39;}</code></p>
+<p>需要指定列族，再指定到版本才能修改</p>
+</li>
+<li><p>过滤信息(get ‘表名’,’Rowkey’)</p>
+<p><code>get &#39;user&#39;,&#39;1001&#39;</code></p>
+<p><code>get &#39;user&#39;,&#39;1001&#39;,&#39;info2:id&#39;</code></p>
+</li>
+<li><p>清空数据</p>
+<p><code>truncate &#39;user&#39;</code></p>
+</li>
+<li><p>删除表</p>
+<p><code>drop &#39;user&#39;</code></p>
+<p>但是返回：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">ERROR: Table user is enabled. Disable it first.</div><div class="line"></div><div class="line">Here is some help for this command:</div><div class="line">Drop the named table. Table must first be disabled:</div><div class="line">  hbase&gt; drop &apos;t1&apos;</div><div class="line">  hbase&gt; drop &apos;ns1:t1&apos;</div></pre></td></tr></table></figure>
+<p>正确步骤为：</p>
+<p><code>disable &#39;user&#39;</code>：指定表不可用</p>
+<p><code>drop &#39;user&#39;</code>：删除</p>
+</li>
+<li><p>扫描指定rowkey范围</p>
+<p><code>scan &#39;user&#39;,{STARTROW=&gt;&#39;2202&#39;}</code></p>
+<p>含头不含尾:</p>
+<p><code>scan &#39;user&#39;,{STARTROW=&gt;&#39;2202&#39;,STOPROW=&gt;&#39;2202&#39;}</code></p>
+</li>
+<li><p>统计行数</p>
+<p><code>count &#39;user&#39;</code></p>
+</li>
 </ol>
-<h1 id="5、-配置元数据库为Mysql"><a href="#5、-配置元数据库为Mysql" class="headerlink" title="5、 配置元数据库为Mysql"></a>5、 配置元数据库为Mysql</h1><p>因为HIVE自带元数据库derby不支持多客户端同时访问，故此更换Mysql为元数据库</p>
-<p>前提：安装好Mysql</p>
-<p>参考资料：<a href="https://blog.csdn.net/pengjunlee/article/details/81212250" target="_blank" rel="external">https://blog.csdn.net/pengjunlee/article/details/81212250</a></p>
+<h1 id="2、文件读写具体流程"><a href="#2、文件读写具体流程" class="headerlink" title="2、文件读写具体流程"></a>2、文件读写具体流程</h1><p>客户端访问zk,返回root表元数据位置，根据元数据信息去查找对应regionserver，根据root表去查找到META表，再根据meta表元数据查找region，返回元数据给客户端</p>
+<h2 id="2-1、Hbase读取数据-总体"><a href="#2-1、Hbase读取数据-总体" class="headerlink" title="2.1、Hbase读取数据(总体)"></a>2.1、Hbase读取数据(总体)</h2><p><img src="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/Hbase%E8%AF%BB%E5%8F%96%E6%B5%81%E7%A8%8B%EF%BC%88%E6%80%BB%E4%BD%93%EF%BC%89.png" alt="流程"></p>
+<p>过程梳理：</p>
 <ol>
-<li>驱动拷贝<br>拷贝mysql-connector-java-5.1.39-bin.jar到/root/opt/modules/hive/lib/下</li>
-<li>配置Metastore到MySql</li>
+<li>客户端访问zk，发出请求</li>
+<li>zk返回-ROOT表位置元数据信息</li>
+<li>根据zk返回信息找到具体的HRegionserver，获取到-ROOT表</li>
+<li>根据-ROOT表元数据信息找到.META表</li>
+<li>根据.META表中存储的Region元数据信息找到具体的Region</li>
+<li>返回所需要读取的信息</li>
 </ol>
-<ul>
-<li><p>在/opt/modules/hive/conf目录下创建一个hive-site.xml</p>
-</li>
-<li><p>根据官方文档配置参数，拷贝数据到hive-site.xml文件中（hive/conf/下创建文件）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</div><div class="line">	&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;configuration.xsl&quot;?&gt;</div><div class="line">	&lt;configuration&gt;</div><div class="line">		&lt;property&gt;</div><div class="line">		  &lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;</div><div class="line">	    &lt;value&gt;jdbc:mysql://node01:3306/metastorecreateDatabaseIfNotExist=true&lt;/value&gt;</div><div class="line">		  &lt;description&gt;JDBC connect string for a JDBC metastore&lt;/description&gt;</div><div class="line">		&lt;/property&gt;</div><div class="line"></div><div class="line">		&lt;property&gt;</div><div class="line">		  &lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;</div><div class="line">		  &lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;</div><div class="line">		  &lt;description&gt;Driver class name for a JDBC metastore&lt;/description&gt;</div><div class="line">		&lt;/property&gt;</div><div class="line"></div><div class="line">		&lt;property&gt;</div><div class="line">		  &lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;</div><div class="line">		  &lt;value&gt;root&lt;/value&gt;</div><div class="line">		  &lt;description&gt;username to use against metastore database&lt;/description&gt;</div><div class="line">		&lt;/property&gt;</div><div class="line"></div><div class="line">		&lt;property&gt;</div><div class="line">		  &lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;</div><div class="line">		  &lt;value&gt;root密码&lt;/value&gt;</div><div class="line">		  &lt;description&gt;password to use against metastore database&lt;/description&gt;</div><div class="line">		&lt;/property&gt;</div><div class="line">		&lt;/configuration&gt;</div></pre></td></tr></table></figure>
-<p>配置完之后需要重启集群生效。</p>
-</li>
-</ul>
-<h1 id="6、-设置显示字段名与当前状态"><a href="#6、-设置显示字段名与当前状态" class="headerlink" title="6、 设置显示字段名与当前状态"></a>6、 设置显示字段名与当前状态</h1><h1 id="6-1-更改默认的元数据路径"><a href="#6-1-更改默认的元数据路径" class="headerlink" title="6.1 更改默认的元数据路径"></a>6.1 更改默认的元数据路径</h1><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;hive.metastore.warehouse.dir&lt;/name&gt;</div><div class="line">  &lt;value&gt;/user/hive/warehouse&lt;/value&gt;</div><div class="line">  &lt;description&gt;location of default database for the warehouse&lt;/description&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
-<h1 id="6-2-设置显示头信息和当前库"><a href="#6-2-设置显示头信息和当前库" class="headerlink" title="6.2 设置显示头信息和当前库"></a>6.2 设置显示头信息和当前库</h1><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;hive.cli.print.header&lt;/name&gt;</div><div class="line">  &lt;value&gt;true&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line"></div><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;hive.cli.print.current.db&lt;/name&gt;</div><div class="line">  &lt;value&gt;true&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<h2 id="2-2、Hbase读取数据-局部"><a href="#2-2、Hbase读取数据-局部" class="headerlink" title="2.2、Hbase读取数据(局部)"></a>2.2、Hbase读取数据(局部)</h2><p><img src="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/Hbase%E5%85%B7%E4%BD%93%E8%AF%BB%E5%8F%96%E6%B5%81%E7%A8%8B.png" alt="Hbase读取数据(局部)"></p>
+<p>过程梳理：</p>
+<ol>
+<li>client从memstore中读取数据</li>
+<li>如果所需要的数据恰好在memstore中，那么直接返回到客户端</li>
+<li>memstore没有找到则会在blockcache中查找</li>
+<li>倘若blockcache中还没找到，那么将通过hdfs客户端对Hfile进行查找</li>
+<li>将读取到的数据缓存到blockcache并返回</li>
+<li>数据返回客户端</li>
+</ol>
+<h2 id="2-3、Hbase写数据过程"><a href="#2-3、Hbase写数据过程" class="headerlink" title="2.3、Hbase写数据过程"></a>2.3、Hbase写数据过程</h2><p><img src="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/Hbase%E5%86%99%E6%95%B0%E6%8D%AE%E8%BF%87%E7%A8%8B.png" alt="写数据过程"></p>
+<p>过程梳理：</p>
+<ol>
+<li>发出请求给zk</li>
+<li>返回元数据信息</li>
+<li>查找到对应的RegionServer(此处省略掉-ROOT，.META的嵌套查询过程)</li>
+<li>找到对应的Region，同时将操作写入到Hlog</li>
+<li>将数据写入到memstore中</li>
+<li>满后溢写数据到StoreFile中，生成Hfile</li>
+<li>hdfs客户端将Hfile写入到集群</li>
+</ol>
 
       
 
@@ -275,7 +325,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Hive</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Hbase</a>
         		</li>
       		
 		</ul>
@@ -331,7 +381,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http:rabbitluluu.github.io/2019/03/08/Hive安装及配置/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http:rabbitluluu.github.io/2019/03/15/Hbase的Shell操作以及读写过程解析/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -345,18 +395,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/03/08/Hive基础指令一/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Hive基础指令一
-        
-      </div>
-    </a>
   
-  
-    <a href="/2019/03/08/Zookeeper监听API操作/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Zookeeper监听API操作</div>
+    <a href="/2019/03/14/Hbase概述和部署/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Hbase概述和部署</div>
       <i class="icon-circle-right"></i>
     </a>
   

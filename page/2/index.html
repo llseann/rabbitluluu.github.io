@@ -154,6 +154,114 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Zookeeper命令行以及API操作" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/08/Zookeeper命令行以及API操作/">Zookeeper命令行以及API操作</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/08/Zookeeper命令行以及API操作/" class="archive-article-date">
+  	<time datetime="2019-03-08T10:09:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="命令行操作"><a href="#命令行操作" class="headerlink" title="命令行操作"></a>命令行操作</h1><p>配置环境变量：vi /etc/profile<br>export ZOOKEEPER_HOME=/root/hd/zookeeper-3.4.10<br>export PATH=$PATH:$ZOOKEEPER_HOME/bin<br>声明环境变量：source /etc/profile</p>
+<ul>
+<li><p>启动客户端<br>$ bin/zkCli.sh</p>
+</li>
+<li><p>连接其它机器客户端操作<br>$ connect node02:2181</p>
+</li>
+<li><p>查看历史操作记录<br>$ history</p>
+</li>
+<li><p>查看当前节点的内容<br>$ ls /</p>
+</li>
+<li><p>存储：创建节点<br>$ create /sean 10</p>
+</li>
+<li><p>查看节点的值<br>$ get /sean</p>
+</li>
+<li><p>创建节点的可选项<br>create [-s] [-e] path data acl<br>[-e] <strong>短暂</strong>节点<br>[-s] 带<strong>序号</strong><br>create -e /test 100<br><strong>注意：此时-e创建的是临时的短暂节点，退出客户端后消失。</strong>退出客户端：quit<br>create -s /test 100<br><strong>注意：此时-s创建是带序号的节点，可以创建节点名相同的，序号依次累加。</strong><br>创建短暂带序号节点<br>create -e -s /test 100</p>
+</li>
+<li><p>修改节点值<br>set path data [version]<br>[version] 版本<br>注意：设置版本号 必须从0开始</p>
+</li>
+<li><p>删除节点<br>delete path</p>
+</li>
+<li><p>创建子节点<br>create /sean/xyz</p>
+</li>
+<li><p>递归删除<br>rmr /sean</p>
+</li>
+<li><p>监听<br>获得监听：get path watch<br>获得当前节点下增减变化：ls path watch</p>
+</li>
+<li><p>查看当前节点状态<br>stat /test</p>
+<h1 id="节点状态信息"><a href="#节点状态信息" class="headerlink" title="节点状态信息"></a>节点状态信息</h1><p>cZxid:zookeeper事务id<br>cTime:节点创建时间<br>mZxid：最后更新的czxid<br>mtime:最后修改的时间<br>pZxid：最后更新子节点的czxid<br>cversion:子节点的变化号、子节点修改次数<br>dataVersion：数据变化号<br>aclVersion：访问控制列表的变化号<br>ephemeralOwner：临时节点判断<br>dataLength：节点数据长度<br>numChildren：子节点个数</p>
+</li>
+</ul>
+<h1 id="API操作"><a href="#API操作" class="headerlink" title="API操作"></a>API操作</h1><p><strong>EPHEMERAL</strong>（短暂的znode）、</p>
+<p><strong>EPHEMERAL_SEQUENTIAL</strong>（短暂的顺序znode）、</p>
+<p><strong>PERSISTENT</strong>（持久的znode）</p>
+<p><strong>PERSISTENT_SEQUENTIAL</strong>（持久的顺序znode）</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div></pre></td><td class="code"><pre><div class="line">package xyz.llsean.zk;</div><div class="line"></div><div class="line">import org.apache.zookeeper.*;</div><div class="line">import org.junit.Before;</div><div class="line">import org.junit.Test;</div><div class="line"></div><div class="line">import java.io.IOException;</div><div class="line">import java.util.List;</div><div class="line"></div><div class="line">/**</div><div class="line"> * @author: Sean</div><div class="line"> * @date: 2019/2/22/22:06</div><div class="line"> * @version: 1.0</div><div class="line"> */</div><div class="line">public class zkClient &#123;</div><div class="line">    //集群地址：端口号</div><div class="line">    private String connected = "node01:2181,node02:2181,node03:2181,node04:2181";</div><div class="line"></div><div class="line">    //超时设置（毫秒）</div><div class="line">    private int timeout = 2000;</div><div class="line"></div><div class="line">    ZooKeeper zkCli = null;</div><div class="line"></div><div class="line">    @Before</div><div class="line">    //连接zookeeper集群</div><div class="line">    public void init() throws IOException &#123;</div><div class="line">        //String:连接集群的ip地址端口 Int：超时设置 Wacher：监听</div><div class="line">        zkCli = new ZooKeeper(connected, timeout, new Watcher() &#123;</div><div class="line">            //回调方法   显示根节点</div><div class="line">            public void process(WatchedEvent event) &#123;</div><div class="line">                System.out.println("已经触发" + event.getType() + "事件！");</div><div class="line">                List&lt;String&gt; chilren;</div><div class="line"></div><div class="line">                //获得节点get</div><div class="line">                try &#123;</div><div class="line">                    chilren = zkCli.getChildren("/", true);</div><div class="line">                &#125; catch (KeeperException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125; catch (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    //测试 是否联通集群  创建节点</div><div class="line">    @Test</div><div class="line">    public void createNode() throws KeeperException, InterruptedException &#123;</div><div class="line">        String p = zkCli.create("/sean", "2333".getBytes(),</div><div class="line">                ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);</div><div class="line">        //System.out.println("目前节点状态：["+zkCli.exists("/", true)+"]");</div><div class="line">        System.out.println(p);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    /**</div><div class="line">     * 获取节点列表</div><div class="line">     * */</div><div class="line">    @Test</div><div class="line">    public void getChild() throws KeeperException, InterruptedException &#123;</div><div class="line">        List&lt;String&gt; children = zkCli.getChildren("/", true);</div><div class="line">        for(String s:children)&#123;</div><div class="line">            System.out.println(s);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 删除节点</div><div class="line">     * */</div><div class="line">    @Test</div><div class="line">    public void deleteData() throws KeeperException, InterruptedException &#123;</div><div class="line">        zkCli.delete("/sean0000000016", -1);</div><div class="line">        getChild();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 修改数据</div><div class="line">     * */</div><div class="line">    @Test</div><div class="line">    public void setData() throws KeeperException, InterruptedException &#123;</div><div class="line">        zkCli.setData("/sean", "sb".getBytes(), -1);</div><div class="line"></div><div class="line">        //查看</div><div class="line">        byte[] data = zkCli.getData("/sean", false, new Stat());</div><div class="line">        System.out.println(new String (data));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 指定的节点是否存在</div><div class="line">     * */</div><div class="line">    @Test</div><div class="line">    public void testExist() throws KeeperException, InterruptedException &#123;</div><div class="line">        Stat exists = zkCli.exists("/llsean", false);</div><div class="line">        System.out.println(exists == null ? "不存在"":"存在");</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Zookeeper</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/08/Zookeeper命令行以及API操作/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Zookeeper简介和安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1187,109 +1295,9 @@ IOUtils.copyBytes(input,output,1024);
 
 
   
-    <article id="post-HDFS基础与操作一" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/08/HDFS基础与操作一/">HDFS基础与操作一</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/08/HDFS基础与操作一/" class="archive-article-date">
-  	<time datetime="2019-03-08T07:40:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1、HDFS-Web-Console"><a href="#1、HDFS-Web-Console" class="headerlink" title="1、HDFS-Web Console"></a>1、HDFS-Web Console</h2><h3 id="（1）Overview–展示HDFS的基本信息"><a href="#（1）Overview–展示HDFS的基本信息" class="headerlink" title="（1）Overview–展示HDFS的基本信息"></a>（1）Overview–展示HDFS的基本信息</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Safemode is off.---高级特性。</div></pre></td></tr></table></figure>
-<h3 id="（2）DataNodes-数据节点信息"><a href="#（2）DataNodes-数据节点信息" class="headerlink" title="（2）DataNodes-数据节点信息"></a>（2）DataNodes-数据节点信息</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">增加和删除数据节点（Decomissioning--&gt;Dead）</div></pre></td></tr></table></figure>
-<h3 id="（3）Datanode-Volume-Failures–数据节点-硬件错误"><a href="#（3）Datanode-Volume-Failures–数据节点-硬件错误" class="headerlink" title="（3）Datanode Volume Failures–数据节点 硬件错误"></a>（3）Datanode Volume Failures–数据节点 硬件错误</h3><h3 id="（4）Snapshot—高级特性"><a href="#（4）Snapshot—高级特性" class="headerlink" title="（4）Snapshot—高级特性"></a>（4）Snapshot—高级特性</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">快照实现数据的备份，防止数据的误操作和丢失。默认是关闭的。</div></pre></td></tr></table></figure>
-<h3 id="（5）Startup-Progress–启动过程"><a href="#（5）Startup-Progress–启动过程" class="headerlink" title="（5）Startup Progress–启动过程"></a>（5）Startup Progress–启动过程</h3><p>   <img src="H:/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E9%AA%8C%E6%89%8B%E5%86%8C/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AF%BE%E7%A8%8B/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/startup.png" alt=""></p>
-<h3 id="（6）Uitlities"><a href="#（6）Uitlities" class="headerlink" title="（6）Uitlities:"></a>（6）Uitlities:</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Browse 文件 ---hdfs -dfs -ls /</div><div class="line">logs---查看日志。</div></pre></td></tr></table></figure>
-<h2 id="2、HDFS-普通操作命令–hdfs-dfs-hadoop-fs"><a href="#2、HDFS-普通操作命令–hdfs-dfs-hadoop-fs" class="headerlink" title="2、HDFS 普通操作命令–hdfs dfs(hadoop fs)"></a>2、HDFS 普通操作命令–hdfs dfs(hadoop fs)</h2><h3 id="（1）创建目录–mkdir"><a href="#（1）创建目录–mkdir" class="headerlink" title="（1）创建目录–mkdir"></a>（1）创建目录–mkdir</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hdfs dfs -mkdir /</div></pre></td></tr></table></figure>
-<h3 id="（2）查看–ls"><a href="#（2）查看–ls" class="headerlink" title="（2）查看–ls"></a>（2）查看–ls</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">查看目录和子目录  hdfs dfs -ls -R /</div><div class="line">                hdfs dfs -lsr  /</div></pre></td></tr></table></figure>
-<h3 id="（3）上传数据"><a href="#（3）上传数据" class="headerlink" title="（3）上传数据"></a>（3）上传数据</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">-put  ：</div><div class="line">-copyFromLocal：          本地路径        hdfs路径</div><div class="line">  hdfs dfs -copyFromLocal ~/temp/a.txt  /test0113/</div><div class="line">-moveFromLocal: 会删除本地文件 剪切</div></pre></td></tr></table></figure>
-<h3 id="（4）下载数据"><a href="#（4）下载数据" class="headerlink" title="（4）下载数据"></a>（4）下载数据</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-get: </div><div class="line">-copyToLocal:从HDFS下载到本地</div></pre></td></tr></table></figure>
-<h3 id="（5）删除数据"><a href="#（5）删除数据" class="headerlink" title="（5）删除数据"></a>（5）删除数据</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">-rm</div><div class="line">-rmr: 删除HDFS的目录和子目录   </div><div class="line">     删除日志：  Deleted /test0113</div><div class="line">    回收站---高级特性 默认是关闭。</div></pre></td></tr></table></figure>
-<h3 id="（6）合并数据–（为hive表数据操作做准备。）"><a href="#（6）合并数据–（为hive表数据操作做准备。）" class="headerlink" title="（6）合并数据–（为hive表数据操作做准备。）"></a>（6）合并数据–（为hive表数据操作做准备。）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">  -getmerge :把某个HDFS的目录下的文件进行先合并后下载</div><div class="line"> *：通配符 ？</div><div class="line">hdfs dfs -getmerge /students /root/students.txt</div></pre></td></tr></table></figure>
-<h3 id="（7）计数和文件大小"><a href="#（7）计数和文件大小" class="headerlink" title="（7）计数和文件大小"></a>（7）计数和文件大小</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">  -count 显示 文件夹、文件个数 文件总的大小</div><div class="line">  -du 显示每个文件夹和文件的大小</div><div class="line">[root@bigdata124 ~]# hdfs dfs -count /students</div><div class="line">           1            4                 63 /students</div><div class="line">[root@bigdata124 ~]# hdfs dfs -du /students</div><div class="line">25  /students/students01.txt</div><div class="line">13  /students/students02.txt</div><div class="line">13  /students/students03.txt</div><div class="line">12  /students/students04.txt</div></pre></td></tr></table></figure>
-<h3 id="（8）负载均衡-balancer"><a href="#（8）负载均衡-balancer" class="headerlink" title="（8）负载均衡 balancer"></a>（8）负载均衡 balancer</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">实现datanode 数据存储均衡。</div><div class="line">## hdfs balancer ##</div></pre></td></tr></table></figure>
-<h2 id="3、HDFS-管理员命令"><a href="#3、HDFS-管理员命令" class="headerlink" title="3、HDFS 管理员命令"></a>3、HDFS 管理员命令</h2><h3 id="（1）hdfs-dfsadmin-report-打印报告"><a href="#（1）hdfs-dfsadmin-report-打印报告" class="headerlink" title="（1）hdfs dfsadmin -report 打印报告"></a>（1）hdfs dfsadmin -report 打印报告</h3><h3 id="（2）-safemode"><a href="#（2）-safemode" class="headerlink" title="（2）-safemode "></a>（2）-safemode <enter |="" leave="" get="" wait=""></enter></h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">enter:手动进入安全模式</div><div class="line">leave:手动离开安全模式</div><div class="line">get:获得当前安全模式的状态</div></pre></td></tr></table></figure>
-<h3 id="（3）快照命令"><a href="#（3）快照命令" class="headerlink" title="（3）快照命令"></a>（3）快照命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[-allowSnapshot &lt;snapshotDir&gt;]</div><div class="line">[-disallowSnapshot &lt;snapshotDir&gt;]</div></pre></td></tr></table></figure>
-<h3 id="（4）Quota-配额"><a href="#（4）Quota-配额" class="headerlink" title="（4）Quota 配额"></a>（4）Quota 配额</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">a、名称配额--数量</div><div class="line">[-setQuota &lt;quota&gt; &lt;dirname&gt;...&lt;dirname&gt;]</div><div class="line">[-clrQuota &lt;dirname&gt;...&lt;dirname&gt;]</div><div class="line"></div><div class="line">b、空间配额--空间大小</div><div class="line">[-setSpaceQuota &lt;quota&gt; [-storageType &lt;storagetype&gt;] &lt;dirname&gt;...&lt;dirname&gt;]</div><div class="line">[-clrSpaceQuota [-storageType &lt;storagetype&gt;] &lt;dirname&gt;...&lt;dirname&gt;]</div></pre></td></tr></table></figure>
-<h2 id="4、IDEA-Maven工程简介"><a href="#4、IDEA-Maven工程简介" class="headerlink" title="4、IDEA Maven工程简介"></a>4、IDEA Maven工程简介</h2><p> （1）IDEA 下载地址：<a href="https://www.jetbrains.com/idea/download/" target="_blank" rel="external">https://www.jetbrains.com/idea/download/</a><br>      破解方法自行查找。Ultimate</p>
-<p> （2）File-new Project-&gt;Maven</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">GroupID: 公司名字</div><div class="line">artifactId：工程名字。</div><div class="line">java程序在：src-》main-&gt;java 右键 新建 java class文件</div><div class="line">target: 是运行程序生成的class文件</div></pre></td></tr></table></figure>
-<p> （3）管理包</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"> /opt/moudle/hadoop-2.7.3/share/hadoop/common/*.jar</div><div class="line"> /opt/moudle/hadoop-2.7.3/share/hadoop/common/lib/*.jar</div><div class="line"> /opt/moudle/hadoop-2.7.3/share/hadoop/hdfs/*.jar</div><div class="line"> /opt/moudle/hadoop-2.7.3/share/hadoop/hdfs/lib/*.jar</div><div class="line">  </div><div class="line"> 通过maven只需要配置POM文件。</div><div class="line">a、 下载一个maven版本 </div><div class="line"> http://maven.apache.org/index.html，</div><div class="line">b、通过 File-settings-Maven</div><div class="line"> 修改： D:\TZ\apache-maven-3.6.0-bin\apache-maven-3.6.0\conf\settings.xml</div><div class="line">    55行：&lt;localRepository&gt;D:\TZ\m2\Repository&lt;/localRepository&gt;</div><div class="line"> MaveHome：D:\TZ\apache-maven-3.6.0-bin\apache-maven-3.6.0</div><div class="line"> User settings:D:\TZ\apache-maven-3.6.0-bin\apache-maven-3.6.0\conf\settings.xml </div><div class="line">c、POM中写入包的依赖</div><div class="line">  参考：https://mvnrepository.com/search?q=hadoop</div><div class="line"> &lt;dependencies&gt;</div><div class="line">    &lt;!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-common --&gt;</div><div class="line">    &lt;dependency&gt;</div><div class="line">        &lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;</div><div class="line">        &lt;artifactId&gt;hadoop-common&lt;/artifactId&gt;</div><div class="line">        &lt;version&gt;2.7.3&lt;/version&gt;</div><div class="line">    &lt;/dependency&gt;</div><div class="line">    &lt;dependency&gt;</div><div class="line">        &lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;</div><div class="line">        &lt;artifactId&gt;hadoop-hdfs&lt;/artifactId&gt;</div><div class="line">        &lt;version&gt;2.7.3&lt;/version&gt;</div><div class="line">    &lt;/dependency&gt;</div><div class="line">    &lt;dependency&gt;</div><div class="line">        &lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;</div><div class="line">        &lt;artifactId&gt;hadoop-client&lt;/artifactId&gt;</div><div class="line">        &lt;version&gt;2.7.3&lt;/version&gt;</div><div class="line">    &lt;/dependency&gt;</div><div class="line">&lt;/dependencies&gt;</div></pre></td></tr></table></figure>
-<p>5、java API 实现HDFS的文件夹创建。</p>
-<hr>
-<p>作业：（1）下载破解 IDEA<br>     （2）创建Maven工程，跑通老师的代码。</p>
-<hr>
-<h3 id="Permission-denied-user-Young-access-WRITE-inode-”-test0113”"><a href="#Permission-denied-user-Young-access-WRITE-inode-”-test0113”" class="headerlink" title="Permission denied: user=Young, access=WRITE, inode=”/test0113”"></a>Permission denied: user=Young, access=WRITE, inode=”/test0113”</h3><p>6、java API 实现HDFS的文件上传</p>
-<p>7、java API 实现HDFS的文件下载</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDFS</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/08/HDFS基础与操作一/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
     </nav>
   
 
@@ -1392,11 +1400,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">MapReduce</a>
+                <a href="javascript:void(0)" class="js-tag color5">HDFS</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HDFS</a>
+                <a href="javascript:void(0)" class="js-tag color5">MapReduce</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1404,11 +1412,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Hadoop</a>
+                <a href="javascript:void(0)" class="js-tag color5">Hive</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hive</a>
+                <a href="javascript:void(0)" class="js-tag color2">Hadoop</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1420,7 +1428,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Sqoop</a>
+                <a href="javascript:void(0)" class="js-tag color5">Zookeeper</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1428,7 +1436,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Zookeeper</a>
+                <a href="javascript:void(0)" class="js-tag color1">Sqoop</a>
               </li>
             
             <div class="clearfix"></div>
