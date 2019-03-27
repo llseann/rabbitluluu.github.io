@@ -154,6 +154,539 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Hive基础指令一" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/08/Hive基础指令一/">Hive基础指令一</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/08/Hive基础指令一/" class="archive-article-date">
+  	<time datetime="2019-03-08T10:09:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1、基础指令"><a href="#1、基础指令" class="headerlink" title="1、基础指令"></a>1、基础指令</h1><ul>
+<li><p>显示数据库</p>
+<p><code>show databases;</code></p>
+</li>
+<li><p>创建数据库</p>
+<p><code>create database sean_db;</code></p>
+<p><strong>标准写法：</strong></p>
+<p><code>create database if not exists sean_db;</code></p>
+<p><strong>指定hdfs路径为根目录db_cache文件夹下：</strong></p>
+<p><code>create database sean_db location &#39;/db_cache&#39;</code></p>
+<p><code>reate database if not exists sean_db location &#39;/&#39;;</code></p>
+</li>
+<li><p>使用数据库</p>
+<p><code>use sean_db</code></p>
+</li>
+<li><p>创建表</p>
+<p>mysql语法：<code>create table love(id int, name,string);</code></p>
+<p>将查询结果创建为表</p>
+<p><code>create table love2 as select * from love where name = &#39;gakki&#39;;</code></p>
+<p><strong>hive语法：</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> mostlove(<span class="keyword">id</span> <span class="built_in">int</span>,<span class="keyword">name</span> <span class="keyword">string</span>)</div><div class="line">              &gt; <span class="keyword">row</span> <span class="keyword">format</span></div><div class="line">              &gt; <span class="keyword">delimited</span> <span class="keyword">fields</span></div><div class="line">              &gt; <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">'\t'</span>;</div></pre></td></tr></table></figure>
+</li>
+<li><p>插入数据</p>
+<p><code>insert into love values(1, &quot;gakki&quot;);</code></p>
+</li>
+<li><p>导入数据</p>
+<p><code>load data [local] inpath &#39;文件路径&#39; into table 表名;</code></p>
+<ul>
+<li><p>导入本地文件</p>
+<p><code>load data local inpath &#39;/root/temp/sean.txt&#39; into table love;</code></p>
+</li>
+<li><p>导入HDFS文件–根目录下的sean.txt到love表中</p>
+<p><code>load data inpath &#39;/sean.txt&#39; into table love;</code></p>
+</li>
+</ul>
+</li>
+<li><p>删除表</p>
+<p><code>drop table love;</code></p>
+</li>
+<li><p>查看库结构</p>
+<p><code>desc database sean_db;</code></p>
+</li>
+<li><p>给库添加额外描述信息</p>
+<p><code>alter database sean_db set dbproperties(&#39;created&#39; = &#39;sean&#39;);</code></p>
+</li>
+<li><p>查看库额外信息</p>
+<p><code>desc database extended sean_db;</code></p>
+</li>
+<li><p>查看指定的通配库:过滤–找出所有s开头的库</p>
+<p><code>show databases like &quot;s*&quot;;</code></p>
+</li>
+<li><p>删除库</p>
+<ul>
+<li>drop database sean_db;</li>
+</ul>
+<p>删除非空库</p>
+<ul>
+<li>drop database sean_db cascade;</li>
+</ul>
+<p>删除非空库标准写法</p>
+<ul>
+<li>drop databases if exists sean_db cascade;</li>
+</ul>
+</li>
+</ul>
+<h1 id="2、数据类型"><a href="#2、数据类型" class="headerlink" title="2、数据类型"></a>2、数据类型</h1><table>
+<thead>
+<tr>
+<th style="text-align:center">Java数据类型</th>
+<th style="text-align:center">HIve数据类型</th>
+<th style="text-align:center">长度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">byte</td>
+<td style="text-align:center">TINYINT</td>
+<td style="text-align:center">1byte有符号整数</td>
+</tr>
+<tr>
+<td style="text-align:center">short</td>
+<td style="text-align:center">SMALLINT</td>
+<td style="text-align:center">2byte有符号整数</td>
+</tr>
+<tr>
+<td style="text-align:center">int</td>
+<td style="text-align:center">INT</td>
+<td style="text-align:center">4byte有符号整数</td>
+</tr>
+<tr>
+<td style="text-align:center">long</td>
+<td style="text-align:center">BIGINT</td>
+<td style="text-align:center">8byte有符号整数</td>
+</tr>
+<tr>
+<td style="text-align:center">boolean</td>
+<td style="text-align:center">BOOLEAN</td>
+<td style="text-align:center">true/false</td>
+</tr>
+<tr>
+<td style="text-align:center">float</td>
+<td style="text-align:center">FLOAT</td>
+<td style="text-align:center">单精度浮点</td>
+</tr>
+<tr>
+<td style="text-align:center">double</td>
+<td style="text-align:center">DOUBLE</td>
+<td style="text-align:center">双精度浮点</td>
+</tr>
+<tr>
+<td style="text-align:center">String</td>
+<td style="text-align:center">STRING</td>
+<td style="text-align:center">字符</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">BINARY</td>
+<td style="text-align:center">字节数组</td>
+</tr>
+</tbody>
+</table>
+<h1 id="3、操作补充"><a href="#3、操作补充" class="headerlink" title="3、操作补充"></a>3、操作补充</h1><h2 id="3-1-创建表"><a href="#3-1-创建表" class="headerlink" title="3.1 创建表"></a>3.1 创建表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> [<span class="keyword">external</span>] <span class="keyword">table</span> [<span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">exists</span>] table_name(字段信息) [partitioned <span class="keyword">by</span>(字段信息)]</div><div class="line">[clustered <span class="keyword">by</span>(字段信息)] [sorted <span class="keyword">by</span>(字段信息)]</div><div class="line"><span class="keyword">row</span> <span class="keyword">format</span> </div><div class="line"><span class="keyword">delimited</span> <span class="keyword">fields</span></div><div class="line"><span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">'切割符'</span>;</div></pre></td></tr></table></figure>
+<h2 id="3-2-管理表（内部表）"><a href="#3-2-管理表（内部表）" class="headerlink" title="3.2 管理表（内部表）"></a>3.2 管理表（内部表）</h2><p>默认不加external创建的就是<strong>管理表</strong>，也称为<strong>内部表</strong>。<br>MANAGED_TABLE管理表。<br>Table Type:MANAGED_TABLE<br>查看表类型：<br><code>desc formatted itstar;</code></p>
+<h2 id="3-3-外部表"><a href="#3-3-外部表" class="headerlink" title="3.3 外部表"></a>3.3 外部表</h2><p>EXTERNAL_TABLE外部表<br>创建方式：<br><code>create external table student(id int,name string)</code></p>
+<p><strong>区别</strong>：如果是管理表，删除hdfs中数据删除，</p>
+<p>​            如果是外部表删除，hdfs数据<strong>不删除</strong>！外部表删除后，重新创建同名表后，表中数据还在</p>
+<h1 id="4、Hive常用命令"><a href="#4、Hive常用命令" class="headerlink" title="4、Hive常用命令"></a>4、Hive常用命令</h1><ul>
+<li><p>不登录hive客户端操作hive指令</p>
+<p><code>bin/hive -e &quot;select * from sean_db.love;&quot;</code></p>
+</li>
+<li><p>直接把sql写入到文件中</p>
+<p><code>bin/hive -f /root/temp/hql.sql</code></p>
+</li>
+<li><p>在hive中可以直接查看hdfs中文件(省去hdfs)</p>
+<p>dfs -ls /</p>
+</li>
+<li><p>清空表内数据,保留表结构</p>
+<p><code>truncate table sean_buck;</code></p>
+</li>
+<li><p>设置Reducer个数</p>
+<p><code>set mapreduce.job.reduces</code></p>
+</li>
+<li><p>设置支持分桶</p>
+<p><code>set hive.enforce.bucketing = true;</code></p>
+</li>
+<li><p>显示方法</p>
+<p><code>show functions;</code></p>
+</li>
+<li><p>查询方法使用</p>
+<p><code>desc function extended pow;</code></p>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Hive</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/08/Hive基础指令一/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Hive安装及配置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/08/Hive安装及配置/">Hive安装及配置</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/08/Hive安装及配置/" class="archive-article-date">
+  	<time datetime="2019-03-08T10:09:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1、概述"><a href="#1、概述" class="headerlink" title="1、概述"></a>1、概述</h1><p>官网：<a href="http://hive.apache.org/" target="_blank" rel="external">http://hive.apache.org/</a><br>Apache Hive™数据仓库软件有助于使用SQL读取，编写和管理驻留在分布式存储中的<br>大型数据集。可以将结构投影到已存储的数据中。提供了命令行工具和JDBC驱动程序以<br>将用户连接到Hive。<br>hive提供了SQL查询功能 hdfs分布式存储。<br>hive本质HQL转化为MapReduce程序。<br>环境前提：</p>
+<ul>
+<li><p>启动hdfs集群</p>
+</li>
+<li><p>启动yarn集群</p>
+<p>如果想用hive的话，需要提前安装部署好hadoop集群。</p>
+</li>
+</ul>
+<h1 id="2、特点"><a href="#2、特点" class="headerlink" title="2、特点"></a>2、特点</h1><p>  <strong>优势：</strong></p>
+<ul>
+<li>操作接口采用类sql语法，select * from stu;<br>简单、上手快！</li>
+<li>hive可以替代mr程序，sqoop。</li>
+<li>hive可以处理海量数据。</li>
+<li>hive支持UDF，自定义函数。</li>
+</ul>
+<p><strong>劣势：</strong></p>
+<ul>
+<li><p>处理数据延迟高，慢。<br>引擎：1.2.2以前版本都是用的mr引擎</p>
+<pre><code>2.x之后用的是spark引擎
+</code></pre></li>
+<li><p>HQL的表达能力有限<br>一些sql无法解决的场景，依然需要我们写mapreduce.</p>
+<h1 id="3、-架构原理"><a href="#3、-架构原理" class="headerlink" title="3、 架构原理"></a>3、 架构原理</h1></li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/hive%20%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86.png" alt=""></p>
+<blockquote>
+<p>sql-&gt;转换-&gt;mapreduce-&gt;job</p>
+</blockquote>
+<h1 id="4、-安装部署"><a href="#4、-安装部署" class="headerlink" title="4、 安装部署"></a>4、 安装部署</h1><ol>
+<li>下载</li>
+<li>上传</li>
+<li>解压</li>
+<li>重命名conf中配置文件<br>mv hive-env.sh.template hive-env.sh</li>
+<li>修改配置文件<br>vi hive-env.sh<br>HADOOP_HOME=/opt/modules/hadoop-2.8.4<br>export HIVE_CONF_DIR=/opt/modules/hive/conf</li>
+<li>启动</li>
+</ol>
+<h1 id="5、-配置元数据库为Mysql"><a href="#5、-配置元数据库为Mysql" class="headerlink" title="5、 配置元数据库为Mysql"></a>5、 配置元数据库为Mysql</h1><p>因为HIVE自带元数据库derby不支持多客户端同时访问，故此更换Mysql为元数据库</p>
+<p>前提：安装好Mysql</p>
+<p>参考资料：<a href="https://blog.csdn.net/pengjunlee/article/details/81212250" target="_blank" rel="external">https://blog.csdn.net/pengjunlee/article/details/81212250</a></p>
+<ol>
+<li>驱动拷贝<br>拷贝mysql-connector-java-5.1.39-bin.jar到/root/opt/modules/hive/lib/下</li>
+<li>配置Metastore到MySql</li>
+</ol>
+<ul>
+<li><p>在/opt/modules/hive/conf目录下创建一个hive-site.xml</p>
+</li>
+<li><p>根据官方文档配置参数，拷贝数据到hive-site.xml文件中（hive/conf/下创建文件）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</div><div class="line">	&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;configuration.xsl&quot;?&gt;</div><div class="line">	&lt;configuration&gt;</div><div class="line">		&lt;property&gt;</div><div class="line">		  &lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;</div><div class="line">	    &lt;value&gt;jdbc:mysql://node01:3306/metastorecreateDatabaseIfNotExist=true&lt;/value&gt;</div><div class="line">		  &lt;description&gt;JDBC connect string for a JDBC metastore&lt;/description&gt;</div><div class="line">		&lt;/property&gt;</div><div class="line"></div><div class="line">		&lt;property&gt;</div><div class="line">		  &lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;</div><div class="line">		  &lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;</div><div class="line">		  &lt;description&gt;Driver class name for a JDBC metastore&lt;/description&gt;</div><div class="line">		&lt;/property&gt;</div><div class="line"></div><div class="line">		&lt;property&gt;</div><div class="line">		  &lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;</div><div class="line">		  &lt;value&gt;root&lt;/value&gt;</div><div class="line">		  &lt;description&gt;username to use against metastore database&lt;/description&gt;</div><div class="line">		&lt;/property&gt;</div><div class="line"></div><div class="line">		&lt;property&gt;</div><div class="line">		  &lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;</div><div class="line">		  &lt;value&gt;root密码&lt;/value&gt;</div><div class="line">		  &lt;description&gt;password to use against metastore database&lt;/description&gt;</div><div class="line">		&lt;/property&gt;</div><div class="line">		&lt;/configuration&gt;</div></pre></td></tr></table></figure>
+<p>配置完之后需要重启集群生效。</p>
+</li>
+</ul>
+<h1 id="6、-设置显示字段名与当前状态"><a href="#6、-设置显示字段名与当前状态" class="headerlink" title="6、 设置显示字段名与当前状态"></a>6、 设置显示字段名与当前状态</h1><h1 id="6-1-更改默认的元数据路径"><a href="#6-1-更改默认的元数据路径" class="headerlink" title="6.1 更改默认的元数据路径"></a>6.1 更改默认的元数据路径</h1><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;hive.metastore.warehouse.dir&lt;/name&gt;</div><div class="line">  &lt;value&gt;/user/hive/warehouse&lt;/value&gt;</div><div class="line">  &lt;description&gt;location of default database for the warehouse&lt;/description&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<h1 id="6-2-设置显示头信息和当前库"><a href="#6-2-设置显示头信息和当前库" class="headerlink" title="6.2 设置显示头信息和当前库"></a>6.2 设置显示头信息和当前库</h1><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;hive.cli.print.header&lt;/name&gt;</div><div class="line">  &lt;value&gt;true&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line"></div><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;hive.cli.print.current.db&lt;/name&gt;</div><div class="line">  &lt;value&gt;true&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Hive</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/08/Hive安装及配置/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Zookeeper监听API操作" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/08/Zookeeper监听API操作/">Zookeeper监听API操作</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/08/Zookeeper监听API操作/" class="archive-article-date">
+  	<time datetime="2019-03-08T10:09:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-对目录监听"><a href="#1-对目录监听" class="headerlink" title="1.对目录监听"></a>1.对目录监听</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> xyz.llsean.watch_;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.KeeperException;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.WatchedEvent;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooKeeper;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * <span class="doctag">@author</span>: Sean</div><div class="line"> * <span class="doctag">@date</span>: 2019/2/24/14:56</div><div class="line"> * <span class="doctag">@version</span>: 1.0</div><div class="line"> * 实现对节点的监听</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">watchDemo_</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, KeeperException, InterruptedException </span>&#123;</div><div class="line">        <span class="comment">//设置集群地址</span></div><div class="line">        String connected = <span class="string">"node01:2181,node02:2181,node03:2181,node04:2181"</span>;</div><div class="line">        <span class="comment">//设置超时时间</span></div><div class="line">        <span class="keyword">int</span> timeout = <span class="number">2000</span>;</div><div class="line">        <span class="comment">//创建客户端</span></div><div class="line">        ZooKeeper zkCli = <span class="keyword">new</span> ZooKeeper(connected, timeout, <span class="keyword">new</span> Watcher() &#123;</div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</div><div class="line">                System.out.println(<span class="string">"正在监听：..."</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        List&lt;String&gt; children = zkCli.getChildren(<span class="string">"/"</span>, <span class="keyword">new</span> Watcher() &#123;</div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</div><div class="line">                System.out.println(<span class="string">"正在监听路径为："</span> + event.getPath());</div><div class="line">                System.out.println(<span class="string">"正在监听类型为:"</span> + event.getType());</div><div class="line">            &#125;</div><div class="line">        &#125;, <span class="keyword">null</span>);</div><div class="line"></div><div class="line">        <span class="keyword">for</span>(String s:children)&#123;</div><div class="line">            System.out.println(s);</div><div class="line">        &#125;</div><div class="line">        Thread.sleep(Long.MAX_VALUE);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="2-对节点内容监听"><a href="#2-对节点内容监听" class="headerlink" title="2.对节点内容监听"></a>2.对节点内容监听</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> xyz.llsean.watch_;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.KeeperException;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.WatchedEvent;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooKeeper;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * <span class="doctag">@author</span>: Sean</div><div class="line"> * <span class="doctag">@date</span>: 2019/2/24/15:08</div><div class="line"> * <span class="doctag">@version</span>: 1.0</div><div class="line"> * 实现对节点内容的监听</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">watchDemo1_</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, KeeperException, InterruptedException </span>&#123;</div><div class="line">        <span class="comment">//设置集群地址</span></div><div class="line">        String connected = <span class="string">"node01:2181,node02:2181,node03:2181,node04:2181"</span>;</div><div class="line">        <span class="comment">//设置超时时间</span></div><div class="line">        <span class="keyword">int</span> timeout = <span class="number">2000</span>;</div><div class="line">        ZooKeeper zkCli = <span class="keyword">new</span> ZooKeeper(connected, timeout, <span class="keyword">new</span> Watcher() &#123;</div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent watchedEvent)</span> </span>&#123;</div><div class="line">                System.out.println(<span class="string">"正在监听....请注意言行"</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        <span class="keyword">byte</span>[] data = zkCli.getData(<span class="string">"/gakki"</span>, <span class="keyword">new</span> Watcher() &#123;</div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</div><div class="line">                System.out.println(<span class="string">"监听路径为："</span> + event.getPath());</div><div class="line">                System.out.println(<span class="string">"监听类型为："</span> + event.getType());</div><div class="line">            &#125;</div><div class="line">        &#125;, <span class="keyword">null</span>);</div><div class="line"></div><div class="line">        System.out.println(<span class="keyword">new</span> String(data));</div><div class="line">        Thread.sleep(Long.MAX_VALUE);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="3-实现持续监听"><a href="#3-实现持续监听" class="headerlink" title="3.实现持续监听"></a>3.实现持续监听</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> xyz.llsean.qq_;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.KeeperException;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.WatchedEvent;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooKeeper;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * <span class="doctag">@author</span>: Sean</div><div class="line"> * <span class="doctag">@date</span>: 2019/2/24/15:13</div><div class="line"> * <span class="doctag">@version</span>: 1.0</div><div class="line"> * 实现持续监听</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">zkClient_</span> </span>&#123;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, KeeperException, InterruptedException </span>&#123;</div><div class="line">        <span class="comment">//1.获取客户端</span></div><div class="line">        zkClient_ zkClient_ = <span class="keyword">new</span> zkClient_();</div><div class="line">        zkClient_.getConnect();</div><div class="line">        <span class="comment">//2.指定监听路径</span></div><div class="line">        zkClient_.getServer();</div><div class="line">        <span class="comment">//3.线程休眠</span></div><div class="line">        zkClient_.getWatchh();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">    * 获取zookeeper客户端连接</div><div class="line">    * */</div><div class="line">    <span class="comment">//设置集群地址</span></div><div class="line">    <span class="keyword">final</span> String connected = <span class="string">"node01:2181,node02:2181,node03:2181,node04:2181"</span>;</div><div class="line">    <span class="comment">//设置超时时间</span></div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> timeout = <span class="number">2000</span>;</div><div class="line"></div><div class="line">    ZooKeeper zkCli;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getConnect</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">        zkCli = <span class="keyword">new</span> ZooKeeper(connected, timeout, <span class="keyword">new</span> Watcher() &#123;</div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</div><div class="line">                <span class="comment">//System.out.println("当前正在监听...");</span></div><div class="line">                List&lt;String&gt; children;</div><div class="line"></div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    children = zkCli.getChildren(<span class="string">"/"</span>, <span class="keyword">true</span>);</div><div class="line">                    <span class="comment">//服务器列表</span></div><div class="line">                    ArrayList&lt;String&gt; serverList_ = <span class="keyword">new</span> ArrayList&lt;String&gt;();</div><div class="line">                    <span class="comment">//获取每个节点数据</span></div><div class="line">                    <span class="keyword">for</span>(String s:children)&#123;</div><div class="line">                        <span class="keyword">byte</span>[] data = zkCli.getData(<span class="string">"/"</span> + s, <span class="keyword">true</span>, <span class="keyword">null</span>);</div><div class="line">                        serverList_.add(<span class="keyword">new</span> String(data));</div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                    <span class="comment">//查看服务器列表</span></div><div class="line">                    System.out.println(serverList_);</div><div class="line">                &#125; <span class="keyword">catch</span> (KeeperException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 指定监听路径</div><div class="line">     * */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getServer</span><span class="params">()</span> <span class="keyword">throws</span> KeeperException, InterruptedException </span>&#123;</div><div class="line"></div><div class="line">        List&lt;String&gt; children = zkCli.getChildren(<span class="string">"/"</span>, <span class="keyword">true</span>);</div><div class="line"></div><div class="line">        <span class="comment">//存储服务器列表</span></div><div class="line">        ArrayList&lt;String&gt; serverList = <span class="keyword">new</span> ArrayList&lt;String&gt;();</div><div class="line"></div><div class="line">        <span class="keyword">for</span>(String s: children)&#123;</div><div class="line">            <span class="keyword">byte</span>[] data = zkCli.getData(<span class="string">"/"</span> + s, <span class="keyword">true</span>, <span class="keyword">null</span>);</div><div class="line">            serverList.add(<span class="keyword">new</span> String(data));</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">//打印服务器列表</span></div><div class="line">        System.out.println(serverList);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 实现一直监听</div><div class="line">     * */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getWatchh</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        Thread.sleep(Long.MAX_VALUE);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Zookeeper</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/08/Zookeeper监听API操作/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Zookeeper命令行以及API操作" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/08/Zookeeper命令行以及API操作/">Zookeeper命令行以及API操作</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/08/Zookeeper命令行以及API操作/" class="archive-article-date">
+  	<time datetime="2019-03-08T10:09:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="命令行操作"><a href="#命令行操作" class="headerlink" title="命令行操作"></a>命令行操作</h1><p>配置环境变量：vi /etc/profile<br>export ZOOKEEPER_HOME=/root/hd/zookeeper-3.4.10<br>export PATH=$PATH:$ZOOKEEPER_HOME/bin<br>声明环境变量：source /etc/profile</p>
+<ul>
+<li><p>启动客户端<br>$ bin/zkCli.sh</p>
+</li>
+<li><p>连接其它机器客户端操作<br>$ connect node02:2181</p>
+</li>
+<li><p>查看历史操作记录<br>$ history</p>
+</li>
+<li><p>查看当前节点的内容<br>$ ls /</p>
+</li>
+<li><p>存储：创建节点<br>$ create /sean 10</p>
+</li>
+<li><p>查看节点的值<br>$ get /sean</p>
+</li>
+<li><p>创建节点的可选项<br>create [-s] [-e] path data acl<br>[-e] <strong>短暂</strong>节点<br>[-s] 带<strong>序号</strong><br>create -e /test 100<br><strong>注意：此时-e创建的是临时的短暂节点，退出客户端后消失。</strong>退出客户端：quit<br>create -s /test 100<br><strong>注意：此时-s创建是带序号的节点，可以创建节点名相同的，序号依次累加。</strong><br>创建短暂带序号节点<br>create -e -s /test 100</p>
+</li>
+<li><p>修改节点值<br>set path data [version]<br>[version] 版本<br>注意：设置版本号 必须从0开始</p>
+</li>
+<li><p>删除节点<br>delete path</p>
+</li>
+<li><p>创建子节点<br>create /sean/xyz</p>
+</li>
+<li><p>递归删除<br>rmr /sean</p>
+</li>
+<li><p>监听<br>获得监听：get path watch<br>获得当前节点下增减变化：ls path watch</p>
+</li>
+<li><p>查看当前节点状态<br>stat /test</p>
+<h1 id="节点状态信息"><a href="#节点状态信息" class="headerlink" title="节点状态信息"></a>节点状态信息</h1><p>cZxid:zookeeper事务id<br>cTime:节点创建时间<br>mZxid：最后更新的czxid<br>mtime:最后修改的时间<br>pZxid：最后更新子节点的czxid<br>cversion:子节点的变化号、子节点修改次数<br>dataVersion：数据变化号<br>aclVersion：访问控制列表的变化号<br>ephemeralOwner：临时节点判断<br>dataLength：节点数据长度<br>numChildren：子节点个数</p>
+</li>
+</ul>
+<h1 id="API操作"><a href="#API操作" class="headerlink" title="API操作"></a>API操作</h1><p><strong>EPHEMERAL</strong>（短暂的znode）、</p>
+<p><strong>EPHEMERAL_SEQUENTIAL</strong>（短暂的顺序znode）、</p>
+<p><strong>PERSISTENT</strong>（持久的znode）</p>
+<p><strong>PERSISTENT_SEQUENTIAL</strong>（持久的顺序znode）</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div></pre></td><td class="code"><pre><div class="line">package xyz.llsean.zk;</div><div class="line"></div><div class="line">import org.apache.zookeeper.*;</div><div class="line">import org.junit.Before;</div><div class="line">import org.junit.Test;</div><div class="line"></div><div class="line">import java.io.IOException;</div><div class="line">import java.util.List;</div><div class="line"></div><div class="line">/**</div><div class="line"> * @author: Sean</div><div class="line"> * @date: 2019/2/22/22:06</div><div class="line"> * @version: 1.0</div><div class="line"> */</div><div class="line">public class zkClient &#123;</div><div class="line">    //集群地址：端口号</div><div class="line">    private String connected = "node01:2181,node02:2181,node03:2181,node04:2181";</div><div class="line"></div><div class="line">    //超时设置（毫秒）</div><div class="line">    private int timeout = 2000;</div><div class="line"></div><div class="line">    ZooKeeper zkCli = null;</div><div class="line"></div><div class="line">    @Before</div><div class="line">    //连接zookeeper集群</div><div class="line">    public void init() throws IOException &#123;</div><div class="line">        //String:连接集群的ip地址端口 Int：超时设置 Wacher：监听</div><div class="line">        zkCli = new ZooKeeper(connected, timeout, new Watcher() &#123;</div><div class="line">            //回调方法   显示根节点</div><div class="line">            public void process(WatchedEvent event) &#123;</div><div class="line">                System.out.println("已经触发" + event.getType() + "事件！");</div><div class="line">                List&lt;String&gt; chilren;</div><div class="line"></div><div class="line">                //获得节点get</div><div class="line">                try &#123;</div><div class="line">                    chilren = zkCli.getChildren("/", true);</div><div class="line">                &#125; catch (KeeperException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125; catch (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    //测试 是否联通集群  创建节点</div><div class="line">    @Test</div><div class="line">    public void createNode() throws KeeperException, InterruptedException &#123;</div><div class="line">        String p = zkCli.create("/sean", "2333".getBytes(),</div><div class="line">                ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);</div><div class="line">        //System.out.println("目前节点状态：["+zkCli.exists("/", true)+"]");</div><div class="line">        System.out.println(p);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    /**</div><div class="line">     * 获取节点列表</div><div class="line">     * */</div><div class="line">    @Test</div><div class="line">    public void getChild() throws KeeperException, InterruptedException &#123;</div><div class="line">        List&lt;String&gt; children = zkCli.getChildren("/", true);</div><div class="line">        for(String s:children)&#123;</div><div class="line">            System.out.println(s);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 删除节点</div><div class="line">     * */</div><div class="line">    @Test</div><div class="line">    public void deleteData() throws KeeperException, InterruptedException &#123;</div><div class="line">        zkCli.delete("/sean0000000016", -1);</div><div class="line">        getChild();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 修改数据</div><div class="line">     * */</div><div class="line">    @Test</div><div class="line">    public void setData() throws KeeperException, InterruptedException &#123;</div><div class="line">        zkCli.setData("/sean", "sb".getBytes(), -1);</div><div class="line"></div><div class="line">        //查看</div><div class="line">        byte[] data = zkCli.getData("/sean", false, new Stat());</div><div class="line">        System.out.println(new String (data));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 指定的节点是否存在</div><div class="line">     * */</div><div class="line">    @Test</div><div class="line">    public void testExist() throws KeeperException, InterruptedException &#123;</div><div class="line">        Stat exists = zkCli.exists("/llsean", false);</div><div class="line">        System.out.println(exists == null ? "不存在"":"存在");</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Zookeeper</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/08/Zookeeper命令行以及API操作/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Zookeeper简介和安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -892,404 +1425,9 @@ IOUtils.copyBytes(input,output,1024);
 
 
   
-    <article id="post-MapReduce小文件切片技巧" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/08/MapReduce小文件切片技巧/">MapReduce小文件切片技巧</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/08/MapReduce小文件切片技巧/" class="archive-article-date">
-  	<time datetime="2019-03-08T07:41:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>背景</strong>：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">如果企业中存在海量的小文件数据</div><div class="line">TextInputFormat按照文件规划切片，文件不管多小都是一个单独的切片，启动mapt</div><div class="line">ask任务去执行，这样会产生大量的maptask，浪费资源。</div><div class="line">优化手段：</div><div class="line">小文件合并大文件，如果不动这个小文件内容。</div></pre></td></tr></table></figure>
-<p><strong>代码</strong>：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">在Driver中添加如下代码：</div><div class="line"></div><div class="line"><span class="comment">//设置读取数据切片的类</span></div><div class="line">job.setInputFormatClass(CombineTextInputFormat.class);</div><div class="line"><span class="comment">//最大切片大小8M</span></div><div class="line">CombineTextInputFormat.setMaxInputSplitSize(job,<span class="number">8388608</span>);</div><div class="line"><span class="comment">//最小切片大小为6M</span></div><div class="line">CombineTextInputFormat.setMinInputSplitSize(job,<span class="number">6291456</span>);</div></pre></td></tr></table></figure>
-<p><strong>Driver模板代码步骤</strong><br>    //1.创建job任务</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//2.制定jar包位置</span></div><div class="line"><span class="comment">//3.关联Mapper类</span></div><div class="line"><span class="comment">//4.关联Reducer类</span></div><div class="line"><span class="comment">//5.设置Mapper输出的数据类型</span></div><div class="line"><span class="comment">//6.设置Redecer输出的数据类型</span></div><div class="line"><span class="comment">//设置读取数据切片的类</span></div><div class="line"><span class="comment">//加入自定义分区</span></div><div class="line"><span class="comment">//设置结果文件个数</span></div><div class="line"><span class="comment">//7.设置数据输入的路径--自行指定</span></div><div class="line"><span class="comment">//8.设置数据输出的路径</span></div><div class="line"><span class="comment">//9.提交任务</span></div></pre></td></tr></table></figure>
-<p>如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//1.创建job任务</span></div><div class="line">Configuration conf = <span class="keyword">new</span> Configuration();</div><div class="line"></div><div class="line"><span class="comment">//2.制定jar包位置</span></div><div class="line">Job job = Job.getInstance(conf);</div><div class="line"></div><div class="line"><span class="comment">//3.关联Mapper类</span></div><div class="line">job.setMapperClass(FlowSortMapper_.class);</div><div class="line"></div><div class="line"><span class="comment">//4.关联Reducer类</span></div><div class="line">job.setReducerClass(FlowSortReducer_.class);</div><div class="line"></div><div class="line"><span class="comment">//5.设置Mapper输出的数据类型</span></div><div class="line">job.setMapOutputKeyClass(FlowSortBean_.class);</div><div class="line">job.setMapOutputValueClass(Text.class);</div><div class="line"></div><div class="line"><span class="comment">//6.设置Redecer输出的数据类型</span></div><div class="line">job.setOutputKeyClass(Text.class);</div><div class="line">job.setOutputValueClass(FlowSortBean_.class);</div><div class="line"></div><div class="line"><span class="comment">//设置读取数据切片的类</span></div><div class="line"><span class="comment">//加入自定义分区</span></div><div class="line">job.setPartitionerClass(FlowSortPartitioner_.class);</div><div class="line"></div><div class="line"><span class="comment">//设置结果文件个数</span></div><div class="line">job.setNumReduceTasks(<span class="number">5</span>);</div><div class="line"></div><div class="line"><span class="comment">//7.设置数据输入的路径--自行指定</span></div><div class="line">FileInputFormat.setInputPaths(job, <span class="keyword">new</span> Path(<span class="string">"H:\\temp\\out\\logs_self1"</span>));</div><div class="line"></div><div class="line"><span class="comment">//8.设置数据输出的路径</span></div><div class="line">FileOutputFormat.setOutputPath(job, <span class="keyword">new</span> Path(<span class="string">"H:\\temp\\out\\logs_self5"</span>));</div><div class="line"></div><div class="line"><span class="comment">//9.提交任务</span></div><div class="line"><span class="keyword">boolean</span> rs = job.waitForCompletion(<span class="keyword">true</span>);</div><div class="line">System.exit(rs?<span class="number">0</span>:<span class="number">1</span>);</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">MapReduce</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/08/MapReduce小文件切片技巧/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-MapReduce分区和排序" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/08/MapReduce分区和排序/">MapReduce分区和排序</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/08/MapReduce分区和排序/" class="archive-article-date">
-  	<time datetime="2019-03-08T07:40:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1、分区"><a href="#1、分区" class="headerlink" title="1、分区"></a>1、分区</h2><p>需求：统计结果进行分区，根据手机号前三位来进行分区，如：135的为一个区域，136为第二个区域，以此类推。</p>
-<p><strong>步骤</strong>：</p>
-<ol>
-<li>自定义类继承partitioner<key,value></key,value></li>
-<li>重写方法<strong>getPartition()</strong></li>
-<li>业务逻辑</li>
-<li>在driver类中加入setPartitionerClass</li>
-<li>注意：需要指定setNumReduceTasks(<strong>个数=分区数+1</strong>)</li>
-</ol>
-<p><strong>代码</strong></p>
-<ol>
-<li><p>新建类PhonenumPatitioner_</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PhonenumPatitioner_</span> <span class="keyword">extends</span> <span class="title">Partitioner</span>&lt;<span class="title">Text</span>, <span class="title">FlowBean_</span>&gt;</span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getPartition</span><span class="params">(Text key, FlowBean_ value, <span class="keyword">int</span> numPartitioner)</span> </span>&#123;</div><div class="line">​    <span class="comment">//获取前三位作为分区依据</span></div><div class="line">​    String phoneNum = key.toString().substring(<span class="number">0</span>,<span class="number">3</span>);</div><div class="line"></div><div class="line">​    <span class="comment">//分区</span></div><div class="line">​    <span class="keyword">int</span> Partition = <span class="number">5</span>;</div><div class="line"></div><div class="line">​    <span class="keyword">if</span>(<span class="string">"135"</span>.equals(phoneNum))&#123;</div><div class="line">​        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">​    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="string">"136"</span>.equals(phoneNum))&#123;</div><div class="line">​        <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">​    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="string">"137"</span>.equals(phoneNum))&#123;</div><div class="line">​        <span class="keyword">return</span> <span class="number">2</span>;</div><div class="line">​    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="string">"138"</span>.equals(phoneNum))&#123;</div><div class="line">​        <span class="keyword">return</span> <span class="number">3</span>;</div><div class="line">​    &#125;</div><div class="line"></div><div class="line">​    <span class="keyword">return</span> Partition;</div><div class="line">     &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<ol>
-<li><p>修改Driver文件FlowCountDriver</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">//加入自定义分区`</div><div class="line">job.setPartitionerClass(PhonenumPatitioner_.class);</div><div class="line"></div><div class="line">//设置结果文件个数</div><div class="line">job.setNumReduceTasks(5);</div></pre></td></tr></table></figure>
-<p><strong>注意：设置文件个数应为分区数+1，倘若设置个数较小，不会报错但是无结果。倘若设置个数过大，程序正常执行，但是会多出一部分空文件</strong></p>
-</li>
-</ol>
-<h2 id="2、排序"><a href="#2、排序" class="headerlink" title="2、排序"></a>2、排序</h2><p>需求：每个分区内进行排序？</p>
-<p><strong>步骤</strong>：</p>
-<ol>
-<li>实现WritableComparable接口</li>
-<li>重写compareTo方法</li>
-</ol>
-<p><strong>代码</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public int compareTo(FlowSortBean_ o) &#123;</div><div class="line">    //倒序排序</div><div class="line">    return this.flowSum &gt; o.getFlowSum() ? -1 : 1;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>区别于Writable接口，WritableComparable接口需要实现compaerTo方法，进行数据的正序或者逆序排列</strong></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">MapReduce</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/08/MapReduce分区和排序/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-HDFS基础与操作二" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/08/HDFS基础与操作二/">HDFS基础与操作二</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/08/HDFS基础与操作二/" class="archive-article-date">
-  	<time datetime="2019-03-08T07:40:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1、HDFS权限问题"><a href="#1、HDFS权限问题" class="headerlink" title="1、HDFS权限问题"></a>1、HDFS权限问题</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">针对用户操作没有权限 permission denied：</div></pre></td></tr></table></figure>
-<p>  （1）修改 hdfs-site.xml 去掉权限检查（关闭HDFS服务 stop-all.sh;修改后 重新 Start-all.sh）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"> &lt;property&gt;</div><div class="line">       &lt;name&gt;dfs.permissions&lt;/name&gt;</div><div class="line">       &lt;value&gt;false&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
-<p>  （2）通过设定用户名字 root</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">System.setProperty(&quot;HADOOP_USER_NAME&quot;,&quot;root&quot;);</div></pre></td></tr></table></figure>
-<p>  （3）通过java的-D参数传递。 HADOOP_USER_NAME=root  （命令行的方式）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public static void main(String[] args)</div></pre></td></tr></table></figure>
-<p>   <a href="https://www.cnblogs.com/-wangjiannan/p/3626965.html" target="_blank" rel="external">-D参数参考网址</a></p>
-<p>  （4）hdfs dfs -chmod 777 /input  让所有用户访问。</p>
-<p>  （5）针对HDFS权限问题，有kerberos认证。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Kerberos: The Network Authentication Protocol</div></pre></td></tr></table></figure>
-<p>   <a href="https://www.cnblogs.com/wukenaihe/p/3732141.html" title="参考网址" target="_blank" rel="external">Kerberos参考网址</a></p>
-<h2 id="2、IDEA-Maven工程实现HDFS的文件上传与下载"><a href="#2、IDEA-Maven工程实现HDFS的文件上传与下载" class="headerlink" title="2、IDEA Maven工程实现HDFS的文件上传与下载"></a>2、IDEA Maven工程实现HDFS的文件上传与下载</h2><p><strong>Maven环境中 只有当 POM文件中所有的依赖包全部变成白色。</strong></p>
-<p><strong>查看源码：crtl+鼠标左键</strong></p>
-<p>  （1）HDFS文件上传</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">import org.apache.hadoop.conf.Configuration;</div><div class="line">import org.apache.hadoop.fs.FileSystem;</div><div class="line">import org.apache.hadoop.fs.Path;</div><div class="line">import org.apache.hadoop.io.IOUtils;</div><div class="line"></div><div class="line">import java.io.*;</div><div class="line"></div><div class="line">/**</div><div class="line"> * Created by Sean on 2019/1/14/20:38</div><div class="line"> * 实现文件上传</div><div class="line"> */</div><div class="line">public class HdfsUpload &#123;</div><div class="line">public static void main(String[] args) throws IOException &#123;</div><div class="line"></div><div class="line">    //step 1 建立客户端</div><div class="line">    Configuration conf = new Configuration();</div><div class="line">    conf.set(&quot;fs.defaultFS&quot;,&quot;hdfs://node01:9000&quot;);</div><div class="line">    //创建客户端</div><div class="line">    FileSystem client = FileSystem.get(conf);</div><div class="line"></div><div class="line">    //step 2 实现文件上传</div><div class="line">    //hdfs dfs -put /copyFromLocal</div><div class="line">    File file = new File(&quot;H:\\大数据实验手册\\大数据课程\\testFile.txt&quot;);</div><div class="line">    InputStream input = new FileInputStream(file);</div><div class="line"></div><div class="line">    //step 3 创建本地输出流</div><div class="line">    OutputStream output = client.create(new Path(&quot;/input/0114_2.txt&quot;));</div><div class="line"></div><div class="line">    //step 4 开始写入HDFS</div><div class="line">    /*方法一：*/</div><div class="line">    /*int len = 0;</div><div class="line">    byte[] buffer = new byte[1024];</div><div class="line">    //因为read读到文件尾会返回-1</div><div class="line">    while((len = input.read(buffer)) != -1)&#123;</div><div class="line">        output.write(buffer,0,len);</div><div class="line">    &#125;//循环写入数据</div><div class="line">    input.close();</div><div class="line">    output.flush();</div><div class="line">    buffer.close();*/</div><div class="line"></div><div class="line">    /*方法二*/</div><div class="line">    IOUtils.copyBytes(input,output,1024);</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">System.out.println(&quot;上传成功！&quot;);</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>  （2）HDFS文件下载</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">import org.apache.hadoop.conf.Configuration;</div><div class="line">import org.apache.hadoop.fs.FileSystem;</div><div class="line">import org.apache.hadoop.fs.Path;</div><div class="line">import org.apache.hadoop.io.IOUtils;</div><div class="line"></div><div class="line">import java.io.*;</div><div class="line"></div><div class="line">/**</div></pre></td></tr></table></figure>
-<ul>
-<li><p>Created by Sean on 2019/1/14/21:57</p>
-</li>
-<li><p>Hdfs下载文件<br>*/<br>public class HdfsDownLoad {<br>public static void main(String[] args) throws IOException {</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">//step 1 建立客户端</div><div class="line">Configuration conf = new Configuration();</div><div class="line">conf.set(&quot;fs.defaultFS&quot;,&quot;hdfs://node01:9000&quot;);</div><div class="line">//创建客户端</div><div class="line">FileSystem client = FileSystem.get(conf);</div><div class="line"></div><div class="line">//step 2 实现文件下载,创建数据输入流 指向hdfs 从hdfs读取数据</div><div class="line">//hdfs dfs -get /copyToLocal</div><div class="line">InputStream input = client.open(new Path(&quot;/input/0114_1.txt&quot;));</div><div class="line"></div><div class="line">//step 3 创建本地输出流</div><div class="line">OutputStream output = new FileOutputStream(&quot;H:/大数据实验手册/大数据课程/b.txt&quot;);</div><div class="line"></div><div class="line">//step 4 开始写入本地</div><div class="line">/*IOUtils*/</div><div class="line">IOUtils.copyBytes(input,output,1024);</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>}</p>
-<p><strong>使用IOUtils 输入路径 输出路径</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">IOUtils.copyBytes(input,output,1024);</div></pre></td></tr></table></figure>
-<h2 id="3、HDFS上传与下载原理"><a href="#3、HDFS上传与下载原理" class="headerlink" title="3、HDFS上传与下载原理"></a>3、HDFS上传与下载原理</h2><p><img src="https://i.imgur.com/ZByPVDT.png" alt=""></p>
-<h2 id="4、安全模式-safe-mode"><a href="#4、安全模式-safe-mode" class="headerlink" title="4、安全模式 safe mode"></a>4、安全模式 safe mode</h2><h2 id="5、快照：是一种备份，默认：HDFS快照是关闭"><a href="#5、快照：是一种备份，默认：HDFS快照是关闭" class="headerlink" title="5、快照：是一种备份，默认：HDFS快照是关闭"></a>5、快照：是一种备份，默认：HDFS快照是关闭</h2><h2 id="6、配额：Quota"><a href="#6、配额：Quota" class="headerlink" title="6、配额：Quota"></a>6、配额：Quota</h2><h2 id="7、回收站：默认HDFS的回收站禁用"><a href="#7、回收站：默认HDFS的回收站禁用" class="headerlink" title="7、回收站：默认HDFS的回收站禁用"></a>7、回收站：默认HDFS的回收站禁用</h2><h2 id="8、idea控制上传下载遇到的问题及其解决"><a href="#8、idea控制上传下载遇到的问题及其解决" class="headerlink" title="8、idea控制上传下载遇到的问题及其解决"></a>8、idea控制上传下载遇到的问题及其解决</h2><p>  错误信息：<br>      <code>Failed to locate the winutils binary in the hadoop binary path  java.io.IOException: Could not locate executable null\bin\winutils.exe in the Hadoop binaries.</code></p>
-<p>  step1:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">下载：hadoop2.7.3  winutils binary </div><div class="line">https://github.com/rucyang/hadoop.dll-and-winutils.exe-for-hadoop2.7.3-on-windows_X64</div></pre></td></tr></table></figure>
-<p>  step2:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">配置环境变量 拷贝进入 D:\hadoop-2.7.3\bin文件下。</div><div class="line">hadoop.home.dir ---bin/winutils.exe</div><div class="line">HADOOP_HOME:D:\hadoop-2.7.3,然后再path里面增加 %HADOOP_HOME%\bin</div><div class="line">或者：System.setProperty(&quot;hadoop.home.dir&quot;, &quot;D:\\hadoop-2.7.3&quot;);</div></pre></td></tr></table></figure>
-<p>​            </p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDFS</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/08/HDFS基础与操作二/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-HDFS基础与操作一" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/08/HDFS基础与操作一/">HDFS基础与操作一</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/08/HDFS基础与操作一/" class="archive-article-date">
-  	<time datetime="2019-03-08T07:40:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1、HDFS-Web-Console"><a href="#1、HDFS-Web-Console" class="headerlink" title="1、HDFS-Web Console"></a>1、HDFS-Web Console</h2><h3 id="（1）Overview–展示HDFS的基本信息"><a href="#（1）Overview–展示HDFS的基本信息" class="headerlink" title="（1）Overview–展示HDFS的基本信息"></a>（1）Overview–展示HDFS的基本信息</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Safemode is off.---高级特性。</div></pre></td></tr></table></figure>
-<h3 id="（2）DataNodes-数据节点信息"><a href="#（2）DataNodes-数据节点信息" class="headerlink" title="（2）DataNodes-数据节点信息"></a>（2）DataNodes-数据节点信息</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">增加和删除数据节点（Decomissioning--&gt;Dead）</div></pre></td></tr></table></figure>
-<h3 id="（3）Datanode-Volume-Failures–数据节点-硬件错误"><a href="#（3）Datanode-Volume-Failures–数据节点-硬件错误" class="headerlink" title="（3）Datanode Volume Failures–数据节点 硬件错误"></a>（3）Datanode Volume Failures–数据节点 硬件错误</h3><h3 id="（4）Snapshot—高级特性"><a href="#（4）Snapshot—高级特性" class="headerlink" title="（4）Snapshot—高级特性"></a>（4）Snapshot—高级特性</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">快照实现数据的备份，防止数据的误操作和丢失。默认是关闭的。</div></pre></td></tr></table></figure>
-<h3 id="（5）Startup-Progress–启动过程"><a href="#（5）Startup-Progress–启动过程" class="headerlink" title="（5）Startup Progress–启动过程"></a>（5）Startup Progress–启动过程</h3><p>   <img src="H:/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E9%AA%8C%E6%89%8B%E5%86%8C/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AF%BE%E7%A8%8B/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/startup.png" alt=""></p>
-<h3 id="（6）Uitlities"><a href="#（6）Uitlities" class="headerlink" title="（6）Uitlities:"></a>（6）Uitlities:</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Browse 文件 ---hdfs -dfs -ls /</div><div class="line">logs---查看日志。</div></pre></td></tr></table></figure>
-<h2 id="2、HDFS-普通操作命令–hdfs-dfs-hadoop-fs"><a href="#2、HDFS-普通操作命令–hdfs-dfs-hadoop-fs" class="headerlink" title="2、HDFS 普通操作命令–hdfs dfs(hadoop fs)"></a>2、HDFS 普通操作命令–hdfs dfs(hadoop fs)</h2><h3 id="（1）创建目录–mkdir"><a href="#（1）创建目录–mkdir" class="headerlink" title="（1）创建目录–mkdir"></a>（1）创建目录–mkdir</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hdfs dfs -mkdir /</div></pre></td></tr></table></figure>
-<h3 id="（2）查看–ls"><a href="#（2）查看–ls" class="headerlink" title="（2）查看–ls"></a>（2）查看–ls</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">查看目录和子目录  hdfs dfs -ls -R /</div><div class="line">                hdfs dfs -lsr  /</div></pre></td></tr></table></figure>
-<h3 id="（3）上传数据"><a href="#（3）上传数据" class="headerlink" title="（3）上传数据"></a>（3）上传数据</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">-put  ：</div><div class="line">-copyFromLocal：          本地路径        hdfs路径</div><div class="line">  hdfs dfs -copyFromLocal ~/temp/a.txt  /test0113/</div><div class="line">-moveFromLocal: 会删除本地文件 剪切</div></pre></td></tr></table></figure>
-<h3 id="（4）下载数据"><a href="#（4）下载数据" class="headerlink" title="（4）下载数据"></a>（4）下载数据</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-get: </div><div class="line">-copyToLocal:从HDFS下载到本地</div></pre></td></tr></table></figure>
-<h3 id="（5）删除数据"><a href="#（5）删除数据" class="headerlink" title="（5）删除数据"></a>（5）删除数据</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">-rm</div><div class="line">-rmr: 删除HDFS的目录和子目录   </div><div class="line">     删除日志：  Deleted /test0113</div><div class="line">    回收站---高级特性 默认是关闭。</div></pre></td></tr></table></figure>
-<h3 id="（6）合并数据–（为hive表数据操作做准备。）"><a href="#（6）合并数据–（为hive表数据操作做准备。）" class="headerlink" title="（6）合并数据–（为hive表数据操作做准备。）"></a>（6）合并数据–（为hive表数据操作做准备。）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">  -getmerge :把某个HDFS的目录下的文件进行先合并后下载</div><div class="line"> *：通配符 ？</div><div class="line">hdfs dfs -getmerge /students /root/students.txt</div></pre></td></tr></table></figure>
-<h3 id="（7）计数和文件大小"><a href="#（7）计数和文件大小" class="headerlink" title="（7）计数和文件大小"></a>（7）计数和文件大小</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">  -count 显示 文件夹、文件个数 文件总的大小</div><div class="line">  -du 显示每个文件夹和文件的大小</div><div class="line">[root@bigdata124 ~]# hdfs dfs -count /students</div><div class="line">           1            4                 63 /students</div><div class="line">[root@bigdata124 ~]# hdfs dfs -du /students</div><div class="line">25  /students/students01.txt</div><div class="line">13  /students/students02.txt</div><div class="line">13  /students/students03.txt</div><div class="line">12  /students/students04.txt</div></pre></td></tr></table></figure>
-<h3 id="（8）负载均衡-balancer"><a href="#（8）负载均衡-balancer" class="headerlink" title="（8）负载均衡 balancer"></a>（8）负载均衡 balancer</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">实现datanode 数据存储均衡。</div><div class="line">## hdfs balancer ##</div></pre></td></tr></table></figure>
-<h2 id="3、HDFS-管理员命令"><a href="#3、HDFS-管理员命令" class="headerlink" title="3、HDFS 管理员命令"></a>3、HDFS 管理员命令</h2><h3 id="（1）hdfs-dfsadmin-report-打印报告"><a href="#（1）hdfs-dfsadmin-report-打印报告" class="headerlink" title="（1）hdfs dfsadmin -report 打印报告"></a>（1）hdfs dfsadmin -report 打印报告</h3><h3 id="（2）-safemode"><a href="#（2）-safemode" class="headerlink" title="（2）-safemode "></a>（2）-safemode <enter |="" leave="" get="" wait=""></enter></h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">enter:手动进入安全模式</div><div class="line">leave:手动离开安全模式</div><div class="line">get:获得当前安全模式的状态</div></pre></td></tr></table></figure>
-<h3 id="（3）快照命令"><a href="#（3）快照命令" class="headerlink" title="（3）快照命令"></a>（3）快照命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[-allowSnapshot &lt;snapshotDir&gt;]</div><div class="line">[-disallowSnapshot &lt;snapshotDir&gt;]</div></pre></td></tr></table></figure>
-<h3 id="（4）Quota-配额"><a href="#（4）Quota-配额" class="headerlink" title="（4）Quota 配额"></a>（4）Quota 配额</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">a、名称配额--数量</div><div class="line">[-setQuota &lt;quota&gt; &lt;dirname&gt;...&lt;dirname&gt;]</div><div class="line">[-clrQuota &lt;dirname&gt;...&lt;dirname&gt;]</div><div class="line"></div><div class="line">b、空间配额--空间大小</div><div class="line">[-setSpaceQuota &lt;quota&gt; [-storageType &lt;storagetype&gt;] &lt;dirname&gt;...&lt;dirname&gt;]</div><div class="line">[-clrSpaceQuota [-storageType &lt;storagetype&gt;] &lt;dirname&gt;...&lt;dirname&gt;]</div></pre></td></tr></table></figure>
-<h2 id="4、IDEA-Maven工程简介"><a href="#4、IDEA-Maven工程简介" class="headerlink" title="4、IDEA Maven工程简介"></a>4、IDEA Maven工程简介</h2><p> （1）IDEA 下载地址：<a href="https://www.jetbrains.com/idea/download/" target="_blank" rel="external">https://www.jetbrains.com/idea/download/</a><br>      破解方法自行查找。Ultimate</p>
-<p> （2）File-new Project-&gt;Maven</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">GroupID: 公司名字</div><div class="line">artifactId：工程名字。</div><div class="line">java程序在：src-》main-&gt;java 右键 新建 java class文件</div><div class="line">target: 是运行程序生成的class文件</div></pre></td></tr></table></figure>
-<p> （3）管理包</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"> /opt/moudle/hadoop-2.7.3/share/hadoop/common/*.jar</div><div class="line"> /opt/moudle/hadoop-2.7.3/share/hadoop/common/lib/*.jar</div><div class="line"> /opt/moudle/hadoop-2.7.3/share/hadoop/hdfs/*.jar</div><div class="line"> /opt/moudle/hadoop-2.7.3/share/hadoop/hdfs/lib/*.jar</div><div class="line">  </div><div class="line"> 通过maven只需要配置POM文件。</div><div class="line">a、 下载一个maven版本 </div><div class="line"> http://maven.apache.org/index.html，</div><div class="line">b、通过 File-settings-Maven</div><div class="line"> 修改： D:\TZ\apache-maven-3.6.0-bin\apache-maven-3.6.0\conf\settings.xml</div><div class="line">    55行：&lt;localRepository&gt;D:\TZ\m2\Repository&lt;/localRepository&gt;</div><div class="line"> MaveHome：D:\TZ\apache-maven-3.6.0-bin\apache-maven-3.6.0</div><div class="line"> User settings:D:\TZ\apache-maven-3.6.0-bin\apache-maven-3.6.0\conf\settings.xml </div><div class="line">c、POM中写入包的依赖</div><div class="line">  参考：https://mvnrepository.com/search?q=hadoop</div><div class="line"> &lt;dependencies&gt;</div><div class="line">    &lt;!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-common --&gt;</div><div class="line">    &lt;dependency&gt;</div><div class="line">        &lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;</div><div class="line">        &lt;artifactId&gt;hadoop-common&lt;/artifactId&gt;</div><div class="line">        &lt;version&gt;2.7.3&lt;/version&gt;</div><div class="line">    &lt;/dependency&gt;</div><div class="line">    &lt;dependency&gt;</div><div class="line">        &lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;</div><div class="line">        &lt;artifactId&gt;hadoop-hdfs&lt;/artifactId&gt;</div><div class="line">        &lt;version&gt;2.7.3&lt;/version&gt;</div><div class="line">    &lt;/dependency&gt;</div><div class="line">    &lt;dependency&gt;</div><div class="line">        &lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;</div><div class="line">        &lt;artifactId&gt;hadoop-client&lt;/artifactId&gt;</div><div class="line">        &lt;version&gt;2.7.3&lt;/version&gt;</div><div class="line">    &lt;/dependency&gt;</div><div class="line">&lt;/dependencies&gt;</div></pre></td></tr></table></figure>
-<p>5、java API 实现HDFS的文件夹创建。</p>
-<hr>
-<p>作业：（1）下载破解 IDEA<br>     （2）创建Maven工程，跑通老师的代码。</p>
-<hr>
-<h3 id="Permission-denied-user-Young-access-WRITE-inode-”-test0113”"><a href="#Permission-denied-user-Young-access-WRITE-inode-”-test0113”" class="headerlink" title="Permission denied: user=Young, access=WRITE, inode=”/test0113”"></a>Permission denied: user=Young, access=WRITE, inode=”/test0113”</h3><p>6、java API 实现HDFS的文件上传</p>
-<p>7、java API 实现HDFS的文件下载</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDFS</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/08/HDFS基础与操作一/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
     </nav>
   
 
@@ -1384,6 +1522,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">MapReduce</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Azkaban</a>
               </li>
              
@@ -1392,15 +1534,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">MapReduce</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Logtash</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kibana</a>
+                <a href="javascript:void(0)" class="js-tag color1">Flume</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1408,7 +1546,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Flume</a>
+                <a href="javascript:void(0)" class="js-tag color2">Kibana</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1424,19 +1562,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Kafka</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Linux</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Sqoop</a>
+                <a href="javascript:void(0)" class="js-tag color1">Kafka</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Scala</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Mapreduce</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Sqoop</a>
               </li>
              
               <li class="article-tag-list-item">
