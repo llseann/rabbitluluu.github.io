@@ -154,6 +154,780 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-HDFS基础与操作一" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/08/HDFS基础与操作一/">HDFS基础与操作一</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/08/HDFS基础与操作一/" class="archive-article-date">
+  	<time datetime="2019-03-08T07:40:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1、HDFS-Web-Console"><a href="#1、HDFS-Web-Console" class="headerlink" title="1、HDFS-Web Console"></a>1、HDFS-Web Console</h2><h3 id="（1）Overview–展示HDFS的基本信息"><a href="#（1）Overview–展示HDFS的基本信息" class="headerlink" title="（1）Overview–展示HDFS的基本信息"></a>（1）Overview–展示HDFS的基本信息</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Safemode is off.---高级特性。</div></pre></td></tr></table></figure>
+<h3 id="（2）DataNodes-数据节点信息"><a href="#（2）DataNodes-数据节点信息" class="headerlink" title="（2）DataNodes-数据节点信息"></a>（2）DataNodes-数据节点信息</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">增加和删除数据节点（Decomissioning--&gt;Dead）</div></pre></td></tr></table></figure>
+<h3 id="（3）Datanode-Volume-Failures–数据节点-硬件错误"><a href="#（3）Datanode-Volume-Failures–数据节点-硬件错误" class="headerlink" title="（3）Datanode Volume Failures–数据节点 硬件错误"></a>（3）Datanode Volume Failures–数据节点 硬件错误</h3><h3 id="（4）Snapshot—高级特性"><a href="#（4）Snapshot—高级特性" class="headerlink" title="（4）Snapshot—高级特性"></a>（4）Snapshot—高级特性</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">快照实现数据的备份，防止数据的误操作和丢失。默认是关闭的。</div></pre></td></tr></table></figure>
+<h3 id="（5）Startup-Progress–启动过程"><a href="#（5）Startup-Progress–启动过程" class="headerlink" title="（5）Startup Progress–启动过程"></a>（5）Startup Progress–启动过程</h3><p>   <img src="H:/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E9%AA%8C%E6%89%8B%E5%86%8C/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AF%BE%E7%A8%8B/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/startup.png" alt=""></p>
+<h3 id="（6）Uitlities"><a href="#（6）Uitlities" class="headerlink" title="（6）Uitlities:"></a>（6）Uitlities:</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Browse 文件 ---hdfs -dfs -ls /</div><div class="line">logs---查看日志。</div></pre></td></tr></table></figure>
+<h2 id="2、HDFS-普通操作命令–hdfs-dfs-hadoop-fs"><a href="#2、HDFS-普通操作命令–hdfs-dfs-hadoop-fs" class="headerlink" title="2、HDFS 普通操作命令–hdfs dfs(hadoop fs)"></a>2、HDFS 普通操作命令–hdfs dfs(hadoop fs)</h2><h3 id="（1）创建目录–mkdir"><a href="#（1）创建目录–mkdir" class="headerlink" title="（1）创建目录–mkdir"></a>（1）创建目录–mkdir</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hdfs dfs -mkdir /</div></pre></td></tr></table></figure>
+<h3 id="（2）查看–ls"><a href="#（2）查看–ls" class="headerlink" title="（2）查看–ls"></a>（2）查看–ls</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">查看目录和子目录  hdfs dfs -ls -R /</div><div class="line">                hdfs dfs -lsr  /</div></pre></td></tr></table></figure>
+<h3 id="（3）上传数据"><a href="#（3）上传数据" class="headerlink" title="（3）上传数据"></a>（3）上传数据</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">-put  ：</div><div class="line">-copyFromLocal：          本地路径        hdfs路径</div><div class="line">  hdfs dfs -copyFromLocal ~/temp/a.txt  /test0113/</div><div class="line">-moveFromLocal: 会删除本地文件 剪切</div></pre></td></tr></table></figure>
+<h3 id="（4）下载数据"><a href="#（4）下载数据" class="headerlink" title="（4）下载数据"></a>（4）下载数据</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-get: </div><div class="line">-copyToLocal:从HDFS下载到本地</div></pre></td></tr></table></figure>
+<h3 id="（5）删除数据"><a href="#（5）删除数据" class="headerlink" title="（5）删除数据"></a>（5）删除数据</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">-rm</div><div class="line">-rmr: 删除HDFS的目录和子目录   </div><div class="line">     删除日志：  Deleted /test0113</div><div class="line">    回收站---高级特性 默认是关闭。</div></pre></td></tr></table></figure>
+<h3 id="（6）合并数据–（为hive表数据操作做准备。）"><a href="#（6）合并数据–（为hive表数据操作做准备。）" class="headerlink" title="（6）合并数据–（为hive表数据操作做准备。）"></a>（6）合并数据–（为hive表数据操作做准备。）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">  -getmerge :把某个HDFS的目录下的文件进行先合并后下载</div><div class="line"> *：通配符 ？</div><div class="line">hdfs dfs -getmerge /students /root/students.txt</div></pre></td></tr></table></figure>
+<h3 id="（7）计数和文件大小"><a href="#（7）计数和文件大小" class="headerlink" title="（7）计数和文件大小"></a>（7）计数和文件大小</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">  -count 显示 文件夹、文件个数 文件总的大小</div><div class="line">  -du 显示每个文件夹和文件的大小</div><div class="line">[root@bigdata124 ~]# hdfs dfs -count /students</div><div class="line">           1            4                 63 /students</div><div class="line">[root@bigdata124 ~]# hdfs dfs -du /students</div><div class="line">25  /students/students01.txt</div><div class="line">13  /students/students02.txt</div><div class="line">13  /students/students03.txt</div><div class="line">12  /students/students04.txt</div></pre></td></tr></table></figure>
+<h3 id="（8）负载均衡-balancer"><a href="#（8）负载均衡-balancer" class="headerlink" title="（8）负载均衡 balancer"></a>（8）负载均衡 balancer</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">实现datanode 数据存储均衡。</div><div class="line">## hdfs balancer ##</div></pre></td></tr></table></figure>
+<h2 id="3、HDFS-管理员命令"><a href="#3、HDFS-管理员命令" class="headerlink" title="3、HDFS 管理员命令"></a>3、HDFS 管理员命令</h2><h3 id="（1）hdfs-dfsadmin-report-打印报告"><a href="#（1）hdfs-dfsadmin-report-打印报告" class="headerlink" title="（1）hdfs dfsadmin -report 打印报告"></a>（1）hdfs dfsadmin -report 打印报告</h3><h3 id="（2）-safemode"><a href="#（2）-safemode" class="headerlink" title="（2）-safemode "></a>（2）-safemode <enter |="" leave="" get="" wait=""></enter></h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">enter:手动进入安全模式</div><div class="line">leave:手动离开安全模式</div><div class="line">get:获得当前安全模式的状态</div></pre></td></tr></table></figure>
+<h3 id="（3）快照命令"><a href="#（3）快照命令" class="headerlink" title="（3）快照命令"></a>（3）快照命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[-allowSnapshot &lt;snapshotDir&gt;]</div><div class="line">[-disallowSnapshot &lt;snapshotDir&gt;]</div></pre></td></tr></table></figure>
+<h3 id="（4）Quota-配额"><a href="#（4）Quota-配额" class="headerlink" title="（4）Quota 配额"></a>（4）Quota 配额</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">a、名称配额--数量</div><div class="line">[-setQuota &lt;quota&gt; &lt;dirname&gt;...&lt;dirname&gt;]</div><div class="line">[-clrQuota &lt;dirname&gt;...&lt;dirname&gt;]</div><div class="line"></div><div class="line">b、空间配额--空间大小</div><div class="line">[-setSpaceQuota &lt;quota&gt; [-storageType &lt;storagetype&gt;] &lt;dirname&gt;...&lt;dirname&gt;]</div><div class="line">[-clrSpaceQuota [-storageType &lt;storagetype&gt;] &lt;dirname&gt;...&lt;dirname&gt;]</div></pre></td></tr></table></figure>
+<h2 id="4、IDEA-Maven工程简介"><a href="#4、IDEA-Maven工程简介" class="headerlink" title="4、IDEA Maven工程简介"></a>4、IDEA Maven工程简介</h2><p> （1）IDEA 下载地址：<a href="https://www.jetbrains.com/idea/download/" target="_blank" rel="external">https://www.jetbrains.com/idea/download/</a><br>      破解方法自行查找。Ultimate</p>
+<p> （2）File-new Project-&gt;Maven</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">GroupID: 公司名字</div><div class="line">artifactId：工程名字。</div><div class="line">java程序在：src-》main-&gt;java 右键 新建 java class文件</div><div class="line">target: 是运行程序生成的class文件</div></pre></td></tr></table></figure>
+<p> （3）管理包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"> /opt/moudle/hadoop-2.7.3/share/hadoop/common/*.jar</div><div class="line"> /opt/moudle/hadoop-2.7.3/share/hadoop/common/lib/*.jar</div><div class="line"> /opt/moudle/hadoop-2.7.3/share/hadoop/hdfs/*.jar</div><div class="line"> /opt/moudle/hadoop-2.7.3/share/hadoop/hdfs/lib/*.jar</div><div class="line">  </div><div class="line"> 通过maven只需要配置POM文件。</div><div class="line">a、 下载一个maven版本 </div><div class="line"> http://maven.apache.org/index.html，</div><div class="line">b、通过 File-settings-Maven</div><div class="line"> 修改： D:\TZ\apache-maven-3.6.0-bin\apache-maven-3.6.0\conf\settings.xml</div><div class="line">    55行：&lt;localRepository&gt;D:\TZ\m2\Repository&lt;/localRepository&gt;</div><div class="line"> MaveHome：D:\TZ\apache-maven-3.6.0-bin\apache-maven-3.6.0</div><div class="line"> User settings:D:\TZ\apache-maven-3.6.0-bin\apache-maven-3.6.0\conf\settings.xml </div><div class="line">c、POM中写入包的依赖</div><div class="line">  参考：https://mvnrepository.com/search?q=hadoop</div><div class="line"> &lt;dependencies&gt;</div><div class="line">    &lt;!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-common --&gt;</div><div class="line">    &lt;dependency&gt;</div><div class="line">        &lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;</div><div class="line">        &lt;artifactId&gt;hadoop-common&lt;/artifactId&gt;</div><div class="line">        &lt;version&gt;2.7.3&lt;/version&gt;</div><div class="line">    &lt;/dependency&gt;</div><div class="line">    &lt;dependency&gt;</div><div class="line">        &lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;</div><div class="line">        &lt;artifactId&gt;hadoop-hdfs&lt;/artifactId&gt;</div><div class="line">        &lt;version&gt;2.7.3&lt;/version&gt;</div><div class="line">    &lt;/dependency&gt;</div><div class="line">    &lt;dependency&gt;</div><div class="line">        &lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;</div><div class="line">        &lt;artifactId&gt;hadoop-client&lt;/artifactId&gt;</div><div class="line">        &lt;version&gt;2.7.3&lt;/version&gt;</div><div class="line">    &lt;/dependency&gt;</div><div class="line">&lt;/dependencies&gt;</div></pre></td></tr></table></figure>
+<p>5、java API 实现HDFS的文件夹创建。</p>
+<hr>
+<p>作业：（1）下载破解 IDEA<br>     （2）创建Maven工程，跑通老师的代码。</p>
+<hr>
+<h3 id="Permission-denied-user-Young-access-WRITE-inode-”-test0113”"><a href="#Permission-denied-user-Young-access-WRITE-inode-”-test0113”" class="headerlink" title="Permission denied: user=Young, access=WRITE, inode=”/test0113”"></a>Permission denied: user=Young, access=WRITE, inode=”/test0113”</h3><p>6、java API 实现HDFS的文件上传</p>
+<p>7、java API 实现HDFS的文件下载</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDFS</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/08/HDFS基础与操作一/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Hadoop安装过程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/08/Hadoop安装过程/">Hadoop安装过程</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/08/Hadoop安装过程/" class="archive-article-date">
+  	<time datetime="2019-03-08T07:37:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1、Hadoop的安装准备工作"><a href="#1、Hadoop的安装准备工作" class="headerlink" title="1、Hadoop的安装准备工作"></a>1、Hadoop的安装准备工作</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Hadoop名字来源--douge cutting</div></pre></td></tr></table></figure>
+<p>（1）安装好linux操作系统（IP配置）</p>
+<p>（2）关闭防火墙</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl stop（disable） firewalld.service</div></pre></td></tr></table></figure>
+<p>(3) 安装Jdk–winscp 上传 opt/software 解压到 opt/moudle<br>(4) Hadoop安装包—虚拟机的克隆 scp（拷贝）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"> a、提前准备好 mkdir /opt/moudle</div><div class="line">   tar -zxvf hadoop-2.7.3.tar.gz -C  /opt/moudle/</div><div class="line"></div><div class="line"> b、vi ~/.bash_profile 增加下面内容</div><div class="line">   HADOOP_HOME=/opt/moudle/hadoop-2.7.3</div><div class="line">   export HADOOP_HOME</div><div class="line">   PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH</div><div class="line">   export PATH</div><div class="line"></div><div class="line">c、 环境变量生效</div><div class="line">   source ~/.bash_profile</div><div class="line">    通过 输入 start 按两下tab 看是否有内容</div></pre></td></tr></table></figure>
+<p><strong> 虚拟机克隆  </strong></p>
+<p>  (1)保证虚拟机处于关闭状态</p>
+<p>  (2)右键-&gt;管理-&gt;克隆 当前状态 完整克隆–&gt;</p>
+<p>  (3)hostname–修改<br>       ip修改 –reboot</p>
+<h1 id="Hadoop（HDFS-Yarn）-本地-伪分布-全分布"><a href="#Hadoop（HDFS-Yarn）-本地-伪分布-全分布" class="headerlink" title="Hadoop（HDFS+Yarn） 本地 伪分布 全分布"></a>Hadoop（HDFS+Yarn） 本地 伪分布 全分布</h1><h2 id="2、Hadoop安装—本地安装"><a href="#2、Hadoop安装—本地安装" class="headerlink" title="2、Hadoop安装—本地安装"></a>2、Hadoop安装—本地安装</h2><p>   （1）特点：没有HDFS和Yarn 只能够测试MR程序是否成功， 作为一个普通的java程序。</p>
+<p>   （2）修改文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">vi hadoop-env.sh</div><div class="line">set number </div><div class="line">修改25行（行数不一 hadoop版本不一致）</div><div class="line">JAVA_HOME=/opt/moudle/jdk1.8.0_181</div><div class="line"> </div><div class="line">cd /root/</div><div class="line">mkdir temp</div><div class="line">touch a.txt</div><div class="line">vi a.txt</div></pre></td></tr></table></figure>
+<p><strong> mapred-site.xml 默认没有，我克隆的文件里面有 这个文件没有被覆盖指定了yarn资源 </strong></p>
+<h2 id="3、Hadoop安装—本地安装伪分布模式"><a href="#3、Hadoop安装—本地安装伪分布模式" class="headerlink" title="3、Hadoop安装—本地安装伪分布模式"></a>3、Hadoop安装—本地安装伪分布模式</h2><h3 id="（1）特点：在一台机器上模拟一个分布式环境具备hadoop的所有功能。"><a href="#（1）特点：在一台机器上模拟一个分布式环境具备hadoop的所有功能。" class="headerlink" title="（1）特点：在一台机器上模拟一个分布式环境具备hadoop的所有功能。"></a>（1）特点：在一台机器上模拟一个分布式环境具备hadoop的所有功能。</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">HDFS：NameNode+DataNode+SecondarynameNode</div><div class="line">Yarn：ResourceManager+NodeManager</div></pre></td></tr></table></figure>
+<h3 id="（2）修改的文件："><a href="#（2）修改的文件：" class="headerlink" title="（2）修改的文件："></a>（2）修改的文件：</h3><p>   <strong>step1:hadoop-env.sh</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">JAVA_HOME=/opt/moudle/jdk1.8.0_181</div></pre></td></tr></table></figure>
+<p>   <strong>step2:hdfs-site.xml</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;!--注释配置数据块的冗余度，默认是3--&gt;</div><div class="line">&lt;property&gt;</div><div class="line">   &lt;name&gt;dfs.replication&lt;/name&gt;</div><div class="line">   &lt;value&gt;1&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;!--注释配置HDFS的权限检查，默认是true--&gt;</div><div class="line">&lt;!--</div><div class="line">&lt;property&gt;</div><div class="line">   &lt;name&gt;dfs.permissions&lt;/name&gt;</div><div class="line">   &lt;value&gt;false&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">--&gt;</div></pre></td></tr></table></figure>
+<p>   <strong>step3:core-site.xml</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;!--配置HDFS主节点，namenode的地址,9000是RPC通信端口--&gt;</div><div class="line">  &lt;property&gt;</div><div class="line">     &lt;name&gt;fs.defaultFS&lt;/name&gt;</div><div class="line">     &lt;value&gt;hdfs://bigdata124:9000&lt;/value&gt;</div><div class="line">  &lt;/property&gt; </div><div class="line">&lt;!--配置HDFS数据块和元数据保存的目录,一定要修改--&gt;</div><div class="line">   &lt;property&gt;</div><div class="line">     &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</div><div class="line">     &lt;value&gt;/opt/moudle/hadoop-2.7.3/tmp&lt;/value&gt;</div><div class="line">  &lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>   <strong>step4：mapred-site.xml(默认没有)</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"> cp mapred-site.xml.template  mapred-site.xml</div><div class="line"></div><div class="line"> &lt;!--配置MR程序运行的框架--&gt;</div><div class="line">  &lt;property&gt;	</div><div class="line">	&lt;name&gt;mapreduce.framework.name&lt;/name&gt;</div><div class="line">	&lt;value&gt;yarn&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>   <strong>step5：yarn-site.xml</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">  &lt;!--配置Yarn的节点--&gt;</div><div class="line">  &lt;property&gt;	</div><div class="line">	&lt;name&gt;yarn.resourcemanager.hostname&lt;/name&gt;</div><div class="line">	&lt;value&gt;bigdata124&lt;/value&gt;</div><div class="line">&lt;/property&gt;	</div><div class="line">   &lt;!--NodeManager执行MR任务的方式是Shuffle洗牌--&gt;</div><div class="line">&lt;property&gt;	</div><div class="line">	&lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;</div><div class="line">	&lt;value&gt;mapreduce_shuffle&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>  <strong>step 6：通过HDFS namenode 格式化</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">在第4步中，hadoop.tmp.dir--格式化</div><div class="line">命令：hdfs namenode -format</div><div class="line">验证：是否格式化成功：</div><div class="line">Storage directory /opt/moudle/hadoop-2.7.3/tmp/dfs/name has been successfully formatted.</div></pre></td></tr></table></figure>
+<p> <strong>ps:重复格式化：hadoop.tmp.dir   先停止集群，需要删除原来的tmp文件。 rm -rf 重新格式化 启动集群</strong></p>
+<p> <strong>最后启动，通过start-all.sh启动</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">验证（5个）：5314 SecondaryNameNode</div><div class="line">5586 NodeManager</div><div class="line">5476 ResourceManager</div><div class="line">5126 DataNode</div><div class="line">5022 NameNode</div><div class="line">web访问:http://10.1.255.124:8088 yarn</div><div class="line">        http://10.1.255.124:50070 HDFS</div></pre></td></tr></table></figure>
+<h2 id="4、免密码登录的原理和配置"><a href="#4、免密码登录的原理和配置" class="headerlink" title="4、免密码登录的原理和配置"></a>4、免密码登录的原理和配置</h2><p>  ssh不对称加密算法（加密和解密是两个文件）。（对称加密： 加密和解密文件是同一个）<br>  <img src="H:/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E9%AA%8C%E6%89%8B%E5%86%8C/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AF%BE%E7%A8%8B/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/2.png" alt=""></p>
+<h3 id="（1）公钥–锁：给出去-给其他机器。"><a href="#（1）公钥–锁：给出去-给其他机器。" class="headerlink" title="（1）公钥–锁：给出去 给其他机器。"></a>（1）公钥–锁：给出去 给其他机器。</h3><h3 id="（2）私钥–钥匙：自己留着，解密。"><a href="#（2）私钥–钥匙：自己留着，解密。" class="headerlink" title="（2）私钥–钥匙：自己留着，解密。"></a>（2）私钥–钥匙：自己留着，解密。</h3><ol>
+<li>ssh-keygen -t rsa     (3次回车)</li>
+<li>ssh-copy-id -i ~/.ssh/id_rsa.pub  root@node01(自己也要拷贝给自己)</li>
+</ol>
+<h2 id="5、Hadoop安装—全分布模式-（重点）"><a href="#5、Hadoop安装—全分布模式-（重点）" class="headerlink" title="5、Hadoop安装—全分布模式    （重点）"></a>5、Hadoop安装—全分布模式    （重点）</h2><h3 id="1-规划："><a href="#1-规划：" class="headerlink" title="(1)规划："></a>(1)规划：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">10.1.255.121 bigdata121 ：主节点</div><div class="line">10.1.255.122 bigdata122 ：从节点</div><div class="line">10.1.255.123 bigdata123 ：从节点</div></pre></td></tr></table></figure>
+<p>   <img src="H:/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E9%AA%8C%E6%89%8B%E5%86%8C/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AF%BE%E7%A8%8B/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/3.png" alt=""></p>
+<h3 id="2-准备工作"><a href="#2-准备工作" class="headerlink" title="(2)准备工作:"></a>(2)准备工作:</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- step 1: jdk、防火墙、ssh免密码登录（3次拷贝）、在etc/hosts 添加主机名。</div><div class="line"></div><div class="line"> ps:对于同时操作多台机器可通过 工具-》发送键输入到所有会话 在选项卡排列 实现 水平排列</div><div class="line"> </div><div class="line">- step 2：时间同步（如果能够上网） 使用网络时间（GUI设置）默认的都是一致的。</div><div class="line">	不能上网： date -s 2019-01-10(同时操作多台机器) 集群紊乱</div><div class="line">              ntp：在机器里面指定一个服务器 作为时钟服务器。</div><div class="line"> </div><div class="line">- step 3: 修改配置文件（）</div></pre></td></tr></table></figure>
+<p><strong>主要在node01操作，其他机器通过scp拷贝。</strong></p>
+<p>  <strong>1:hadoop-env.sh</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">JAVA_HOME=/opt/moudle/jdk1.8.0_181</div></pre></td></tr></table></figure>
+<p>  <strong>2:hdfs-site.xml</strong>  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;!--注释配置数据块的冗余度，默认是3--&gt;</div><div class="line">&lt;property&gt;</div><div class="line">   &lt;name&gt;dfs.replication&lt;/name&gt;</div><div class="line">   &lt;value&gt;2&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;!--注释配置HDFS的权限检查，默认是true--&gt;</div><div class="line">&lt;!--</div><div class="line">&lt;property&gt;</div><div class="line">   &lt;name&gt;dfs.permissions&lt;/name&gt;</div><div class="line">   &lt;value&gt;false&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">--&gt;</div></pre></td></tr></table></figure>
+<p>   <strong>3:core-site.xml</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;!--配置HDFS主节点，namenode的地址,9000是RPC通信端口--&gt;</div><div class="line">  &lt;property&gt;</div><div class="line">     &lt;name&gt;fs.defaultFS&lt;/name&gt;</div><div class="line">     &lt;value&gt;hdfs://bigdata124:9000&lt;/value&gt;</div><div class="line">  &lt;/property&gt; </div><div class="line">&lt;!--配置HDFS数据块和元数据保存的目录,一定要修改--&gt;</div><div class="line">   &lt;property&gt;</div><div class="line">     &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</div><div class="line">     &lt;value&gt;/opt/moudle/hadoop-2.7.3/tmp&lt;/value&gt;</div><div class="line">  &lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>   <strong>4：mapred-site.xml(默认没有)</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">  cp mapred-site.xml.template  mapred-site.xml</div><div class="line"> &lt;!--配置MR程序运行的框架--&gt;</div><div class="line">  &lt;property&gt;	</div><div class="line">	&lt;name&gt;mapreduce.framework.name&lt;/name&gt;</div><div class="line">	&lt;value&gt;yarn&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>   <strong>5：yarn-site.xml</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">  &lt;!--配置Yarn的节点--&gt;</div><div class="line">  &lt;property&gt;	</div><div class="line">	&lt;name&gt;yarn.resourcemanager.hostname&lt;/name&gt;</div><div class="line">	&lt;value&gt;bigdata124&lt;/value&gt;</div><div class="line">&lt;/property&gt;	</div><div class="line">   &lt;!--NodeManager执行MR任务的方式是Shuffle洗牌--&gt;</div><div class="line">&lt;property&gt;	</div><div class="line">	&lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;</div><div class="line">	&lt;value&gt;mapreduce_shuffle&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>   <strong>6：slaves(和自己的从节点机器名字一致)</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">node02</div><div class="line">node03</div></pre></td></tr></table></figure>
+<p>   <strong>7：通过HDFS namenode 格式化</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">hdfs namenode -format</div><div class="line">成功的标志： Storage directory /opt/moudle/hadoop-2.7.3/tmp/dfs/name has been successfully formatted.</div></pre></td></tr></table></figure>
+<p>   <strong>8：通过scp拷贝</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">scp -r /opt/moudle/hadoop-2.7.3/ root@bigdata122:/opt/moudle/</div><div class="line">scp -r /opt/moudle/hadoop-2.7.3/ root@bigdata123:/opt/moudle/</div></pre></td></tr></table></figure>
+<p>   <strong>最后启动，通过start-all.sh启动</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">验证（5个）：5314 SecondaryNameNode</div><div class="line">5586 NodeManager</div><div class="line">5476 ResourceManager</div><div class="line">5126 DataNode</div><div class="line">5022 NameNode</div><div class="line">	web访问:http://10.1.255.124:8088 yarn</div><div class="line">         http://10.1.255.124:50070 HDFS</div><div class="line">学会看 vi /opt/moudle/hadoop-2.7.3/logs/hadoop-root-datanode-bigdata123.log Shift+G 看启动日志。</div></pre></td></tr></table></figure>
+<p>HDFS体系架构（Yarn资源放在后面）</p>
+<h2 id="6、HDFS-NameNode：名称节点"><a href="#6、HDFS-NameNode：名称节点" class="headerlink" title="6、HDFS-NameNode：名称节点"></a>6、HDFS-NameNode：名称节点</h2><p>  (1)职责：对HDFS的节点进行管理，管理员</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">接收客户端（命令行、java）的请求：创建目录、上传数据、下载数据和删除数据。</div><div class="line">管理和维护HDFS的日志和元信息</div></pre></td></tr></table></figure>
+<p>  (2)dfs/name目录解释:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">  a、current：主要存放日志和元信息 存贮路径：/opt/moudle/hadoop-2.7.3/tmp/dfs/name/current</div><div class="line">    edits文件：二进制文件，体现了HDFS的最新状态</div><div class="line"> </div><div class="line">             hdfs oev -i edits_inprogress_0000000000000000003 -o ~/a.xml</div><div class="line">             o:表示 offline </div><div class="line">             inprogress:表示最新的。</div><div class="line">	&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</div><div class="line">	&lt;EDITS&gt;</div><div class="line">	  &lt;EDITS_VERSION&gt;-63&lt;/EDITS_VERSION&gt;</div><div class="line">	  &lt;RECORD&gt;</div><div class="line">	    &lt;OPCODE&gt;OP_START_LOG_SEGMENT&lt;/OPCODE&gt;</div><div class="line">	    &lt;DATA&gt;</div><div class="line">	      &lt;TXID&gt;3&lt;/TXID&gt;</div><div class="line">	    &lt;/DATA&gt;</div><div class="line">	  &lt;/RECORD&gt;</div><div class="line">	  &lt;RECORD&gt;</div><div class="line">	    &lt;OPCODE&gt;OP_MKDIR&lt;/OPCODE&gt;</div><div class="line">	    &lt;DATA&gt;</div><div class="line">	      &lt;TXID&gt;4&lt;/TXID&gt;</div><div class="line">	      &lt;LENGTH&gt;0&lt;/LENGTH&gt;</div><div class="line">	      &lt;INODEID&gt;16386&lt;/INODEID&gt;</div><div class="line">	      &lt;PATH&gt;/input&lt;/PATH&gt;</div><div class="line">	      &lt;TIMESTAMP&gt;1547129194216&lt;/TIMESTAMP&gt;</div><div class="line">	      &lt;PERMISSION_STATUS&gt;</div><div class="line">	        &lt;USERNAME&gt;root&lt;/USERNAME&gt;</div><div class="line">	        &lt;GROUPNAME&gt;supergroup&lt;/GROUPNAME&gt;</div><div class="line">	        &lt;MODE&gt;493&lt;/MODE&gt;</div><div class="line">	      &lt;/PERMISSION_STATUS&gt;</div><div class="line">	    &lt;/DATA&gt;</div><div class="line">	  &lt;/RECORD&gt;</div><div class="line">	&lt;/EDITS&gt;</div><div class="line">  b、元信息文件 fsimage：记录的数据块的位置信息和数据块冗余信息，没有体现HDFS的最新状态，二进制文件</div><div class="line">      hdfs oiv -i fsimage_0000000000000000002 -o ~/b.xml -p XML</div><div class="line"></div><div class="line">(2)in_use.lock 避免同一文件被多使用，只能启动一个namenode</div></pre></td></tr></table></figure>
+<h2 id="7、HDFS-DataNode：数据节点"><a href="#7、HDFS-DataNode：数据节点" class="headerlink" title="7、HDFS-DataNode：数据节点"></a>7、HDFS-DataNode：数据节点</h2><p>  （1）主要用来进行数据的存储。</p>
+<pre><code> 1.x 64M
+2.x 128M( hdfs-site.xml 可以修改 blocksize)
+</code></pre><p>   （2）数据块的表现形式就是一个个的blk文件</p>
+<p>  位置：/opt/moudle/hadoop-2.7.3/tmp/dfs/data/current/BP-### <em>933765109-10.1.255.124-1546784436341</em> ###/current/finalized/subdir0/subdir0<br>   尝试上传一个 大于128M的文件（128<em>1024</em>1024）<br>   Hadoop 3.x 有 纠删码技术，节约存储空间。  </p>
+<h2 id="8、HDFS-SecondaryNameNode：第二名称节点"><a href="#8、HDFS-SecondaryNameNode：第二名称节点" class="headerlink" title="8、HDFS-SecondaryNameNode：第二名称节点"></a>8、HDFS-SecondaryNameNode：第二名称节点</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">（1）进行日志信息的合并，根据checkpoint或者时间间隔（3600s）或者edits文件达到64M。</div><div class="line">（2）edits文件合并到fsimage里面 edits文件可以清空</div></pre></td></tr></table></figure>
+<p>​<br>​    </p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Hadoop</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/08/Hadoop安装过程/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Hive高级语句" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/02/27/Hive高级语句/">Hive高级语句</a>
+    </h1>
+  
+
+        
+        <a href="/2018/02/27/Hive高级语句/" class="archive-article-date">
+  	<time datetime="2018-02-27T06:53:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="创建内部管理表"><a href="#创建内部管理表" class="headerlink" title="创建内部管理表"></a>创建内部管理表</h1><p>在数据库rel中创建学生信息表字段信息：学号、姓名、年龄、地域</p>
+<p>切换使用rel数据库：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">use rel;</div><div class="line">create table student_info(</div><div class="line">student_id string comment &apos;学号&apos;,</div><div class="line">name string comment &apos;姓名&apos;,</div><div class="line">age int comment &apos;年龄&apos;,</div><div class="line">origin string comment &apos;地域&apos;</div><div class="line">)</div><div class="line">comment &apos;学生信息表&apos;</div><div class="line">row format delimited </div><div class="line">fields terminated by &apos;\t&apos; </div><div class="line">lines terminated by &apos;\n&apos;</div><div class="line">stored as textfile;</div></pre></td></tr></table></figure></p>
+<h2 id="使用load本地加载数据"><a href="#使用load本地加载数据" class="headerlink" title="使用load本地加载数据"></a>使用load本地加载数据</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">load data local inpath &apos;/home/zkpk/apps/hive_test_data/student_info_data.txt&apos; into table student_info;</div></pre></td></tr></table></figure>
+<h2 id="查看student-info表在hdfs上位置"><a href="#查看student-info表在hdfs上位置" class="headerlink" title="查看student_info表在hdfs上位置"></a>查看student_info表在hdfs上位置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hadoop fs -ls /user/hive/warehouse/student_info</div></pre></td></tr></table></figure>
+<p>此处应该会多出一个student_info_data.txt文件</p>
+<h2 id="查询北京（代码11）的学生信息"><a href="#查询北京（代码11）的学生信息" class="headerlink" title="查询北京（代码11）的学生信息"></a>查询北京（代码11）的学生信息</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from student_info where origin=&apos;11&apos;</div></pre></td></tr></table></figure>
+<p>运行一个mapreduce任务，得出结果。</p>
+<h2 id="使用load从hdfs加载数据到表student-info"><a href="#使用load从hdfs加载数据到表student-info" class="headerlink" title="使用load从hdfs加载数据到表student_info"></a>使用load从hdfs加载数据到表student_info</h2><h3 id="删除student-info表已经存在的hdfs文件"><a href="#删除student-info表已经存在的hdfs文件" class="headerlink" title="删除student_info表已经存在的hdfs文件"></a>删除student_info表已经存在的hdfs文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hadoop fs -rm -f /user/hive/warehouse/rel.db/student_info/student_info_data.txt</div></pre></td></tr></table></figure>
+<p>查询student_info,查看数据是否存在<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from student_info</div></pre></td></tr></table></figure></p>
+<h3 id="将本地文件上传到hdfs根目录下"><a href="#将本地文件上传到hdfs根目录下" class="headerlink" title="将本地文件上传到hdfs根目录下"></a>将本地文件上传到hdfs根目录下</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hadoop fs -put /home/zkpk/apps/hive_test_data/student_info_data.txt /</div></pre></td></tr></table></figure>
+<h3 id="使用load将hdfs文件加载到student-info表中"><a href="#使用load将hdfs文件加载到student-info表中" class="headerlink" title="使用load将hdfs文件加载到student_info表中"></a>使用load将hdfs文件加载到student_info表中</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">load data inpath &apos;/student_info_data.txt&apos; into table student_info;</div><div class="line"></div><div class="line">load data inpath &apos;/student_info_data.txt&apos; overwrite into table student_info;   //overwrite覆盖之前数据进行读取</div></pre></td></tr></table></figure>
+<h3 id="查询student-info，新加载的数据已经生效"><a href="#查询student-info，新加载的数据已经生效" class="headerlink" title="查询student_info，新加载的数据已经生效"></a>查询student_info，新加载的数据已经生效</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from student_info</div></pre></td></tr></table></figure>
+<p>此时使用hadoop fs -ls /查看hdfs根目录会发现刚刚上传的student_info_data.txt已经消失，而是存在于hdfs路径下/user/hive/warehouse/rel.db/student_info</p>
+<h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><p>创建员工表：employee</p>
+<p>字段信息：用户id，工资，工作过的城市，社保缴费情况(养老,医保)，福利(吃饭补助(float),是否转正(boolean),商业保险(float))<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">create table rel.employee(</div><div class="line">user_id string,</div><div class="line">salary int,</div><div class="line">worked_citys array&lt;string&gt;,</div><div class="line">social_security map&lt;string,float&gt;,</div><div class="line">welfare struct&lt;meal_allowance:float,if_regular:boolean,commercial_insurance:float&gt;</div><div class="line">)</div><div class="line">row format delimited fields terminated by &apos;\t&apos; </div><div class="line">collection items terminated by &apos;,&apos;</div><div class="line">map keys terminated by &apos;:&apos;</div><div class="line">lines terminated by &apos;\n&apos;</div><div class="line">stored as textfile;</div></pre></td></tr></table></figure></p>
+<h2 id="本地加载数据"><a href="#本地加载数据" class="headerlink" title="本地加载数据"></a>本地加载数据</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">load data local inpath &apos;/home/zkpk/apps/hive_test_data/employee_data.txt&apos; into table employee;</div></pre></td></tr></table></figure>
+<p>检查一下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from employee;</div></pre></td></tr></table></figure></p>
+<h2 id="修改employees-data-txt文件中的某些值"><a href="#修改employees-data-txt文件中的某些值" class="headerlink" title="修改employees_data.txt文件中的某些值"></a>修改employees_data.txt文件中的某些值</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">load data local inpath &apos;/home/zkpk/apps/hive_test_data/employee_data.txt&apos; into table employee;</div></pre></td></tr></table></figure>
+<p>我们会发现第二次向表中加载数据，会在原表后追加，不进行覆盖操作<br>查看一下hdfs路径<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hadoop fs -ls /user/hive/warehouse/rel.db/employee</div></pre></td></tr></table></figure></p>
+<p>会出现employees_data_copy_1.txt文件</p>
+<h2 id="使用overwrite方式加载，覆盖原表数据"><a href="#使用overwrite方式加载，覆盖原表数据" class="headerlink" title="使用overwrite方式加载，覆盖原表数据"></a>使用overwrite方式加载，覆盖原表数据</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">load data local inpath &apos;/home/zkpk/apps/hive_test_data/employees_data.txt&apos; overwrite into table employee;</div></pre></td></tr></table></figure>
+<p>此处使用了overwrite方式载入，会对原表进行覆盖。</p>
+<h2 id="按条件查询"><a href="#按条件查询" class="headerlink" title="按条件查询"></a>按条件查询</h2><p>查询已转正的员工编号，工资，工作过的第一个城市，社保养老缴费情况，福利餐补金额<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">select user_id,</div><div class="line">salary,</div><div class="line">worked_citys[0],</div><div class="line">social_security[&apos;养老&apos;],</div><div class="line">welfare.meal_allowance </div><div class="line">from rel.employee</div><div class="line">where welfare.if_regular=true;</div></pre></td></tr></table></figure></p>
+<h1 id="创建外部表"><a href="#创建外部表" class="headerlink" title="创建外部表"></a>创建外部表</h1><p>可以提前创建好hdfs路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hadoop mkdir -p/user/hive/warehouse/data/student_school_info</div></pre></td></tr></table></figure>
+<p>如果没有提前创建好，在创建外部表的时候会根据指定路径自动创建</p>
+<p>创建外部表学生入学信息</p>
+<p>字段信息：学号、姓名、学院id、专业id、入学年份<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">create external table rel.student_school_info(</div><div class="line">student_id string,</div><div class="line">name string,</div><div class="line">institute_id string,</div><div class="line">major_id string,</div><div class="line">school_year string</div><div class="line">)</div><div class="line">row format delimited </div><div class="line">fields terminated by &apos;\t&apos; </div><div class="line">lines terminated by &apos;\n&apos;</div><div class="line">stored as textfile</div><div class="line">location &apos;/user/hive/warehouse/data/student_school_info&apos;;</div></pre></td></tr></table></figure></p>
+<p>location对应之前创建的外部表hdfs路径<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hadoop fs -put /home/zkpk/apps/hive_test_data/student_school_info_external_data.txt /user/hive/warehouse/data/student_school_info/</div></pre></td></tr></table></figure></p>
+<p>外部表区别：创建好对应路径，直接将需要存入的数据文件上传到对应的外部表路径中，表自动完成读取。</p>
+<p>检查：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from student_school_info</div></pre></td></tr></table></figure></p>
+<h1 id="创建内部分区表"><a href="#创建内部分区表" class="headerlink" title="创建内部分区表"></a>创建内部分区表</h1><p>创建学生入学信息表</p>
+<p>字段信息：学号、姓名、学院id、专业id</p>
+<p>分区字段：入学年份<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">create table student_school_info_partition(</div><div class="line">student_id string,</div><div class="line">name string,</div><div class="line">institute_id string,</div><div class="line">major_id string</div><div class="line">)</div><div class="line">partitioned by(school_year string) </div><div class="line">row format delimited</div><div class="line">fields terminated by &apos;\t&apos; </div><div class="line">lines terminated by &apos;\n&apos;</div><div class="line">stored as textfile;</div></pre></td></tr></table></figure></p>
+<h2 id="使用insert-into导入数据"><a href="#使用insert-into导入数据" class="headerlink" title="使用insert into导入数据"></a>使用insert into导入数据</h2><p>从student_school_info表将2017年入学的学籍信息导入到student_school_info_partition分区表中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">insert into table student_school_info_partition partition(school_year=&apos;2017&apos;)</div><div class="line">select t1.student_id,t1.name,t1.institute_id,t1.major_id</div><div class="line">from student_school_info t1</div><div class="line">where t1.school_year=2017;</div></pre></td></tr></table></figure></p>
+<h2 id="查看分区"><a href="#查看分区" class="headerlink" title="查看分区"></a>查看分区</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">show partitions student_school_info_partition;</div></pre></td></tr></table></figure>
+<h2 id="查看hdfs路径"><a href="#查看hdfs路径" class="headerlink" title="查看hdfs路径"></a>查看hdfs路径</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hadoop fs -ls /user/hive/warehouse/rel.db/student_school_info_partition/</div></pre></td></tr></table></figure>
+<p>会增加school_year=’2017’目录</p>
+<h2 id="查询student-school-info-partition"><a href="#查询student-school-info-partition" class="headerlink" title="查询student_school_info_partition"></a>查询student_school_info_partition</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from student_school_info_partition where school_year=&apos;2017&apos;;</div></pre></td></tr></table></figure>
+<h2 id="删除分区"><a href="#删除分区" class="headerlink" title="删除分区"></a>删除分区</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table student_school_info_partition drop partition (school_year=&apos;2017&apos;);</div></pre></td></tr></table></figure>
+<p>查看hdfs路径<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hadoop fs -ls /user/hive/warehouse/rel.db/student_school_info_partition/</div></pre></td></tr></table></figure></p>
+<p>school_year=’2017’目录已经被删除</p>
+<h2 id="使用动态分区添加数据"><a href="#使用动态分区添加数据" class="headerlink" title="使用动态分区添加数据"></a>使用动态分区添加数据</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">set hive.exec.dynamic.partition=true;</div><div class="line">set hive.exec.dynamic.partition.mode=nonstrict;</div><div class="line">insert overwrite table student_school_info_partition partition(school_year)</div><div class="line">select t1.student_id,t1.name,t1.institute_id,t1.major_id,t1.school_year</div><div class="line">from student_school_info t1</div></pre></td></tr></table></figure>
+<h2 id="查看分区-1"><a href="#查看分区-1" class="headerlink" title="查看分区"></a>查看分区</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">show partitions student_school_info_partition;</div></pre></td></tr></table></figure>
+<h2 id="查看hdfs路径-1"><a href="#查看hdfs路径-1" class="headerlink" title="查看hdfs路径"></a>查看hdfs路径</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hadoop fs -ls /user/hive/warehouse/rel.db/student_school_info_partition/</div></pre></td></tr></table></figure>
+<p>会增加对应的school_year=’2017’目录</p>
+<h2 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from student_school_info_partition where school_year=&apos;2017&apos;;</div></pre></td></tr></table></figure>
+<h1 id="创建外部分区表"><a href="#创建外部分区表" class="headerlink" title="创建外部分区表"></a>创建外部分区表</h1><p>创建学生入学信息表</p>
+<p>字段信息：学号、姓名、学院id、专业id</p>
+<p>分区字段：入学年份<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">create external table rel.student_school_info_external_partition(</div><div class="line">student_id string,</div><div class="line">name string,</div><div class="line">institute_id string,</div><div class="line">major_id string</div><div class="line">)</div><div class="line">partitioned by(school_year string) </div><div class="line">row format delimited </div><div class="line">fields terminated by &apos;\t&apos; </div><div class="line">lines terminated by &apos;\n&apos;</div><div class="line">stored as textfile</div><div class="line">location &apos;/user/hive/warehouse/data/student_school_info_external_partition&apos;;</div></pre></td></tr></table></figure></p>
+<h2 id="在分区表的hdfs路径中添加文件目录"><a href="#在分区表的hdfs路径中添加文件目录" class="headerlink" title="在分区表的hdfs路径中添加文件目录"></a>在分区表的hdfs路径中添加文件目录</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hadoop fs -mkdir /user/hive/warehouse/data/student_school_info_external_partition/school_year=2017</div></pre></td></tr></table></figure>
+<h2 id="将数据文件传到上步骤创建的文件夹下"><a href="#将数据文件传到上步骤创建的文件夹下" class="headerlink" title="将数据文件传到上步骤创建的文件夹下"></a>将数据文件传到上步骤创建的文件夹下</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hadoop fs -put student_school_external_partition_data.txt /user/hive/warehouse/data/student_school_info_external_partition/school_year=2017</div></pre></td></tr></table></figure>
+<h2 id="查询-1"><a href="#查询-1" class="headerlink" title="查询"></a>查询</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from student_school_info_external_partition;</div></pre></td></tr></table></figure>
+<p>没有数据显示，因为数据添加了但是还没有分区。所以查询时无数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">show partitions student_school_info_external_partition;</div></pre></td></tr></table></figure></p>
+<p>没有分区显示。</p>
+<h2 id="添加分区"><a href="#添加分区" class="headerlink" title="添加分区"></a>添加分区</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table student_school_info_external_partition add partition(school_year=&apos;2017&apos;);</div></pre></td></tr></table></figure>
+<p>此时再次查询则可以显示数据</p>
+<h2 id="删除分区-1"><a href="#删除分区-1" class="headerlink" title="删除分区"></a>删除分区</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table student_school_info_external_partition drop partition(school_year=&apos;2017&apos;);</div></pre></td></tr></table></figure>
+<p>查看分区，分区被删除<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">show partitions student_school_info_external_partition;</div></pre></td></tr></table></figure></p>
+<p>查看hdfs数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hadoop fs -ls /user/hive/warehouse/data/student_school_info_external_partition/school_year=2017</div></pre></td></tr></table></figure></p>
+<p>数据文件还存在</p>
+<h1 id="LIKE-AS的使用及增删改查操作"><a href="#LIKE-AS的使用及增删改查操作" class="headerlink" title="LIKE,AS的使用及增删改查操作"></a>LIKE,AS的使用及增删改查操作</h1><ul>
+<li><p>根据已存在的表结构，使用like关键字，复制一个表结构一模一样的新表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">create table student_info2 like student_info;</div></pre></td></tr></table></figure>
+</li>
+<li><p>根据已经存在的表，使用as关键字，创建一个与查询结果字段一致的表，同时将查询结果数据插入到新表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">create table student_info3 as select * from student_info;</div></pre></td></tr></table></figure>
+</li>
+<li><p>只有student_id,name两个字段的表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">create table student_info4 as select student_id,name from student_info;</div></pre></td></tr></table></figure>
+</li>
+<li><p>student_info4表重命名为student_id_name</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table student_info4 rename to student_id_name;</div></pre></td></tr></table></figure>
+</li>
+<li><p>给student_info3表添加性别列,新添加的字段会在所有列最后，分区列之前，在添加新列之前已经存在的数据文件中<br>如果没有新添加列对应的数据，在查询的时候显示为空。添加多个列用逗号隔开</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table student_info_new3 add columns (gender string comment &apos;性别&apos;);</div></pre></td></tr></table></figure>
+</li>
+<li><p>修改列，将继续存在的列再定义一遍，需要替换的列重新定义</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table student_info_new3 replace columns(student_id string,name string,age int,origin string,gender2 int);</div></pre></td></tr></table></figure>
+</li>
+<li><p>删除列,将继续存在的列再定义一遍，需要删除的列不再定义</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table student_info_new3 replace columns(student_id string,name string,age int,origin string);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="创建分桶表"><a href="#创建分桶表" class="headerlink" title="创建分桶表"></a>创建分桶表</h1><p>按照指定字段取它的hash散列值分桶</p>
+<p>创建学生入学信息分桶表</p>
+<p>字段信息：学号、姓名、学院ID、专业ID</p>
+<p>分桶字段：学号，4个桶，桶内按照学号升序排列<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">create table rel.student_info_bucket(</div><div class="line">student_id string,</div><div class="line">name string,</div><div class="line">age int,</div><div class="line">origin string</div><div class="line">)</div><div class="line">clustered by (student_id) sorted by (student_id asc) into 4 buckets </div><div class="line">row format delimited </div><div class="line">fields terminated by &apos;\t&apos; </div><div class="line">lines terminated by &apos;\n&apos; </div><div class="line">stored as textfile;</div></pre></td></tr></table></figure></p>
+<p>向student_info_bucket分桶表插入数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">set hive.enforce.bucketing = true;</div><div class="line">set mapreduce.job.reduces=4;</div><div class="line">insert overwrite table student_info_bucket </div><div class="line">select student_id,name,age,origin </div><div class="line">from student_info </div><div class="line">cluster by(student_id);</div></pre></td></tr></table></figure></p>
+<p>查看分桶文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hadoop fs -ls /user/hive/warehouse/rel.db/student_info_bucket</div></pre></td></tr></table></figure></p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>分桶表一般不使用load向分桶表中导入数据，因为load导入数据只是将数据复制到表的数据存储目录下，hive并不会<br>在load的时候对数据进行分析然后按照分桶字段分桶，load只会将一个文件全部导入到分桶表中，并没有分桶。一般<br>采用insert从其他表向分桶表插入数据。<br>分桶表在创建表的时候只是定义表的模型，插入的时候需要做如下操作：<br>在每次执行分桶插入的时候在当前执行的session会话中要设置hive.enforce.bucketing = true;声明本次执行的是一次分桶操作。<br>需要指定reduce个数与分桶的数量相同set mapreduce.job.reduces=4，这样才能保证有多少桶就生成多少个文件。<br>如果定义了按照分桶字段排序，需要在从其他表查询数据过程中将数据按照分区字段排序之后插入各个桶中，分桶表并不会将各分桶中的数据排序。<br>排序和分桶的字段相同的时候使用Cluster by(字段),cluster by 默认按照分桶字段在桶内升序排列，如果需要在桶内降序排列，<br>如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">set hive.enforce.bucketing = true;</div><div class="line">set mapreduce.job.reduces=4;</div><div class="line">insert overwrite table student_info_bucket </div><div class="line">select student_id,name,age,origin </div><div class="line">from student_info </div><div class="line">distribute by (student_id) sort by (student_id desc);</div></pre></td></tr></table></figure></p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h1 id="导出函数"><a href="#导出函数" class="headerlink" title="导出函数"></a>导出函数</h1><p>使用insert将student_info表数据导出到本地指定路径<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">insert overwrite local directory &apos;/home/zkpk/apps/hive_test_data/export_data&apos; </div><div class="line">row format delimited  fields terminated by &apos;\t&apos; select * from student_info;</div></pre></td></tr></table></figure></p>
+<p>导出数据到本地的常用方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hive -e&quot;select * from rel.student_info&quot;&gt; ./student_info_data.txt</div></pre></td></tr></table></figure></p>
+<p>默认结果分隔符：’\t’</p>
+<h1 id="join关联"><a href="#join关联" class="headerlink" title="join关联"></a>join关联</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">create table rel.a(</div><div class="line">id int,</div><div class="line">name string</div><div class="line">)</div><div class="line">row format delimited </div><div class="line">fields terminated by &apos;\t&apos; </div><div class="line">lines terminated by &apos;\n&apos; </div><div class="line">stored as textfile;</div><div class="line"></div><div class="line">create table rel.b(</div><div class="line">id int,</div><div class="line">name string</div><div class="line">)</div><div class="line">row format delimited </div><div class="line">fields terminated by &apos;\t&apos; </div><div class="line">lines terminated by &apos;\n&apos; </div><div class="line">stored as textfile;</div><div class="line"></div><div class="line"></div><div class="line">load data local inpath &apos;/home/zkpk/apps/hive_test_data/a_join_data&apos; into table a;</div><div class="line">load data local inpath &apos;/home/zkpk/apps/hive_test_data/b_join_data&apos; into table b;</div></pre></td></tr></table></figure>
+<h2 id="join或inner-join"><a href="#join或inner-join" class="headerlink" title="join或inner join"></a>join或inner join</h2><p>两个表通过id关联，只把id值相等的数据查询出来。join的查询结果与inner join的查询结果相同。</p>
+<figure class="highlight plain"><figcaption><span>* from a join b on a.id=b.id;```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">等同于</div><div class="line"></div><div class="line">```select * from a inner join b on a.id=b.id;</div></pre></td></tr></table></figure>
+<h2 id="full-outer-join或full-join"><a href="#full-outer-join或full-join" class="headerlink" title="full outer join或full join"></a>full outer join或full join</h2><p>两个表通过id关联，把两个表的数据全部查询出来<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from a full join b on a.id=b.id;</div></pre></td></tr></table></figure></p>
+<h2 id="left-join"><a href="#left-join" class="headerlink" title="left join"></a>left join</h2><p>左连接时，左表中出现的join字段都保留，右表没有连接上的都为空<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from a left join b on a.id=b.id;</div></pre></td></tr></table></figure></p>
+<h2 id="right-join"><a href="#right-join" class="headerlink" title="right join"></a>right join</h2><p>右连接时，右表中出现的join字段都保留，左表没有连接上的都是空<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from a right join b on a.id=b.id;</div></pre></td></tr></table></figure></p>
+<h2 id="left-semi-join"><a href="#left-semi-join" class="headerlink" title="left semi join"></a>left semi join</h2><p>左半连接实现了类似IN/EXISTS的查询语义，输出符合条件的左表内容。</p>
+<p>hive不支持in …exists这种关系型数据库中的子查询结构，hive暂时不支持右半连接。例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select a.id, a.name from a where a.id in (select b.id from b);</div></pre></td></tr></table></figure></p>
+<p>使用Hive对应于如下语句：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select a.id,a.name from a left semi join b on a.id = b.id;</div></pre></td></tr></table></figure></p>
+<h2 id="map-side-join"><a href="#map-side-join" class="headerlink" title="map side join"></a>map side join</h2><p>使用分布式缓存将小表数据加载都各个map任务中，在map端完成join，map任务输出后，不需要将数据拷贝到reducer阶段再进行join，<br>降低的数据在网络节点之间传输的开销。多表关联数据倾斜优化的一种手段。多表连接，如果只有一个表比较大，其他表都很小，<br>则join操作会转换成一个只包含map的Job。运行日志中会出现Number of reduce tasks is set to 0 since there’s no reduce operator<br>没有reduce的提示。<br>例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select /*+ mapjoin(b) */ a.id, a.name from a join b on a.id = b.id</div></pre></td></tr></table></figure></p>
+<h1 id="hive内置函数"><a href="#hive内置函数" class="headerlink" title="hive内置函数"></a>hive内置函数</h1><p>创建用户评分表<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">create table rel.user_core_info(</div><div class="line">user_id string,</div><div class="line">age int,</div><div class="line">gender string,</div><div class="line">core int</div><div class="line">)</div><div class="line">row format delimited fields terminated by &apos;\t&apos; </div><div class="line">lines terminated by &apos;\n&apos;</div><div class="line">stored as textfile;</div><div class="line"></div><div class="line">load data local inpath &apos;/home/hadoop/apps/hive_test_data/user_core.txt&apos; into table rel.user_core_info;</div></pre></td></tr></table></figure></p>
+<h2 id="条件函数-case-when"><a href="#条件函数-case-when" class="headerlink" title="条件函数 case when"></a>条件函数 case when</h2><ul>
+<li><p>语法1：CASE a WHEN b THEN c [WHEN d THEN e]* [ELSE f] END<br>说明：如果a等于b，那么返回c；如果a等于d，那么返回e；否则返回f<br>例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hive&gt; select case 1 when 2 then &apos;two&apos; when 1 then &apos;one&apos; else &apos;zero&apos; end;</div></pre></td></tr></table></figure>
+</li>
+<li><p>语法2：CASE WHEN a THEN b [WHEN c THEN d]* [ELSE e] END<br>说明：如果a为TRUE，则返回b；如果c为TRUE，则返回d；否则返回e<br>例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hive&gt; select case when 1=2 then &apos;two&apos; when 1=1 then &apos;one&apos; else &apos;zero&apos; end;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>查询用户评分表，每个年龄段的最大评分值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">select gender,</div><div class="line">case when age&lt;=20 then &apos;p0&apos; when age&gt;20 and age&lt;=50 then &apos;p1&apos; when age&gt;=50 then &apos;p3&apos; else &apos;p0&apos; end,</div><div class="line">max(core) max_core</div><div class="line">from rel.user_core_info </div><div class="line">group by gender,</div><div class="line">case when age&lt;=20 then &apos;p0&apos; when age&gt;20 and age&lt;=50 then &apos;p1&apos; when age&gt;=50 then &apos;p3&apos; else &apos;p0&apos; end;</div></pre></td></tr></table></figure></p>
+<h2 id="自定义UDF函数"><a href="#自定义UDF函数" class="headerlink" title="自定义UDF函数"></a>自定义UDF函数</h2><p>当Hive提供的内置函数无法满足你的业务处理需要时，此时就可以考虑使用用户自定义函数（UDF：user-defined function）。<br>UDF 作用于单个数据行，产生一个数据行作为输出。<br>步骤：</p>
+<ol>
+<li>先开发一个java类，继承UDF，并重载evaluate方法</li>
+<li>打成jar包上传到服务器</li>
+<li><p>在使用的时候将jar包添加到hive的classpath</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">add jar /home/zkpk/apps/hive_test_data/HiveUdfPro-1.0-SNAPSHOT.jar;</div></pre></td></tr></table></figure>
+</li>
+<li><p>创建临时函数与开发好的java class关联</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">create temporary function age_partition as &apos;cn.chinahadoop.udf.AgePartitionFunction&apos;; </div><div class="line">#根据自己包位置写</div></pre></td></tr></table></figure>
+</li>
+<li><p>即可在hql中使用自定义的函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">select gender,</div><div class="line">age_partition(age),</div><div class="line">max(core) max_core</div><div class="line">from rel.user_core_info </div><div class="line">group by gender,</div><div class="line">age_partition(age);</div></pre></td></tr></table></figure></li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Hadoop</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/02/27/Hive高级语句/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Linux-Shell脚本(2)" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/02/08/Linux-Shell脚本(2)/">Linux-Shell脚本(2)</a>
+    </h1>
+  
+
+        
+        <a href="/2018/02/08/Linux-Shell脚本(2)/" class="archive-article-date">
+  	<time datetime="2018-02-08T15:35:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="条件判断语句"><a href="#条件判断语句" class="headerlink" title="条件判断语句"></a>条件判断语句</h1><h2 id="if-…-then语句"><a href="#if-…-then语句" class="headerlink" title="if …. then语句"></a>if …. then语句</h2><h3 id="单条件判断"><a href="#单条件判断" class="headerlink" title="单条件判断"></a>单条件判断</h3><p>格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">if [ 条件判断 ]; then</div><div class="line">    条件成立执行，命令;</div><div class="line">fi 将if反过来写,就成为fi 结束if语句</div></pre></td></tr></table></figure></p>
+<p>&amp;&amp; 代表 AND<br>|| 代表 or<br>实例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">read -p &quot;Please input (Y/N): &quot; yn</div><div class="line">if [ &quot;$yn&quot; == &quot;Y&quot; ] || [ &quot;$yn&quot; == &quot;y&quot; ]; then</div><div class="line">echo &quot;OK, continue&quot;</div><div class="line">exit 0</div><div class="line">fi</div></pre></td></tr></table></figure></p>
+<h3 id="多条件判断"><a href="#多条件判断" class="headerlink" title="多条件判断"></a>多条件判断</h3><p>格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">if [ 条件1 ]; then</div><div class="line">    条件1成立执行，命令;</div><div class="line">elif [ 条件2 ]; then</div><div class="line">    条件2成立执行，命令;</div><div class="line">else</div><div class="line">    条件都不成立指定;</div><div class="line">fi</div></pre></td></tr></table></figure></p>
+<p>实例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">read -p &quot;Please input (Y/N): &quot; yn</div><div class="line">if [ &quot;$yn&quot; == &quot;Y&quot; ] || [ &quot;$yn&quot; == &quot;y&quot; ]; then</div><div class="line">    echo &quot;OK, continue&quot;</div><div class="line">elif [ &quot;$yn&quot; == &quot;N&quot; ] || [ &quot;$yn&quot; == &quot;n&quot; ]; then</div><div class="line">    echo &quot;Oh, interrupt!&quot;</div><div class="line">else</div><div class="line">    echo &quot;I don&apos;t know what your choice is&quot;</div><div class="line">fi</div></pre></td></tr></table></figure></p>
+<h2 id="case-…-esac语句"><a href="#case-…-esac语句" class="headerlink" title="case ….. esac语句"></a>case ….. esac语句</h2><p>格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">case $变量名称 in</div><div class="line">&quot;第一个变量内容&quot;)</div><div class="line">程序段</div><div class="line">;;</div><div class="line">&quot;第二个变量内容&quot;)</div><div class="line">程序段</div><div class="line">;;</div><div class="line">*)    #不满足前两种情况就会进入*）</div><div class="line">exit 1</div><div class="line">;;</div><div class="line">esac  #类似于if...fi  case以esac结束</div></pre></td></tr></table></figure></p>
+<p>实例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">#运行时得传入参数</div><div class="line">case $1 in</div><div class="line">&quot;hello&quot;)</div><div class="line">    echo &quot;Hello, how are you ?&quot;</div><div class="line">;;</div><div class="line">&quot;&quot;)</div><div class="line">    echo &quot;You MUST input parameters, ex&gt; &#123;$0 someword&#125;&quot;</div><div class="line">;;</div><div class="line">*)</div><div class="line">    echo &quot;Usage $0 &#123;hello&#125;&quot;</div><div class="line">;;</div><div class="line">esac</div></pre></td></tr></table></figure></p>
+<h2 id="函数语句"><a href="#函数语句" class="headerlink" title="函数语句"></a>函数语句</h2><p>格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">function fname() &#123;</div><div class="line">命令</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>实例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">#需要传入参数</div><div class="line">function printc()&#123;</div><div class="line">    echo -n &quot;Your choice is &quot;</div><div class="line">&#125;</div><div class="line">echo &quot;This program will print your selection !&quot;</div><div class="line">case $1 in</div><div class="line">&quot;one&quot;)</div><div class="line">    printc; echo $1 | tr &apos;a-z&apos; &apos;A-Z&apos;</div><div class="line">;;</div><div class="line">&quot;two&quot;)</div><div class="line">    printc; echo $1 | tr &apos;a-z&apos; &apos;A-Z&apos;</div><div class="line">;;</div><div class="line">&quot;three&quot;)</div><div class="line">    printc; echo $1 | tr &apos;a-z&apos; &apos;A-Z&apos;</div><div class="line">;;</div><div class="line">*)</div><div class="line">    echo &quot;Usage $0 &#123;one|two|three&#125;&quot;</div><div class="line">;;</div><div class="line">esac</div></pre></td></tr></table></figure></p>
+<h1 id="循环语句"><a href="#循环语句" class="headerlink" title="循环语句"></a>循环语句</h1><h2 id="while循环"><a href="#while循环" class="headerlink" title="while循环"></a>while循环</h2><p>格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">while [ condition ]</div><div class="line">do</div><div class="line">  命令</div><div class="line">done</div></pre></td></tr></table></figure></p>
+<p>实例1：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line"># 输入大写YES或者小写yes结束循环语句</div><div class="line">while [ &quot;$yn&quot; != &quot;yes&quot; -a &quot;$yn&quot; != &quot;YES&quot; ]</div><div class="line">do</div><div class="line">    read -p &quot;Please input yes/YES to stop this program: &quot; yn</div><div class="line">done</div><div class="line">    echo &quot;OK! you input the correct answer.&quot;</div></pre></td></tr></table></figure></p>
+<p>实例2：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">#实现1+2+3...+100的累加</div><div class="line">sum=0 # 总数</div><div class="line">i=0 # 1, 2, 3....</div><div class="line">while [ &quot;$i&quot; != &quot;100&quot; ]</div><div class="line">do</div><div class="line">    i=$(($i+1)) # 每次 i 都会增加 1</div><div class="line">    sum=$(($sum+$i)) # 每次都会加总一次! done</div><div class="line">echo &quot;The result of &apos;1+2+3+...+100&apos; is ==&gt; $sum&quot;</div></pre></td></tr></table></figure></p>
+<h2 id="until循环语句"><a href="#until循环语句" class="headerlink" title="until循环语句"></a>until循环语句</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">until [ condition ]</div><div class="line">do</div><div class="line">    命令</div><div class="line">done</div></pre></td></tr></table></figure>
+<p>实例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">until [ &quot;$yn&quot; == &quot;yes&quot; -o &quot;$yn&quot; == &quot;YES&quot; ]</div><div class="line">do</div><div class="line">    read -p &quot;Please input yes/YES to stop this program: &quot; yn</div><div class="line">done</div><div class="line">echo &quot;OK! you input the correct answer.&quot;</div></pre></td></tr></table></figure></p>
+<h2 id="for循环语句"><a href="#for循环语句" class="headerlink" title="for循环语句"></a>for循环语句</h2><h3 id="罗列被循环的参数"><a href="#罗列被循环的参数" class="headerlink" title="罗列被循环的参数"></a>罗列被循环的参数</h3><p>格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">for var in con1 con2 con3 ...</div><div class="line">do</div><div class="line">    命令</div><div class="line">done</div><div class="line"># var从con1...到con3到...依次取值</div></pre></td></tr></table></figure></p>
+<p>实例1：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">for animal in dog cat elephant</div><div class="line">do</div><div class="line">echo &quot;There are $&#123;animal&#125;s.... &quot;</div><div class="line">done</div></pre></td></tr></table></figure></p>
+<p>实例2：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line"># 1. 先看看这个目录是否存在</div><div class="line">read -p &quot;Please input a directory: &quot; dir</div><div class="line">    if [ &quot;$dir&quot; == &quot;&quot; -o ! -d &quot;$dir&quot; ]; then</div><div class="line">    echo &quot;The $dir is NOT exist in your system.&quot;</div><div class="line">exit 1</div><div class="line">fi</div><div class="line"># 2. 开始测试~</div><div class="line">filelist=$(ls $dir) # 列出所有在该目录下的文件名</div><div class="line">for filename in $filelist</div><div class="line">do</div><div class="line">    perm=&quot;&quot;</div><div class="line">    test -r &quot;$dir/$filename&quot; &amp;&amp; perm=&quot;$perm readable&quot;</div><div class="line">    test -w &quot;$dir/$filename&quot; &amp;&amp; perm=&quot;$perm writable&quot;</div><div class="line">    test -x &quot;$dir/$filename&quot; &amp;&amp; perm=&quot;$perm executable&quot;</div><div class="line">    echo &quot;The file $dir/$filename&apos;s permission is $perm &quot;</div><div class="line">done</div></pre></td></tr></table></figure></p>
+<h3 id="有规律的取数字值"><a href="#有规律的取数字值" class="headerlink" title="有规律的取数字值"></a>有规律的取数字值</h3><p>格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">for ((初始值;条件;执行步长))</div><div class="line">do</div><div class="line">    命令</div><div class="line">done</div></pre></td></tr></table></figure></p>
+<p>实例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">read -p &quot;Please input a number, I will count for 1+2+...+your_input: &quot; nu</div><div class="line">sum=0</div><div class="line">for (( i=1; i&lt;=$nu; i=i+1 )) do</div><div class="line">    sum=$(($sum+$i))</div><div class="line">done</div><div class="line">echo &quot;The result of &apos;1+2+3+...+$nu&apos; is ==&gt; $sum&quot;</div></pre></td></tr></table></figure></p>
+<h2 id="脚本检查"><a href="#脚本检查" class="headerlink" title="脚本检查"></a>脚本检查</h2><p>格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sh [-nvx] scripts.sh</div></pre></td></tr></table></figure></p>
+<ul>
+<li>-n:不执行script,仅查询语法的问题;</li>
+<li>-v:在执行script前,先将scripts的内容输出到屏幕上;</li>
+<li>-x:将使用到的script内容显示到屏幕上,这是很有用的参数;可以看出每步骤的运行结果，比较实用<h1 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h1><blockquote>
+<p>题目：计算距离下次生日还有多少天</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">read -p &quot;Pleas input your birthday (MMDD, ex&gt; 0709): &quot; bir</div><div class="line">now=`date +%m%d`</div><div class="line">if [ &quot;$bir&quot; == &quot;$now&quot; ]; then</div><div class="line">    echo &quot;Happy Birthday to you!!!&quot;</div><div class="line">elif [ &quot;$bir&quot; -gt &quot;$now&quot; ]; then</div><div class="line">    year=`date +%Y`</div><div class="line">    total_d=$(($((`date --date=&quot;$year$bir&quot; +%s`-`date +%s`))/60/60/24))</div><div class="line">    echo &quot;Your birthday will be $total_d later&quot;</div><div class="line">else</div><div class="line">    year=$((`date +%Y`+1))</div><div class="line">    total_d=$(($((`date --date=&quot;$year$bir&quot; +%s`-`date +%s`))/60/60/24))</div><div class="line">    echo &quot;Your birthday will be $total_d later&quot;</div><div class="line">fi</div></pre></td></tr></table></figure></blockquote>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Linux</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/02/08/Linux-Shell脚本(2)/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Linux-Shell脚本(1)" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/30/Linux-Shell脚本(1)/">Linux-Shell脚本(1)</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/30/Linux-Shell脚本(1)/" class="archive-article-date">
+  	<time datetime="2018-01-30T06:34:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="shell-script介绍"><a href="#shell-script介绍" class="headerlink" title="shell script介绍"></a>shell script介绍</h1><h1 id="1、shell-script"><a href="#1、shell-script" class="headerlink" title="1、shell script"></a>1、shell script</h1><h3 id="1-1、定义"><a href="#1-1、定义" class="headerlink" title="1.1、定义"></a>1.1、定义</h3><ul>
+<li>其实就是纯文本文件，以固定的语法组织起来。</li>
+<li>可以编辑这个文件, 让这个文件帮我们 一次执行多个命令。</li>
+<li>可以通过一些运算与逻辑判断来帮我们达成某些较复杂的功能。</li>
+</ul>
+<h3 id="1-2、运行方式"><a href="#1-2、运行方式" class="headerlink" title="1.2、运行方式"></a>1.2、运行方式</h3><p>shell.sh文件必须具备可读与可执行 (rx) 的权限</p>
+<ul>
+<li>直接执行：<ul>
+<li>绝对路径：运行文件所在的绝对路径来执行指令，如/home/zkpk/apps/shell.sh </li>
+<li>相对路径：cd到脚本所在目录 ,使用 ./shell.sh 执行</li>
+</ul>
+</li>
+<li>bash执行:<ul>
+<li>bash shell.sh</li>
+<li>sh shell.sh</li>
+</ul>
+</li>
+<li>source 执行<ul>
+<li>source shell.sh</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-3、脚本基本格式"><a href="#1-3、脚本基本格式" class="headerlink" title="1.3、脚本基本格式"></a>1.3、脚本基本格式</h3><pre><code>#!/bin/bash
+# Shows &quot;Hello World!&quot; in your screen.
+echo -e &quot;Hello World! \a \n&quot;
+exit 0
+</code></pre><p>第一行：基本格式，告知系统执行方式，当采用非sh XXX.sh格式执行时，此行必须。</p>
+<p>第二行：注释，#开头，后面的文字内容不参与程序执行。</p>
+<p>第三行：基本的输出语句。在屏幕打印”Hello World!”。</p>
+<p>第四行：脚本执行完毕的返回语句。可以使用echo $?来获取执行后返回值。</p>
+<h3 id="1-4、数值运算"><a href="#1-4、数值运算" class="headerlink" title="1.4、数值运算"></a>1.4、数值运算</h3><p>格式：$((运算主体))</p>
+<p>实例（乘法运算）：</p>
+<pre><code>#!/bin/bash
+echo -e &quot;Input 2 numbers, I will cross them! \n&quot;
+read -p &quot;first number: &quot; firstnu               #键盘录入数字，存到firstnu中
+read -p &quot;second number: &quot; secnu                #键盘录入数字2，存到secnu中
+total=$(($firstnu*$secnu))                     #进行运算
+echo -e &quot;\nThe result of $firstnu x $secnu is ==&gt; $total&quot;        #输出结果
+</code></pre><p>第四行((firstnu$secnu)) 为双重括号，若删去一层则以字符串进行运算</p>
+<h3 id="1-5、test判断命令"><a href="#1-5、test判断命令" class="headerlink" title="1.5、test判断命令"></a>1.5、test判断命令</h3><p>使用范例：test -e demo.txt</p>
+<ul>
+<li>判断某个文件类型<ul>
+<li>-e 该文件是否存在</li>
+<li>-f 该文件是否存在且为文件(file)</li>
+<li>-d 该文件名是否存在且为目录(directory)</li>
+<li>-b 该文件是否存在且为一个 block device 装置</li>
+<li>-c 该文件是否存在且为一个 character device 装置</li>
+<li>-S 该文件是否存在且为一个 Socket 文件</li>
+<li>-p 该文件是否存在且为一个 FIFO (pipe) 文件</li>
+<li>-L 该文件是否存在且为一个连接文件</li>
+</ul>
+</li>
+<li>判断文件权限<ul>
+<li>-r 检查该文件是否存在且具有可读的权限</li>
+<li>-w 检查该文件是否存在且具有可写的权限</li>
+<li>-x 检查该文件是否存在且具有可执行的权限</li>
+<li>-u 检查该文件名是否存在且具有SUID的属性</li>
+<li>-g 检查该文件名是否存在且具有SGID的属性</li>
+<li>-k 检查该文件名是否存在且具有Sticky bit的属性</li>
+<li>-s 检查该文件是否存在且为非空文件</li>
+</ul>
+</li>
+<li>两个文件之间比较<ul>
+<li>-nt 判断file1 是否比 file2 新</li>
+<li>-ot 判断file1 是否比 file2 旧</li>
+<li>-ef 判断两个文件是否为同一个文件</li>
+</ul>
+</li>
+<li>整数之间的判断<ul>
+<li>-eq 两数值相等(equal)</li>
+<li>-ne 两数值不等(not equal)</li>
+<li>-gt n1大于n2(greater than)</li>
+<li>-lt n1小于n2(less than)</li>
+<li>-ge n1大于等于n2(greater than or equal)</li>
+<li>-le n1小于等于n2(less than or equal)</li>
+</ul>
+</li>
+<li>判断字符串<ul>
+<li>test -z string 判断字符串是否为空?若 string 为空字符串,则为 true</li>
+<li>test -n string 判断字符串是否非空?若 string 为空字符串,则为 false</li>
+<li>test str1 = str2 判断str1是否等于str2,若相等,则返回 true</li>
+<li>test str1 != str2 判断str1是否不等于str2,若相等,则返回 false</li>
+</ul>
+</li>
+</ul>
+<p>实例(判断文件类型，显示其权限)：</p>
+<pre><code>#!/bin/bash
+# Program:
+# User input a filename, program will check
+# 1. 输入文件名，并判断输入存在
+echo -e &quot;Please input a filename, I will check the filename&apos;s type and \ permission. \n\n&quot;
+read -p &quot;Input a filename : &quot; filename
+test -z $filename &amp;&amp; echo &quot;You MUST input a filename.&quot; &amp;&amp; exit 0
+# 2. 判断文件是否存在?不存在结束脚本
+test ! -e $filename &amp;&amp; echo &quot;The filename &apos;$filename&apos; DO NOT exist&quot; &amp;&amp; exit 0
+# 3. 判断文件类型及属性
+test -f $filename &amp;&amp; filetype=&quot;regulare file&quot;
+test -d $filename &amp;&amp; filetype=&quot;directory&quot;
+test -r $filename &amp;&amp; perm=&quot;readable&quot;
+test -w $filename &amp;&amp; perm=&quot;$perm writable&quot;
+test -x $filename &amp;&amp; perm=&quot;$perm executable&quot;
+# 4. 显示文件信息
+echo &quot;The filename: $filename is a $filetype&quot;
+echo &quot;And the permissions are : $perm&quot;
+</code></pre><h3 id="1-6、判断符号"><a href="#1-6、判断符号" class="headerlink" title="1.6、判断符号[]"></a>1.6、判断符号[]</h3><ul>
+<li>[ 判断条件 ]       两端留有空格   </li>
+</ul>
+<p>“-o”表示两者条件满足其一即可</p>
+<p>“-a”表示两者都得满足。</p>
+<p>实例：</p>
+<pre><code>#!/bin/bash
+#This program shows the user&apos;s choice
+read -p &quot;Please input (Y/N): &quot; temp
+[ &quot;$temp&quot; == &quot;Y&quot; -o &quot;$temp&quot; == &quot;y&quot; ] &amp;&amp; echo &quot;OK, continue&quot; &amp;&amp; exit 0
+</code></pre><h1 id="2、shell-script参数"><a href="#2、shell-script参数" class="headerlink" title="2、shell script参数"></a>2、shell script参数</h1><h3 id="2-1、shell-script-默认参数"><a href="#2-1、shell-script-默认参数" class="headerlink" title="2.1、shell script 默认参数"></a>2.1、shell script 默认参数</h3><p>如：调用语句如下</p>
+<pre><code>./shell.sh con1 con2 con3 con4
+$0为./shell.sh  $1为con1  $2为con2  $3为con3 $4位con4
+</code></pre><p>实例：</p>
+<pre><code>#!/bin/bash
+echo &quot;The script name is ==&gt; $0&quot;
+echo &quot;Total parameter number is ==&gt; $#&quot;
+[ &quot;$#&quot; -lt 2 ] &amp;&amp; echo &quot;The number of parameter is less than 2.Stop here.&quot; &amp;&amp; exit 0
+echo &quot;Your whole parameter is ==&gt; &apos;$@&apos;&quot;
+echo &quot;The 1st parameter ==&gt; $1&quot;
+echo &quot;The 2nd parameter ==&gt; $2&quot;
+</code></pre><p>运行界面：</p>
+<pre><code>[zkpk@node05 test_linux]$ ./p4.sh 1 2
+The script name is ==&gt; ./p4.sh
+Total parameter number is ==&gt; 2
+Your whole parameter is ==&gt; &apos;1 2&apos;
+The 1st parameter ==&gt; 1
+The 2nd parameter ==&gt; 2
+</code></pre><h3 id="2-2、参数偏移shift"><a href="#2-2、参数偏移shift" class="headerlink" title="2.2、参数偏移shift"></a>2.2、参数偏移shift</h3><p>实例解释：</p>
+<pre><code>./p5.sh one two three four five six
+#!/bin/bash
+echo &quot;Total parameter number is ==&gt; $#&quot;
+echo &quot;Your whole parameter is ==&gt; &apos;$@&apos;&quot;
+#shift一个变量
+shift
+echo &quot;Total parameter number is ==&gt; $#&quot;
+echo &quot;Your whole parameter is ==&gt; &apos;$@&apos;&quot;
+shift 3 #shift三个变量
+echo &quot;Total parameter number is ==&gt; $#&quot;
+echo &quot;Your whole parameter is ==&gt; &apos;$@&apos;&quot;
+</code></pre><p>运行结果：</p>
+<pre><code>[zkpk@node05 test_linux]$ ./p5.sh one two three four five six
+Total parameter number is ==&gt; 6
+Your whole parameter is ==&gt; &apos;one two three four five six&apos;
+Total parameter number is ==&gt; 5
+Your whole parameter is ==&gt; &apos;two three four five six&apos;
+Total parameter number is ==&gt; 2
+Your whole parameter is ==&gt; &apos;five six&apos;
+</code></pre><p>使用shift后，变量位置发生偏移，在第一次shift一个变量后，变量$1从one变成了two。以此类推。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Linux</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/30/Linux-Shell脚本(1)/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Shell的世界-初识Vim" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -901,72 +1675,9 @@ Observer（观察者）
 
 
   
-    <article id="post-初来乍到，请多关照" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/24/初来乍到，请多关照/">初来乍到，请多关照</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/24/初来乍到，请多关照/" class="archive-article-date">
-  	<time datetime="2017-07-24T14:52:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-24</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <pre><code>捯饬了两天，终于将我的Github博客创建好了。 昨天一直在纠结为啥usename.github.io访问不了，今晚打完游戏，突然灵光一闪，会不会是名字有问题，仔细检查了一下。 写错了一个字。 找到了问题的症结所在，一切似乎就迎刃而解了。在大牛看来似乎很不值得一提。但在我看来已经难能可贵了。 后续会进行博客的优化和美化。期待能在Github上面学到更多。未完待续。。。：
-</code></pre>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/24/初来乍到，请多关照/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span>
+      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
     </nav>
   
 
@@ -1065,15 +1776,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">MapReduce</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Elasticsearch</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Flume</a>
+                <a href="javascript:void(0)" class="js-tag color2">Kibana</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">MapReduce</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1081,7 +1792,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Hadoop</a>
+                <a href="javascript:void(0)" class="js-tag color3">Logtash</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Flume</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1089,7 +1804,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Logtash</a>
+                <a href="javascript:void(0)" class="js-tag color2">Hadoop</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1105,11 +1820,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Mapreduce</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Scala</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Mapreduce</a>
+                <a href="javascript:void(0)" class="js-tag color1">Spark</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1117,15 +1836,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Yarn</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kibana</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Zookeeper</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Yarn</a>
               </li>
              
               <li class="article-tag-list-item">
