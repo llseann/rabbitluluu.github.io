@@ -154,6 +154,617 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-ELK之E-Elasticsearch安装和配置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/22/ELK之E-Elasticsearch安装和配置/">ELK之E--Elasticsearch安装和配置</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/22/ELK之E-Elasticsearch安装和配置/" class="archive-article-date">
+  	<time datetime="2019-03-22T02:45:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1、概述"><a href="#1、概述" class="headerlink" title="1、概述"></a>1、概述</h1><p>​    Elasticsearch，基于lucene，隐藏复杂性，提供简单易用的restful api接口、java api接口（还有其他语言的api接口）。</p>
+<p>​    关于elasticsearch的一个传说，有一个程序员失业了，陪着自己老婆去英国伦敦学习厨师课程。程序员在失业期间想给老婆写一个菜谱搜索引擎，觉得lucene实在太复杂了，就开发了一个封装了lucene的开源项目，compass。后来程序员找到了工作，是做分布式的高性能项目的，觉得compass不够，就写了elasticsearch，让lucene变成分布式的系统。</p>
+<p>​    Elasticsearch是一个实时分布式搜索和分析引擎。它用于全文搜索、结构化搜索、分析。</p>
+<h1 id="2、概念区分"><a href="#2、概念区分" class="headerlink" title="2、概念区分"></a>2、概念区分</h1><ol>
+<li><p>近实时</p>
+<p>近实时，两个意思，从写入数据到数据可以被搜索到有一个小延迟（大概1秒）；基于es执行搜索和分析可以达到秒级。</p>
+</li>
+<li><p>Cluster（集群）</p>
+<p>集群包含多个节点，每个节点属于哪个集群是通过一个配置（集群名称，默认是elasticsearch）来决定的，对于中小型应用来说，刚开始一个集群就一个节点很正常。</p>
+</li>
+<li><p>Node（节点）</p>
+<p>集群中的一个节点，节点也有一个名称（默认是随机分配的），节点名称很重要（在执行运维管理操作的时候），默认节点会去加入一个名称为“elasticsearch”的集群，如果直接启动一堆节点，那么它们会自动组成一个elasticsearch集群，当然一个节点也可以组成一个elasticsearch集群。</p>
+</li>
+<li><p>Index（索引-数据库）</p>
+<p>索引包含一堆有相似结构的文档数据，比如可以有一个客户索引，商品分类索引，订单索引，索引有一个名称。一个index包含很多document，一个index就代表了一类类似的或者相同的document。比如说建立一个product index，商品索引，里面可能就存放了所有的商品数据，所有的商品document。</p>
+</li>
+<li><p>Type（类型-表）</p>
+<p>每个索引里都可以有一个或多个type，type是index中的一个逻辑数据分类，一个type下的document，都有相同的field，比如博客系统，有一个索引，可以定义用户数据type，博客数据type，评论数据type。</p>
+</li>
+<li><p>Document（文档-行）</p>
+<p>文档是es中的最小数据单元，一个document可以是一条客户数据，一条商品分类数据，一条订单数据，通常用JSON数据结构表示，每个index下的type中，都可以去存储多个document。</p>
+</li>
+<li><p>Field（字段-列）</p>
+<p>Field是Elasticsearch的最小单位。一个document里面有多个field，每个field就是一个数据字段</p>
+</li>
+<li><p>mapping（映射-约束）</p>
+<p>数据如何存放到索引对象上，需要有一个映射配置，包括：数据类型、是否存储、是否分词等。</p>
+</li>
+</ol>
+<p><strong>elasticsearch与数据库的类比:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">关系型数据库（比如Mysql）</th>
+<th style="text-align:center">非关系型数据库（Elasticsearch）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">数据库Database</td>
+<td style="text-align:center">索引Index</td>
+</tr>
+<tr>
+<td style="text-align:center">表Table</td>
+<td style="text-align:center">类型Type</td>
+</tr>
+<tr>
+<td style="text-align:center">数据行Row</td>
+<td style="text-align:center">文档Document</td>
+</tr>
+<tr>
+<td style="text-align:center">数据列Column</td>
+<td style="text-align:center">字段Field</td>
+</tr>
+<tr>
+<td style="text-align:center">约束 Schema</td>
+<td style="text-align:center">映射Mapping</td>
+</tr>
+</tbody>
+</table>
+<h1 id="3、存数据和搜索机制"><a href="#3、存数据和搜索机制" class="headerlink" title="3、存数据和搜索机制"></a>3、存数据和搜索机制</h1><p><img src="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/ES%E5%AD%98%E6%95%B0%E6%8D%AE%E5%92%8C%E6%90%9C%E7%B4%A2%E6%9C%BA%E5%88%B6.png" alt=""></p>
+<h1 id="4、安装"><a href="#4、安装" class="headerlink" title="4、安装"></a>4、安装</h1><p><strong>单节点安装：</strong></p>
+<ol>
+<li><p>下载</p>
+</li>
+<li><p>解压</p>
+</li>
+<li><p>修改配置文件<code>elasticsearch.yml</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"># ---------------------------------- Cluster -------------------------------------</div><div class="line">cluster.name: my-application</div><div class="line"># ------------------------------------ Node --------------------------------------</div><div class="line">node.name: node-1</div><div class="line"># ----------------------------------- Paths ---------------------------------------</div><div class="line">path.data: /opt/modules/elasticsearch-5.6.1/data</div><div class="line">path.logs: /opt/modules/elasticsearch-5.6.1/logs</div><div class="line"># ----------------------------------- Memory -----------------------------------</div><div class="line">bootstrap.memory_lock: false</div><div class="line">bootstrap.system_call_filter: false</div><div class="line"># ---------------------------------- Network ------------------------------------</div><div class="line">network.host: 192.168.10.201 </div><div class="line"># --------------------------------- Discovery ------------------------------------</div><div class="line">discovery.zen.ping.unicast.hosts: [&quot;node01&quot;]</div></pre></td></tr></table></figure>
+<p>注意事项：</p>
+<ol>
+<li>cluster.name</li>
+</ol>
+<p>如果要配置集群需要两个节点上的elasticsearch配置的cluster.name相同，都启动可以自动组成集群，这里如果不改cluster.name则默认是cluster.name=my-application，</p>
+<ol>
+<li>nodename随意取但是集群内的各节点不能相同</li>
+<li>修改后的每行前面不能有空格，修改后的“：”后面必须有一个空格</li>
+</ol>
+</li>
+<li><p>修改服务器相关配置</p>
+<ol>
+<li><p><code>/etc/security/limits.conf</code>中添加如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">* soft nofile 65536</div><div class="line">* hard nofile 131072</div><div class="line">* soft nproc 4096</div><div class="line">* hard nproc 4096</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>/etc/security/limits.conf</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* soft nproc 4096</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>/etc/sysctl.conf</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vm.max_map_count=655360</div></pre></td></tr></table></figure>
+<p>添加完后运行<code>sudo sysctl -p</code>查看是否生效</p>
+</li>
+</ol>
+</li>
+<li><p>安装web监控端</p>
+<p>谷歌浏览器添加<code>elasticsearch-head.crx</code>即可</p>
+</li>
+<li><p>启动</p>
+<p><code>bin/elasticsearch</code></p>
+</li>
+</ol>
+<p><strong>集群安装：</strong></p>
+<p>将安装包scp到其他机器</p>
+<p>再在主节点配置中添加如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">node.master: true</div><div class="line">node.data: true</div></pre></td></tr></table></figure>
+<p>其他节点配置中添加</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">node.master: false</div><div class="line">node.data: true</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Elasticsearch</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/22/ELK之E-Elasticsearch安装和配置/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Kafka的API及其使用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/22/Kafka的API及其使用/">Kafka的API及其使用</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/22/Kafka的API及其使用/" class="archive-article-date">
+  	<time datetime="2019-03-22T02:45:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1、命令行操作"><a href="#1、命令行操作" class="headerlink" title="1、命令行操作"></a>1、命令行操作</h1><ol>
+<li><p>查看当前集群中已存在的主题topic<br><code>bin/kafka-topics.sh --zookeeper node01:2181 --list</code></p>
+</li>
+<li><p>创建topic<br><code>bin/kafka-topics.sh --zookeeper node01:2181 --create --replication-factor 3 --partitions 1 --topic gakki</code></p>
+<p>–zookeeper 连接zk集群<br>–create 创建<br>–replication-factor 副本<br>–partitions 分区<br>–topic 主题名</p>
+</li>
+<li><p>删除主题<br><code>bin/kafka-topics.sh --zookeeper node01:2181 --delete --topic gakki</code></p>
+</li>
+<li><p>发送消息<br>生产者启动：<br><code>bin/kafka-console-producer.sh --broker-list node01:9092 --topic gakki</code><br>消费者启动：<br><code>bin/kafka-console-consumer.sh --bootstrap-server node01:9092 --topi
+c gakki --from-beginning</code><br>5）查看主题详细信息<br><code>bin/kafka-topics.sh --zookeeper node01:2181 --describe --topic gakki</code></p>
+</li>
+</ol>
+<h1 id="2、API操作"><a href="#2、API操作" class="headerlink" title="2、API操作"></a>2、API操作</h1><h2 id="2-1、Producer"><a href="#2-1、Producer" class="headerlink" title="2.1、Producer"></a>2.1、Producer</h2><p>写法一：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> xyz.llsean.kafka_producer;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.kafka.clients.producer.KafkaProducer;</div><div class="line"><span class="keyword">import</span> org.apache.kafka.clients.producer.ProducerRecord;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.Properties;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * <span class="doctag">@author</span>: Sean</div><div class="line"> * <span class="doctag">@date</span>: 2019/3/18/10:13</div><div class="line"> * <span class="doctag">@version</span>: 1.0</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Producer</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="comment">//1.配置生产者属性（指定多个参数）</span></div><div class="line">        Properties prpo = <span class="keyword">new</span> Properties();</div><div class="line"></div><div class="line">        <span class="comment">//参数配置</span></div><div class="line">        <span class="comment">//kafka节点的地址</span></div><div class="line">        prpo.put(<span class="string">"bootstrap.servers"</span>,<span class="string">"node01:9092"</span>);</div><div class="line">        </div><div class="line">        <span class="comment">/**</span></div><div class="line">         * 可选项</div><div class="line">         * */</div><div class="line">        <span class="comment">//发送消息是否等待应答</span></div><div class="line">        prpo.put(<span class="string">"acks"</span>,<span class="string">"all"</span>);</div><div class="line">        <span class="comment">//配置发送消息失败重试</span></div><div class="line">        prpo.put(<span class="string">"retries"</span>,<span class="string">"0"</span>);</div><div class="line">        <span class="comment">//配置批量处理消息大小</span></div><div class="line">        prpo.put(<span class="string">"batch.size"</span>,<span class="string">"10241"</span>);</div><div class="line">        <span class="comment">//配置批量处理数据延迟--ms</span></div><div class="line">        prpo.put(<span class="string">"linger.ms"</span>,<span class="string">"5"</span>);</div><div class="line">        <span class="comment">//配置内存缓冲大小</span></div><div class="line">        prpo.put(<span class="string">"buffer.memory"</span>,<span class="string">"123412"</span>);</div><div class="line">        </div><div class="line">        <span class="comment">//消息在发送前必须序列化</span></div><div class="line">        prpo.put(<span class="string">"key.serializer"</span>,<span class="string">"org.apache.kafka.common.serialization.StringSerializer"</span>);</div><div class="line">        prpo.put(<span class="string">"value.serializer"</span>,<span class="string">"org.apache.kafka.common.serialization.StringSerializer"</span>);</div><div class="line"></div><div class="line">        <span class="comment">//2.实例化producer</span></div><div class="line">        KafkaProducer&lt;String, String&gt; producer = <span class="keyword">new</span> KafkaProducer&lt;&gt;(prpo);</div><div class="line"></div><div class="line">        <span class="comment">//3.发送消息</span></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">99</span>; i++) &#123;</div><div class="line">            producer.send(<span class="keyword">new</span> ProducerRecord&lt;String, String&gt;(<span class="string">"jojo"</span>,<span class="string">"sean's love"</span> + i));</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">//4.释放资源</span></div><div class="line">        producer.close();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>写法二：</p>
+<p>接口回调，可以在idea控制台直接看到运行信息，便于管理者查看任务运行的状态</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> xyz.llsean.kafka_producer;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.kafka.clients.producer.Callback;</div><div class="line"><span class="keyword">import</span> org.apache.kafka.clients.producer.KafkaProducer;</div><div class="line"><span class="keyword">import</span> org.apache.kafka.clients.producer.ProducerRecord;</div><div class="line"><span class="keyword">import</span> org.apache.kafka.clients.producer.RecordMetadata;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.Properties;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * <span class="doctag">@author</span>: Sean</div><div class="line"> * <span class="doctag">@date</span>: 2019/3/18/10:13</div><div class="line"> * <span class="doctag">@version</span>: 1.0</div><div class="line"> * 接口回调--用来监控当前的运行状态</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Producer2</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="comment">//1.配置生产者属性（指定多个参数）</span></div><div class="line">        Properties prpo = <span class="keyword">new</span> Properties();</div><div class="line"></div><div class="line">        <span class="comment">//参数配置</span></div><div class="line">        <span class="comment">//kafka节点的地址</span></div><div class="line">        prpo.put(<span class="string">"bootstrap.servers"</span>, <span class="string">"node01:9092"</span>);</div><div class="line"></div><div class="line">        <span class="comment">/**</span></div><div class="line">         * 可选项</div><div class="line">         * */</div><div class="line">        <span class="comment">//发送消息是否等待应答</span></div><div class="line">        prpo.put(<span class="string">"acks"</span>, <span class="string">"all"</span>);</div><div class="line">        <span class="comment">//配置发送消息失败重试</span></div><div class="line">        prpo.put(<span class="string">"retries"</span>, <span class="string">"0"</span>);</div><div class="line">        <span class="comment">//配置批量处理消息大小</span></div><div class="line">        prpo.put(<span class="string">"batch.size"</span>, <span class="string">"10241"</span>);</div><div class="line">        <span class="comment">//配置批量处理数据延迟--ms</span></div><div class="line">        prpo.put(<span class="string">"linger.ms"</span>, <span class="string">"5"</span>);</div><div class="line">        <span class="comment">//配置内存缓冲大小</span></div><div class="line">        prpo.put(<span class="string">"buffer.memory"</span>, <span class="string">"123412"</span>);</div><div class="line"></div><div class="line">        <span class="comment">//消息在发送前必须序列化</span></div><div class="line">        prpo.put(<span class="string">"key.serializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringSerializer"</span>);</div><div class="line">        prpo.put(<span class="string">"value.serializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringSerializer"</span>);</div><div class="line">        <span class="comment">//加载分区逻辑</span></div><div class="line">        <span class="comment">//prpo.put("partitioner.class","xyz.llsean.kafka_producer.Partition");</span></div><div class="line"></div><div class="line">        <span class="comment">//2.实例化producer</span></div><div class="line">        KafkaProducer&lt;String, String&gt; producer = <span class="keyword">new</span> KafkaProducer&lt;&gt;(prpo);</div><div class="line"></div><div class="line">        <span class="comment">//3.发送消息</span></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">99</span>; i++) &#123;</div><div class="line">            producer.send(<span class="keyword">new</span> ProducerRecord&lt;String, String&gt;(<span class="string">"llsean"</span>, <span class="string">"sean's love emmm"</span> + i),</div><div class="line">                    <span class="keyword">new</span> Callback() &#123;</div><div class="line">                        <span class="meta">@Override</span></div><div class="line">                        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCompletion</span><span class="params">(RecordMetadata metadata, Exception e)</span> </span>&#123;</div><div class="line">                            <span class="comment">//如果有metadata不为null 拿到当前的数据偏移量和分区</span></div><div class="line">                            <span class="keyword">if</span> (metadata != <span class="keyword">null</span>) &#123;</div><div class="line">                                System.out.println(metadata.topic() + <span class="string">"-----"</span> +</div><div class="line">                                        metadata.offset() + <span class="string">"-----"</span> + metadata.partition());</div><div class="line">                            &#125;</div><div class="line">                        &#125;</div><div class="line">                    &#125;);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">//4.释放资源</span></div><div class="line">        producer.close();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>设置加载自定义分区：</p>
+<p>实现Partitioner接口，重写方法即可</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> xyz.llsean.kafka_producer;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.kafka.clients.producer.Partitioner;</div><div class="line"><span class="keyword">import</span> org.apache.kafka.common.Cluster;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.Map;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * <span class="doctag">@author</span>: Sean</div><div class="line"> * <span class="doctag">@date</span>: 2019/3/18/10:56</div><div class="line"> * <span class="doctag">@version</span>: 1.0</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Partition</span> <span class="keyword">implements</span> <span class="title">Partitioner</span></span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">//设置</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(Map&lt;String, ?&gt; map)</span> </span>&#123;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//分区逻辑</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(String s, Object o, <span class="keyword">byte</span>[] bytes, Object o1, <span class="keyword">byte</span>[] bytes1, Cluster cluster)</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//释放资源</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="2-2、Consumer"><a href="#2-2、Consumer" class="headerlink" title="2.2、Consumer"></a>2.2、Consumer</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> xyz.llsean.kafka_consumer;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecord;</div><div class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecords;</div><div class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.KafkaConsumer;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.Arrays;</div><div class="line"><span class="keyword">import</span> java.util.Properties;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * <span class="doctag">@author</span>: Sean</div><div class="line"> * <span class="doctag">@date</span>: 2019/3/18/11:16</div><div class="line"> * <span class="doctag">@version</span>: 1.0</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Consumer</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">//1.配置消费者属性</span></div><div class="line">        Properties prpo = <span class="keyword">new</span> Properties();</div><div class="line"></div><div class="line">        <span class="comment">//配置属性</span></div><div class="line">        <span class="comment">//服务器地址</span></div><div class="line">        prpo.put(<span class="string">"bootstrap.servers"</span>, <span class="string">"node01:9092"</span>);</div><div class="line">        <span class="comment">//配置消费者组</span></div><div class="line">        prpo.put(<span class="string">"group.id"</span>,<span class="string">"g1"</span>);</div><div class="line">        <span class="comment">//配置是否自动确认offset</span></div><div class="line">        prpo.put(<span class="string">"enable.auto.commit"</span>,<span class="string">"true"</span>);</div><div class="line">        <span class="comment">//序列化和反序列化</span></div><div class="line">        prpo.put(<span class="string">"key.deserializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringDeserializer"</span>);</div><div class="line">        prpo.put(<span class="string">"value.deserializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringDeserializer"</span>);</div><div class="line"></div><div class="line">        <span class="comment">//2.实例化消费者</span></div><div class="line">        <span class="keyword">final</span> KafkaConsumer consumer = <span class="keyword">new</span> KafkaConsumer&lt;String,String&gt;(prpo);</div><div class="line"></div><div class="line">        <span class="comment">//4.释放资源</span></div><div class="line">        Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                <span class="keyword">if</span> (consumer != <span class="keyword">null</span>)&#123;</div><div class="line">                    consumer.close();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;));</div><div class="line"></div><div class="line">        <span class="comment">//订阅消息主题</span></div><div class="line">        consumer.subscribe(Arrays.asList(<span class="string">"jojo"</span>));</div><div class="line"></div><div class="line">        <span class="comment">//3.拉取消息</span></div><div class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>)&#123;</div><div class="line">            ConsumerRecords&lt;String,String&gt; record = consumer.poll(<span class="number">500</span>);</div><div class="line">            <span class="comment">//遍历消息</span></div><div class="line">            <span class="keyword">for</span>(ConsumerRecord&lt;String,String&gt; c:record)&#123;</div><div class="line">                System.out.println(c.topic()+<span class="string">"---"</span>+c.value());</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Kafka</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/22/Kafka的API及其使用/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-kafka概述和安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/22/kafka概述和安装/">kafka概述和安装</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/22/kafka概述和安装/" class="archive-article-date">
+  	<time datetime="2019-03-22T02:45:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1、kafka概述"><a href="#1、kafka概述" class="headerlink" title="1、kafka概述"></a>1、kafka概述</h1><h2 id="1-1、概述"><a href="#1-1、概述" class="headerlink" title="1.1、概述"></a>1.1、概述</h2><p>官网：<br><a href="http://kafka.apache.org/" target="_blank" rel="external">http://kafka.apache.org/</a><br>ApacheKafka®是一个分布式流媒体平台<br>流媒体平台有三个关键功能：</p>
+<ul>
+<li>发布和订阅记录流，类似于消息队列或企业消息传递系统。</li>
+<li>以容错的持久方式存储记录流。</li>
+<li>记录发生时处理流</li>
+</ul>
+<p>Kafka通常用于两大类应用：</p>
+<ul>
+<li>构建可在系统或应用程序之间可靠获取数据的实时流数据管道</li>
+<li>构建转换或响应数据流的实时流应用程序</li>
+</ul>
+<p>在流计算中，kafka主要功能是用来缓存数据，storm可以通过消费kafka中的数据进行流计算。<br>是一套开源的消息系统，由scala写成。支持javaAPI的。<br>kafka最初由LinkedIn公司开发，2011年开源。<br>是一个<strong>分布式消息队列</strong>，kafka读消息保存采用Topic进行归类。</p>
+<h2 id="1-2、角色组成"><a href="#1-2、角色组成" class="headerlink" title="1.2、角色组成"></a>1.2、角色组成</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">发送消息：Producer(生产者)</div><div class="line">接收消息：Consumer(消费者)</div></pre></td></tr></table></figure>
+<h2 id="1-3、作用"><a href="#1-3、作用" class="headerlink" title="1.3、作用"></a>1.3、作用</h2><ul>
+<li>解耦<br>为了避免出现问题，一个组件专业做一件事</li>
+<li>拓展性<br>可增加处理过程</li>
+<li>灵活<br>面对访问量剧增，不会因为超负荷请求而完全瘫痪。</li>
+<li>可恢复<br>一部分组件失效，不会影响整个系统。可以进行恢复。</li>
+<li>缓冲<br>控制数据流经过系统的速度。</li>
+<li>顺序保证<br>对消息进行有序处理。</li>
+<li>异步通信<br>akka,消息队列提供了异步处理的机制。允许用户把消息放到队列，不立刻处理。</li>
+</ul>
+<h1 id="2、架构"><a href="#2、架构" class="headerlink" title="2、架构"></a>2、架构</h1><h1 id="3、安装部署"><a href="#3、安装部署" class="headerlink" title="3、安装部署"></a>3、安装部署</h1><p>提前准备：搭建kafka集群要先搭建zookeeper集群</p>
+<ol>
+<li><p>官网下载安装包</p>
+</li>
+<li><p>上传安装包</p>
+</li>
+<li><p>解压安装包</p>
+</li>
+<li><p>重命名</p>
+</li>
+<li><p>修改配置文件<br><code>config/server.properties</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">broker.id=0 #每台机器的id不同即可</div><div class="line">delete.topic.enable=true #是否允许删除主题</div><div class="line">log.dirs=/root/hd/kafka/logs #运行日志保存位置</div><div class="line">zookeeper.connect=hd09-01:2181,hd09-02:2181,</div></pre></td></tr></table></figure>
+</li>
+<li><p>启动集群<br><code>bin/kafka-server-start.sh config/server.properties &amp;</code></p>
+</li>
+<li><p>关闭<br><code>bin/kafka-server-stop.sh</code></p>
+</li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">kafka</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/22/kafka概述和安装/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Hbase调优" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/22/Hbase调优/">Hbase调优</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/22/Hbase调优/" class="archive-article-date">
+  	<time datetime="2019-03-22T02:44:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Hbase优化技巧"><a href="#Hbase优化技巧" class="headerlink" title="Hbase优化技巧"></a>Hbase优化技巧</h1><ol>
+<li><p>预分区问题</p>
+<p>region分片的原因，表十分大</p>
+<p>region存储数据，如果有多个region，每个region负责维护一部分的rowkey{startrowkey，endrowkey}</p>
+<p>分多少片？提前规划，有效提高hbase性能，进行存储数据前做好rowkey的预分区优化hbase</p>
+<p>实际操作：</p>
+<p>​    <code>create &#39;user_pp&#39;,&#39;info&#39;,partition&#39;,SPLITS =&gt;[&#39;201&#39;,&#39;202&#39;,&#39;203&#39;,&#39;204&#39;]</code></p>
+<p>添加上列族名，便于添加数据，下者同理</p>
+<p>提前将分区信息写入文件，</p>
+<p>​    <code>create &#39;user_ppp&#39;,&#39;partition&#39;,SPLITS_FILE=&gt;&#39;/root/temp/partitions.txt&#39;</code></p>
+</li>
+</ol>
+<ol>
+<li><p>rowkey如何设计？</p>
+<p>rowkey是数据的唯一标识，这条数据存储在哪个分区由预分区范围决定</p>
+<p>合理设计rowkey：一份数据分为5个region存储，但是我们需要尽可能的保证每个region中数据量差不多</p>
+<p>尽可能的打散数据，平均分配到每个region中即可</p>
+<p>解决方案：</p>
+<p>​    生成随机数、Hash/散列值、字符串拼接/反转</p>
+<p>如：原来的rowkey是201，hash后104526607，</p>
+<p>​                    202，hash后104526606，</p>
+<p>​    字符串拼接：20190316_dsa1  20190316_gdss</p>
+<p>​    字符串反转：20190316-&gt;61309102</p>
+</li>
+</ol>
+<ol>
+<li><p>hbase基础优化</p>
+<p>因为hbase用的hdfs存储，datanode允许最大文件打开数，默认是4096，将其<strong>调大</strong>，修改<code>hdfs-site.xml</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dfs.datanode.max.transfer.threads</div></pre></td></tr></table></figure>
+<p>优化等待时间,默认60000毫秒，将数值<strong>调大</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dfs.image.transfer.timeout</div></pre></td></tr></table></figure>
+<p>内存优化：修改<code>hadoop-env.sh</code>设置内存的堆大小</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">export HADOOP_PORTMAP_OPTS=&apos;-Xmx512m $HADOOP_PORTMAP_OPTS&apos;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Hbase</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/22/Hbase调优/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Hbase的API和MR实例" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/22/Hbase的API和MR实例/">Hbase的API和MR实例</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/22/Hbase的API和MR实例/" class="archive-article-date">
+  	<time datetime="2019-03-22T02:44:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>package xyz.llsean.HbaseMR2_;</p>
+<p>import org.apache.hadoop.conf.Configuration;<br>import org.apache.hadoop.fs.Path;<br>import org.apache.hadoop.hbase.HBaseConfiguration;<br>import org.apache.hadoop.hbase.client.Put;<br>import org.apache.hadoop.hbase.io.ImmutableBytesWritable;<br>import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;<br>import org.apache.hadoop.mapreduce.Job;<br>import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;<br>import org.apache.hadoop.util.Tool;<br>import org.apache.hadoop.util.ToolRunner;</p>
+<p>/**</p>
+<ul>
+<li>@author: Sean</li>
+<li>@date: 2019/3/17/9:54</li>
+<li><p>@version: 1.0<br> */<br> public class ReadHdfsDriver implements Tool{<br> private Configuration conf;</p>
+<p> @Override<br> public void setConf(Configuration conf) {</p>
+<pre><code>this.conf = HBaseConfiguration.create(conf);
+</code></pre><p> }</p>
+<p> @Override<br> public Configuration getConf() {</p>
+<pre><code>return this.conf;
+</code></pre><p> }</p>
+<p> @Override<br> public int run(String[] args) throws Exception {</p>
+<pre><code>//1.创建job
+Job job = Job.getInstance(conf);
+job.setJarByClass(ReadHdfsDriver.class);
+
+//2.设置Mapper
+job.setMapperClass(ReadHdfsMapper_.class);
+job.setMapOutputKeyClass(ImmutableBytesWritable.class);
+job.setMapOutputValueClass(Put.class);
+
+//3.设置Reducer
+TableMapReduceUtil.initTableReducerJob(&quot;user_hdfs&quot;,
+        WriterHdfsReducer_.class,
+        job);
+
+//4.输入配置
+FileInputFormat.addInputPath(job,new Path(&quot;/temp/love.txt&quot;));
+
+boolean rs = job.waitForCompletion(true);
+return rs?0:1;
+</code></pre><p> }</p>
+<p> public static void main(String[] args) {</p>
+<pre><code>try {
+    int run = ToolRunner.run(new ReadHdfsDriver(), args);
+    System.exit(run);
+} catch (Exception e) {
+    e.printStackTrace();
+}
+</code></pre><p> }<br> }</p>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Hbase</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/22/Hbase的API和MR实例/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Hbase的Shell操作以及读写过程解析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -834,852 +1445,6 @@ command=//opt/modules/hive/bin/hive -f &quot;hive.sql&quot;</code></p>
 
 
   
-    <article id="post-Hive基础指令三" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/08/Hive基础指令三/">Hive基础指令三</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/08/Hive基础指令三/" class="archive-article-date">
-  	<time datetime="2019-03-08T10:10:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Hive基础三"><a href="#Hive基础三" class="headerlink" title="Hive基础三"></a>Hive基础三</h1><h2 id="1、排序"><a href="#1、排序" class="headerlink" title="1、排序"></a>1、排序</h2><p><strong>Order By：</strong>全局排序</p>
-<ol>
-<li><p>按照员工表的奖金金额进行正序排列</p>
-<p><code>select * from emptable order by emptable.comm;</code></p>
-<p>默认正序，后面加asc， 可以省略</p>
-</li>
-<li><p>按照员工表的奖金金额进行倒序排列</p>
-<p><code>select * from emptable order by emptable.comm desc;</code></p>
-</li>
-<li><p>按照部门和奖金进行升序排列</p>
-<p><code>select * from emptable order by deptno,comm;</code></p>
-</li>
-</ol>
-<p><strong>Sort By：</strong>内部排序，分区表中进行 并设置Reducer个数</p>
-<ol>
-<li><p>在<strong>分区表</strong>表中查询所有信息，启用3个reduce并根据deptno降序</p>
-<p><code>set mapreduce.job.reduces=3;</code></p>
-</li>
-</ol>
-<p>​    <code>select * from dept_partitions sort by deptno desc;</code></p>
-<p><strong>Distribute By：</strong>分区排序</p>
-<ol>
-<li><p>先按照部门编号进行升序排序，再按照地域编号进行降序排序</p>
-<p><code>select * from dept_partitions distribute by deptno sort by loc desc;</code></p>
-</li>
-</ol>
-<p><strong>Cluster By：</strong></p>
-<ol>
-<li><p>按照部门编号进行排序</p>
-<p><code>select * from dept_partitions cluster by deptno;</code></p>
-<p>具备Distribute By 和Sort By两者功能，字段一样的时候可以代替</p>
-<p>如：</p>
-<p><code>select * from dept_partitions distribute by deptno sort by deptno;</code></p>
-<p>等价于：<code>select * from dept_partitions cluster by deptno;</code></p>
-</li>
-</ol>
-<h2 id="2、分桶"><a href="#2、分桶" class="headerlink" title="2、分桶"></a>2、分桶</h2><font color="red"><strong>区分：</strong>分桶分的是文件，分区分的是文件夹</font>
-
-<p><strong>使用场景：</strong>用户需要统计一个具有代表性的结果时，并不是全部结果!</p>
-<p>​        数据量十分大的时候，需要进行<strong>抽样</strong>的时候会用到</p>
-<p><strong>设置支持分桶</strong>：<code>set hive.enforce.bucketing = true;</code></p>
-<ol>
-<li><p>如何创建分桶表</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt; create table emptable_buck(id int, name string)</div><div class="line">              &gt; clustered by(id) into 4 buckets</div><div class="line">              &gt; row format</div><div class="line">              &gt; delimited fields</div><div class="line">              &gt; terminated by &apos;\t&apos;;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<ol>
-<li><p>抽样</p>
-<p><code>select * from emptable_buck tablesample(bucket 1 out of 2 on id);</code></p>
-<p>tablesample是抽样语句，语法：TABLESAMPLE(BUCKET x OUT OF y)</p>
-<p>​        y必须是table总bucket数的<strong>倍数或者因子</strong>。hive根据y的大小，决定抽样的比例。例如，table总共分了64份，当y=32时，抽取 (64/32=)2个bucket的数据，当y=128时，抽取(64/128=)1/2个bucket的数据。x表示从哪个bucket开始抽取。例 如，table总bucket数为32，tablesample(bucket 3 out of 16)，表示总共抽取（32/16=）2个bucket的数据，分别为第3个bucket和第（3+16=）19个bucket的数据。</p>
-</li>
-</ol>
-<h2 id="3、UDF自定义函数"><a href="#3、UDF自定义函数" class="headerlink" title="3、UDF自定义函数"></a>3、UDF自定义函数</h2><p>​    UDF：一进一出</p>
-<p>​    UDAF：聚合函数，多进一出(count/max/avg)</p>
-<p>​    UDTF：一进多出</p>
-<p>添加jar包：</p>
-<p>​    <code>add jar /root/myjar.jar</code></p>
-<p>加载为临时的方法：</p>
-<p>​    <code>create temporary function my_cat as &quot;包名.类名&quot;</code></p>
-<p>加载为永久的方法：</p>
-<p>hive-site.xml 中添加以下属性<code>hive.aux.jars.path</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;hive.aux.jars.path&lt;/name&gt;</div><div class="line">	&lt;value&gt;file:///root/hd/hive/lib/hive.jar&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
-<h2 id="4、Hive压缩"><a href="#4、Hive压缩" class="headerlink" title="4、Hive压缩"></a>4、Hive压缩</h2><p>​    存储：hdfs</p>
-<p>​    计算：mapreduce</p>
-<h3 id="4-1Map端输出阶段压缩："><a href="#4-1Map端输出阶段压缩：" class="headerlink" title="4.1Map端输出阶段压缩："></a>4.1Map端输出阶段压缩：</h3><p>开启传输数据压缩功能：</p>
-<p>​    <code>set hive.exec.compress.intermediate=true;</code></p>
-<p>开启map输出压缩功能：</p>
-<p>​    <code>set mapreduce.map.output.compress=true;</code><br>设置snappy压缩方式：<br>​    <code>set mapreduce.map.output.compress.codec=org.apache.hadoop.io.compress.SnappyCodec;</code></p>
-<h3 id="4-2Reduce端输出压缩："><a href="#4-2Reduce端输出压缩：" class="headerlink" title="4.2Reduce端输出压缩："></a>4.2Reduce端输出压缩：</h3><p>设置hive输出数据压缩功能<br>    <code>set hive.exec.compress.output=true;</code><br>设置mr输出数据压缩<br>    <code>set mapreduce.output.fileoutputformat.compress=true;</code><br>指定压缩编码：<br>    <code>set mapreduce.output.fileoutputformat.compress.codec=org.apache.
-hadoop.io.compress.SnappyCodec;</code><br>指定压缩类型块压缩<br>    <code>set mapreduce.output.fileoutputformat.compress.type=BLOCK;</code><br>测试结果</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Hive</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/08/Hive基础指令三/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Hive基础指令二" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/08/Hive基础指令二/">Hive基础指令二</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/08/Hive基础指令二/" class="archive-article-date">
-  	<time datetime="2019-03-08T10:09:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Hive基础操作二"><a href="#Hive基础操作二" class="headerlink" title="Hive基础操作二"></a>Hive基础操作二</h1><h2 id="1、-分区表"><a href="#1、-分区表" class="headerlink" title="1、 分区表"></a>1、 分区表</h2><ol>
-<li><p>创建分区表</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> dept_partitions(<span class="keyword">id</span> <span class="built_in">int</span>, <span class="keyword">name</span> <span class="keyword">string</span>)</div><div class="line"><span class="keyword">partition</span> <span class="keyword">by</span>(<span class="keyword">day</span> <span class="keyword">string</span>)</div><div class="line"><span class="keyword">row</span> <span class="keyword">format</span></div><div class="line"><span class="keyword">delimited</span> <span class="keyword">fields</span></div><div class="line"><span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">''</span>;</div></pre></td></tr></table></figure>
-</li>
-<li><p>导入数据</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">load</span> <span class="keyword">data</span> <span class="keyword">local</span> inpath <span class="string">'/root/temp/dept.txt'</span> <span class="keyword">into</span> <span class="keyword">table</span> dept_partitions <span class="keyword">partition</span>(<span class="keyword">day</span> = <span class="string">"0302"</span>);</div></pre></td></tr></table></figure>
-<p>得<strong>指明分区字段</strong></p>
-</li>
-<li><p>查询</p>
-</li>
-</ol>
-<ul>
-<li><p>全查询</p>
-<p><code>select * from dept_partitions;</code></p>
-<p>此时查看的是<strong>整个</strong>分区表</p>
-</li>
-<li><p>单表查询</p>
-<p><code>select * from dept_partitions where day = &#39;0302&#39;;</code></p>
-<p>查找<strong>指定</strong>分区的数据</p>
-</li>
-<li><p>联合查询–union</p>
-<p><code>select * from dept_partitions where day = &#39;0302&#39; union select * from dept_partitions where day = &#39;0303&#39;;</code></p>
-<p>查询多个分区</p>
-</li>
-</ul>
-<ol>
-<li><p>添加分区</p>
-<p><code>alter table dept_partitions add partition(day = &quot;0305&quot;);</code></p>
-</li>
-</ol>
-<p>   添加多个分区</p>
-<p>   <code>alter table dept_partitions add partition(day = &quot;0306&quot;) partition(day = &quot;0307&quot;);</code></p>
-<p>   <strong>分区之间用空格分开即可</strong></p>
-<ol>
-<li><p>查询分区个数</p>
-<p><code>show partitions dept_partitions;</code></p>
-</li>
-<li><p>删除分区</p>
-<p><code>alter table dept_partitions drop partition(day = &quot;0307&quot;);</code></p>
-</li>
-<li><p>修复表的关联</p>
-<p>直接创建hdfs路径，将文件上传进去，执行该语句直接将数据关联</p>
-<p><code>msck repair table dept_partitions;</code></p>
-</li>
-</ol>
-<h2 id="2、-DML数据操作"><a href="#2、-DML数据操作" class="headerlink" title="2、 DML数据操作"></a>2、 DML数据操作</h2><ol>
-<li><p>数据导入</p>
-<p><code>load data [local] inpath &#39;/文件名&#39; into table 表名;</code></p>
-</li>
-<li><p>向表中插入数据</p>
-<p><code>insert into table stu_partitions partition(age = 18) values(1,&#39;gakki&#39;);</code></p>
-</li>
-</ol>
-<p>   向现有表中插入sql查询结果(overwrite是覆盖)</p>
-<p>   <code>insert overwriter table stu_partitions partition(age = 18) select * from sean_db.mostlove where id &lt;= 3;</code></p>
-<p>​    直接创建新表插入sql查询结果,会自动创建和被查询表一样的结构</p>
-<p>​    <code>create table if not exists stu_partitions1 as select * from stu_partitions where id =         4;</code></p>
-<ol>
-<li><p>直接创建表的同时加载数据</p>
-<p>`create table stu_partitions2 (id int, name string)</p>
-<pre><code>&gt; row format
-&gt; delimited fields
-&gt; terminated by &apos;\t&apos;
-&gt; location &apos;/temp&apos;;`
-</code></pre></li>
-</ol>
-<font color="red">注意：location指定的是HDFS中的一个<strong>文件夹</strong>，非文件,并且该文件夹下不能有其他目录</font>
-
-<ol>
-<li><p>将查询结果导出到本地</p>
-<p><code>insert overwrite local directory &#39;/root/data&#39; select * from dept_partitions;</code></p>
-</li>
-<li><p>将hive表中数据导出到hdfs(拷贝过程)</p>
-<p><code>export table dept_partitions to &#39;/data&#39;;</code></p>
-<p>将hdfs中数据导入到hive(拷贝过程)</p>
-<p><code>inport table test_table from &#39;/data&#39;;</code></p>
-</li>
-<li><p>清空表</p>
-<p><code>truncate table test_table;</code></p>
-</li>
-</ol>
-<h2 id="3-查询操作"><a href="#3-查询操作" class="headerlink" title="3. 查询操作"></a>3. 查询操作</h2><ol>
-<li><p>基础查询</p>
-<p><code>select * from table;</code></p>
-<p><code>select id,name from table;</code></p>
-</li>
-<li><p>设置别名</p>
-<p><code>select ename , sal+1000 as salary from sean_db.emptable;</code></p>
-</li>
-<li><p>创建员工表</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt; create table sean_db.emptable (empno int, ename string, job string, mgr int, </div><div class="line">              &gt; birthday string, sal double, comm double, deptno int)</div><div class="line">              &gt; row format</div><div class="line">              &gt; delimited fields</div><div class="line">              &gt; terminated by '\t';</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<ol>
-<li><p>查询公司有多少员工</p>
-<p><code>select count(*) as empnumber from sean_db.emptable;</code></p>
-</li>
-<li><p>查询最高的工资</p>
-<p><code>select max(sal) from sean_db.emptable;</code></p>
-</li>
-<li><p>查询最少的工资</p>
-<p><code>select min(sal) from sean_db.emptable;</code></p>
-</li>
-<li><p>求工资的总和</p>
-<p><code>select sum(sal) sal_sum from emp_table;</code></p>
-</li>
-<li><p>求该公司的员工工资平均值</p>
-<p><code>select avg(sal) sal_avg from emptable;</code></p>
-</li>
-<li><p>查询结果只显示前n条</p>
-<p><code>select * from emptable limit 3;</code></p>
-</li>
-</ol>
-<p><strong>where语句，== 过滤</strong></p>
-<p><strong>使用：where字句后紧接from</strong></p>
-<ol>
-<li><p>求出工资大于1300的员工</p>
-<p><code>select * from emptable where sal &gt; 1300;</code></p>
-</li>
-<li><p>求出工资在1300~3000范围的员工信息</p>
-<p><code>select * from emptable where sal &gt;= 1300 and sal &lt;= 3000;</code></p>
-<p><code>select * from emptable where sal &gt; 1300 and sal &lt; 3000;</code></p>
-<p><strong>is null 和 is not null</strong></p>
-</li>
-<li><p>求出奖金为空的</p>
-<p><code>select * from emptable where comm is null;</code></p>
-</li>
-<li><p>求出奖金为非空的</p>
-<p><code>select * from emptable where comm is not null;</code></p>
-</li>
-<li><p>求出工资在2000~3000员工的姓名</p>
-<p><code>select ename from emptable where sal in(2000,3000);</code></p>
-</li>
-</ol>
-<p><strong>like:模糊查询</strong></p>
-<p><strong>使用：通配符</strong></p>
-<p><code>%</code> : 代表后面零个或多个字符</p>
-<p><code>_</code> : 代表一个字符</p>
-<ol>
-<li><p>查询工资以1开头的员工信息</p>
-<p><code>select * from emptable where sal like &#39;1%&#39;;</code></p>
-</li>
-<li><p>查询工资第二位为1的员工信息</p>
-<p><code>select * from emptable where sal like &#39;_1%&#39;;</code></p>
-</li>
-<li><p>查询工资里面含有5的员工信息</p>
-<p><code>select * from emptable where sal like &#39;%5%&#39;;</code></p>
-</li>
-</ol>
-<p><strong>AND/NOT/OR的使用</strong></p>
-<ol>
-<li><p>查询工资大于两千并且部门号是30</p>
-<p><code>select * from emptable where sal &gt; 2000 and deptno = 30;</code></p>
-</li>
-<li><p>查询工资大于两千或者部门号是30</p>
-<p><code>select * from emptable where sal &gt; 2000 or deptno = 30;</code></p>
-</li>
-<li><p>查询工资不在2000~3000的员工信息</p>
-<p><code>select * from emptable where sal &lt; 2000 or sal &gt; 3000;</code></p>
-</li>
-</ol>
-<p><strong>分组操作</strong></p>
-<p><code>Group By</code>： 通常和一些聚合函数一起使用</p>
-<ol>
-<li><p>求每个部门的平均工资</p>
-<p><code>select avg(sal) as avg_sal , deptno from emptable group by deptno;</code></p>
-</li>
-<li><p>求每个部门工资最低的工资</p>
-<p><code>select min(sal) as min_sal, deptno from emptable group by deptno;</code></p>
-</li>
-</ol>
-<p><code>having</code>： 用于分组的统计语句</p>
-<p><code>where</code>： 后面不可以跟分组函数</p>
-<ol>
-<li><p>求平均工资大于2000的部门</p>
-<p><code>select deptno, avg(sal) as avg_sal from emptable group by deptno having avg_sal &gt; 2000;</code></p>
-</li>
-</ol>
-<h2 id="4-Join操作"><a href="#4-Join操作" class="headerlink" title="4. Join操作"></a>4. Join操作</h2><p>员工表中只有部门编号，没有部门名称</p>
-<p>部门表中有部门标号和部门名称</p>
-<ol>
-<li><p>查询员工编号、员工姓名、员工所在的部门名称（等值join）</p>
-<p><code>select emptable.empno, emptable.ename, dept.dname from emptable join dept on emptable.deptno = dept.deptno;</code></p>
-<p><code>select e.empno, e.ename, d.dname from emptable as e join dept as d where e.deptno = d.deptno;</code></p>
-</li>
-<li><p>查询员工编号、员工姓名、员工所在的部门名称、部门所在地</p>
-<p><strong>内连接</strong>：只有连接的两张表都存在于条件相匹配的数据才会被保留下来</p>
-<p><code>select e.empno, e.ename, d.dname ,d.loc from emptable as e join dept as d on e.deptno = d.deptno;</code></p>
-</li>
-<li><p>查询员工编号、员工姓名、部门名称</p>
-<p><strong>左外链接 left join</strong>：默认用的就是左外连接，可以省略，保留左表数据，右表没有join上 显示null</p>
-<p><code>select e.empno, e.ename, d.dname from emptable e left join dept d on e.deptno = d.deptno;</code></p>
-</li>
-<li><p>查询员工编号、员工姓名、部门名称</p>
-<p><strong>右外链接  right join</strong>：保留右表数据，左表没有join上显示为null</p>
-<p><code>select e.empno, e.ename, d.dname from emptable e right join dept d on e.deptno = d.deptno;</code></p>
-</li>
-<li><p>查询员工编号、员工姓名、部门名称</p>
-<p><strong>满外链接</strong>： 结果会返回所有表中符合条件的所有记录，如果有字段没有符合条件，用null代替</p>
-<p><code>select e.empno, e.ename, d.dname from emptable e full join dept d on e.deptno = d.deptno</code></p>
-</li>
-<li><p>查询员工名、部门名称、地域名称———-多表查询</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> e.ename, d.dname, l.loc_name <span class="keyword">from</span> emptable e <span class="keyword">join</span> dept d <span class="keyword">on</span> e.deptno = d.deptno</div><div class="line">              &gt; <span class="keyword">join</span> location l <span class="keyword">on</span> d.loc = l.loc;</div></pre></td></tr></table></figure></li>
-</ol>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Hive</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/08/Hive基础指令二/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Hive基础指令一" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/08/Hive基础指令一/">Hive基础指令一</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/08/Hive基础指令一/" class="archive-article-date">
-  	<time datetime="2019-03-08T10:09:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1、基础指令"><a href="#1、基础指令" class="headerlink" title="1、基础指令"></a>1、基础指令</h1><ul>
-<li><p>显示数据库</p>
-<p><code>show databases;</code></p>
-</li>
-<li><p>创建数据库</p>
-<p><code>create database sean_db;</code></p>
-<p><strong>标准写法：</strong></p>
-<p><code>create database if not exists sean_db;</code></p>
-<p><strong>指定hdfs路径为根目录db_cache文件夹下：</strong></p>
-<p><code>create database sean_db location &#39;/db_cache&#39;</code></p>
-<p><code>reate database if not exists sean_db location &#39;/&#39;;</code></p>
-</li>
-<li><p>使用数据库</p>
-<p><code>use sean_db</code></p>
-</li>
-<li><p>创建表</p>
-<p>mysql语法：<code>create table love(id int, name,string);</code></p>
-<p>将查询结果创建为表</p>
-<p><code>create table love2 as select * from love where name = &#39;gakki&#39;;</code></p>
-<p><strong>hive语法：</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> mostlove(<span class="keyword">id</span> <span class="built_in">int</span>,<span class="keyword">name</span> <span class="keyword">string</span>)</div><div class="line">              &gt; <span class="keyword">row</span> <span class="keyword">format</span></div><div class="line">              &gt; <span class="keyword">delimited</span> <span class="keyword">fields</span></div><div class="line">              &gt; <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">'\t'</span>;</div></pre></td></tr></table></figure>
-</li>
-<li><p>插入数据</p>
-<p><code>insert into love values(1, &quot;gakki&quot;);</code></p>
-</li>
-<li><p>导入数据</p>
-<p><code>load data [local] inpath &#39;文件路径&#39; into table 表名;</code></p>
-<ul>
-<li><p>导入本地文件</p>
-<p><code>load data local inpath &#39;/root/temp/sean.txt&#39; into table love;</code></p>
-</li>
-<li><p>导入HDFS文件–根目录下的sean.txt到love表中</p>
-<p><code>load data inpath &#39;/sean.txt&#39; into table love;</code></p>
-</li>
-</ul>
-</li>
-<li><p>删除表</p>
-<p><code>drop table love;</code></p>
-</li>
-<li><p>查看库结构</p>
-<p><code>desc database sean_db;</code></p>
-</li>
-<li><p>给库添加额外描述信息</p>
-<p><code>alter database sean_db set dbproperties(&#39;created&#39; = &#39;sean&#39;);</code></p>
-</li>
-<li><p>查看库额外信息</p>
-<p><code>desc database extended sean_db;</code></p>
-</li>
-<li><p>查看指定的通配库:过滤–找出所有s开头的库</p>
-<p><code>show databases like &quot;s*&quot;;</code></p>
-</li>
-<li><p>删除库</p>
-<ul>
-<li>drop database sean_db;</li>
-</ul>
-<p>删除非空库</p>
-<ul>
-<li>drop database sean_db cascade;</li>
-</ul>
-<p>删除非空库标准写法</p>
-<ul>
-<li>drop databases if exists sean_db cascade;</li>
-</ul>
-</li>
-</ul>
-<h1 id="2、数据类型"><a href="#2、数据类型" class="headerlink" title="2、数据类型"></a>2、数据类型</h1><table>
-<thead>
-<tr>
-<th style="text-align:center">Java数据类型</th>
-<th style="text-align:center">HIve数据类型</th>
-<th style="text-align:center">长度</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">byte</td>
-<td style="text-align:center">TINYINT</td>
-<td style="text-align:center">1byte有符号整数</td>
-</tr>
-<tr>
-<td style="text-align:center">short</td>
-<td style="text-align:center">SMALLINT</td>
-<td style="text-align:center">2byte有符号整数</td>
-</tr>
-<tr>
-<td style="text-align:center">int</td>
-<td style="text-align:center">INT</td>
-<td style="text-align:center">4byte有符号整数</td>
-</tr>
-<tr>
-<td style="text-align:center">long</td>
-<td style="text-align:center">BIGINT</td>
-<td style="text-align:center">8byte有符号整数</td>
-</tr>
-<tr>
-<td style="text-align:center">boolean</td>
-<td style="text-align:center">BOOLEAN</td>
-<td style="text-align:center">true/false</td>
-</tr>
-<tr>
-<td style="text-align:center">float</td>
-<td style="text-align:center">FLOAT</td>
-<td style="text-align:center">单精度浮点</td>
-</tr>
-<tr>
-<td style="text-align:center">double</td>
-<td style="text-align:center">DOUBLE</td>
-<td style="text-align:center">双精度浮点</td>
-</tr>
-<tr>
-<td style="text-align:center">String</td>
-<td style="text-align:center">STRING</td>
-<td style="text-align:center">字符</td>
-</tr>
-<tr>
-<td style="text-align:center"></td>
-<td style="text-align:center">BINARY</td>
-<td style="text-align:center">字节数组</td>
-</tr>
-</tbody>
-</table>
-<h1 id="3、操作补充"><a href="#3、操作补充" class="headerlink" title="3、操作补充"></a>3、操作补充</h1><h2 id="3-1-创建表"><a href="#3-1-创建表" class="headerlink" title="3.1 创建表"></a>3.1 创建表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> [<span class="keyword">external</span>] <span class="keyword">table</span> [<span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">exists</span>] table_name(字段信息) [partitioned <span class="keyword">by</span>(字段信息)]</div><div class="line">[clustered <span class="keyword">by</span>(字段信息)] [sorted <span class="keyword">by</span>(字段信息)]</div><div class="line"><span class="keyword">row</span> <span class="keyword">format</span> </div><div class="line"><span class="keyword">delimited</span> <span class="keyword">fields</span></div><div class="line"><span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">'切割符'</span>;</div></pre></td></tr></table></figure>
-<h2 id="3-2-管理表（内部表）"><a href="#3-2-管理表（内部表）" class="headerlink" title="3.2 管理表（内部表）"></a>3.2 管理表（内部表）</h2><p>默认不加external创建的就是<strong>管理表</strong>，也称为<strong>内部表</strong>。<br>MANAGED_TABLE管理表。<br>Table Type:MANAGED_TABLE<br>查看表类型：<br><code>desc formatted itstar;</code></p>
-<h2 id="3-3-外部表"><a href="#3-3-外部表" class="headerlink" title="3.3 外部表"></a>3.3 外部表</h2><p>EXTERNAL_TABLE外部表<br>创建方式：<br><code>create external table student(id int,name string)</code></p>
-<p><strong>区别</strong>：如果是管理表，删除hdfs中数据删除，</p>
-<p>​            如果是外部表删除，hdfs数据<strong>不删除</strong>！外部表删除后，重新创建同名表后，表中数据还在</p>
-<h1 id="4、Hive常用命令"><a href="#4、Hive常用命令" class="headerlink" title="4、Hive常用命令"></a>4、Hive常用命令</h1><ul>
-<li><p>不登录hive客户端操作hive指令</p>
-<p><code>bin/hive -e &quot;select * from sean_db.love;&quot;</code></p>
-</li>
-<li><p>直接把sql写入到文件中</p>
-<p><code>bin/hive -f /root/temp/hql.sql</code></p>
-</li>
-<li><p>在hive中可以直接查看hdfs中文件(省去hdfs)</p>
-<p>dfs -ls /</p>
-</li>
-<li><p>清空表内数据,保留表结构</p>
-<p><code>truncate table sean_buck;</code></p>
-</li>
-<li><p>设置Reducer个数</p>
-<p><code>set mapreduce.job.reduces</code></p>
-</li>
-<li><p>设置支持分桶</p>
-<p><code>set hive.enforce.bucketing = true;</code></p>
-</li>
-<li><p>显示方法</p>
-<p><code>show functions;</code></p>
-</li>
-<li><p>查询方法使用</p>
-<p><code>desc function extended pow;</code></p>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Hive</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/08/Hive基础指令一/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Hive安装及配置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/08/Hive安装及配置/">Hive安装及配置</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/08/Hive安装及配置/" class="archive-article-date">
-  	<time datetime="2019-03-08T10:09:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1、概述"><a href="#1、概述" class="headerlink" title="1、概述"></a>1、概述</h1><p>官网：<a href="http://hive.apache.org/" target="_blank" rel="external">http://hive.apache.org/</a><br>Apache Hive™数据仓库软件有助于使用SQL读取，编写和管理驻留在分布式存储中的<br>大型数据集。可以将结构投影到已存储的数据中。提供了命令行工具和JDBC驱动程序以<br>将用户连接到Hive。<br>hive提供了SQL查询功能 hdfs分布式存储。<br>hive本质HQL转化为MapReduce程序。<br>环境前提：</p>
-<ul>
-<li><p>启动hdfs集群</p>
-</li>
-<li><p>启动yarn集群</p>
-<p>如果想用hive的话，需要提前安装部署好hadoop集群。</p>
-</li>
-</ul>
-<h1 id="2、特点"><a href="#2、特点" class="headerlink" title="2、特点"></a>2、特点</h1><p>  <strong>优势：</strong></p>
-<ul>
-<li>操作接口采用类sql语法，select * from stu;<br>简单、上手快！</li>
-<li>hive可以替代mr程序，sqoop。</li>
-<li>hive可以处理海量数据。</li>
-<li>hive支持UDF，自定义函数。</li>
-</ul>
-<p><strong>劣势：</strong></p>
-<ul>
-<li><p>处理数据延迟高，慢。<br>引擎：1.2.2以前版本都是用的mr引擎</p>
-<pre><code>2.x之后用的是spark引擎
-</code></pre></li>
-<li><p>HQL的表达能力有限<br>一些sql无法解决的场景，依然需要我们写mapreduce.</p>
-<h1 id="3、-架构原理"><a href="#3、-架构原理" class="headerlink" title="3、 架构原理"></a>3、 架构原理</h1></li>
-</ul>
-<p><img src="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/hive%20%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86.png" alt=""></p>
-<blockquote>
-<p>sql-&gt;转换-&gt;mapreduce-&gt;job</p>
-</blockquote>
-<h1 id="4、-安装部署"><a href="#4、-安装部署" class="headerlink" title="4、 安装部署"></a>4、 安装部署</h1><ol>
-<li>下载</li>
-<li>上传</li>
-<li>解压</li>
-<li>重命名conf中配置文件<br>mv hive-env.sh.template hive-env.sh</li>
-<li>修改配置文件<br>vi hive-env.sh<br>HADOOP_HOME=/opt/modules/hadoop-2.8.4<br>export HIVE_CONF_DIR=/opt/modules/hive/conf</li>
-<li>启动</li>
-</ol>
-<h1 id="5、-配置元数据库为Mysql"><a href="#5、-配置元数据库为Mysql" class="headerlink" title="5、 配置元数据库为Mysql"></a>5、 配置元数据库为Mysql</h1><p>因为HIVE自带元数据库derby不支持多客户端同时访问，故此更换Mysql为元数据库</p>
-<p>前提：安装好Mysql</p>
-<p>参考资料：<a href="https://blog.csdn.net/pengjunlee/article/details/81212250" target="_blank" rel="external">https://blog.csdn.net/pengjunlee/article/details/81212250</a></p>
-<ol>
-<li>驱动拷贝<br>拷贝mysql-connector-java-5.1.39-bin.jar到/root/opt/modules/hive/lib/下</li>
-<li>配置Metastore到MySql</li>
-</ol>
-<ul>
-<li><p>在/opt/modules/hive/conf目录下创建一个hive-site.xml</p>
-</li>
-<li><p>根据官方文档配置参数，拷贝数据到hive-site.xml文件中（hive/conf/下创建文件）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</div><div class="line">	&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;configuration.xsl&quot;?&gt;</div><div class="line">	&lt;configuration&gt;</div><div class="line">		&lt;property&gt;</div><div class="line">		  &lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;</div><div class="line">	    &lt;value&gt;jdbc:mysql://node01:3306/metastorecreateDatabaseIfNotExist=true&lt;/value&gt;</div><div class="line">		  &lt;description&gt;JDBC connect string for a JDBC metastore&lt;/description&gt;</div><div class="line">		&lt;/property&gt;</div><div class="line"></div><div class="line">		&lt;property&gt;</div><div class="line">		  &lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;</div><div class="line">		  &lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;</div><div class="line">		  &lt;description&gt;Driver class name for a JDBC metastore&lt;/description&gt;</div><div class="line">		&lt;/property&gt;</div><div class="line"></div><div class="line">		&lt;property&gt;</div><div class="line">		  &lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;</div><div class="line">		  &lt;value&gt;root&lt;/value&gt;</div><div class="line">		  &lt;description&gt;username to use against metastore database&lt;/description&gt;</div><div class="line">		&lt;/property&gt;</div><div class="line"></div><div class="line">		&lt;property&gt;</div><div class="line">		  &lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;</div><div class="line">		  &lt;value&gt;root密码&lt;/value&gt;</div><div class="line">		  &lt;description&gt;password to use against metastore database&lt;/description&gt;</div><div class="line">		&lt;/property&gt;</div><div class="line">		&lt;/configuration&gt;</div></pre></td></tr></table></figure>
-<p>配置完之后需要重启集群生效。</p>
-</li>
-</ul>
-<h1 id="6、-设置显示字段名与当前状态"><a href="#6、-设置显示字段名与当前状态" class="headerlink" title="6、 设置显示字段名与当前状态"></a>6、 设置显示字段名与当前状态</h1><h1 id="6-1-更改默认的元数据路径"><a href="#6-1-更改默认的元数据路径" class="headerlink" title="6.1 更改默认的元数据路径"></a>6.1 更改默认的元数据路径</h1><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;hive.metastore.warehouse.dir&lt;/name&gt;</div><div class="line">  &lt;value&gt;/user/hive/warehouse&lt;/value&gt;</div><div class="line">  &lt;description&gt;location of default database for the warehouse&lt;/description&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
-<h1 id="6-2-设置显示头信息和当前库"><a href="#6-2-设置显示头信息和当前库" class="headerlink" title="6.2 设置显示头信息和当前库"></a>6.2 设置显示头信息和当前库</h1><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;hive.cli.print.header&lt;/name&gt;</div><div class="line">  &lt;value&gt;true&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line"></div><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;hive.cli.print.current.db&lt;/name&gt;</div><div class="line">  &lt;value&gt;true&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Hive</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/08/Hive安装及配置/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Zookeeper监听API操作" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/08/Zookeeper监听API操作/">Zookeeper监听API操作</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/08/Zookeeper监听API操作/" class="archive-article-date">
-  	<time datetime="2019-03-08T10:09:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-对目录监听"><a href="#1-对目录监听" class="headerlink" title="1.对目录监听"></a>1.对目录监听</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> xyz.llsean.watch_;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.KeeperException;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.WatchedEvent;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooKeeper;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * <span class="doctag">@author</span>: Sean</div><div class="line"> * <span class="doctag">@date</span>: 2019/2/24/14:56</div><div class="line"> * <span class="doctag">@version</span>: 1.0</div><div class="line"> * 实现对节点的监听</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">watchDemo_</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, KeeperException, InterruptedException </span>&#123;</div><div class="line">        <span class="comment">//设置集群地址</span></div><div class="line">        String connected = <span class="string">"node01:2181,node02:2181,node03:2181,node04:2181"</span>;</div><div class="line">        <span class="comment">//设置超时时间</span></div><div class="line">        <span class="keyword">int</span> timeout = <span class="number">2000</span>;</div><div class="line">        <span class="comment">//创建客户端</span></div><div class="line">        ZooKeeper zkCli = <span class="keyword">new</span> ZooKeeper(connected, timeout, <span class="keyword">new</span> Watcher() &#123;</div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</div><div class="line">                System.out.println(<span class="string">"正在监听：..."</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        List&lt;String&gt; children = zkCli.getChildren(<span class="string">"/"</span>, <span class="keyword">new</span> Watcher() &#123;</div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</div><div class="line">                System.out.println(<span class="string">"正在监听路径为："</span> + event.getPath());</div><div class="line">                System.out.println(<span class="string">"正在监听类型为:"</span> + event.getType());</div><div class="line">            &#125;</div><div class="line">        &#125;, <span class="keyword">null</span>);</div><div class="line"></div><div class="line">        <span class="keyword">for</span>(String s:children)&#123;</div><div class="line">            System.out.println(s);</div><div class="line">        &#125;</div><div class="line">        Thread.sleep(Long.MAX_VALUE);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="2-对节点内容监听"><a href="#2-对节点内容监听" class="headerlink" title="2.对节点内容监听"></a>2.对节点内容监听</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> xyz.llsean.watch_;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.KeeperException;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.WatchedEvent;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooKeeper;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * <span class="doctag">@author</span>: Sean</div><div class="line"> * <span class="doctag">@date</span>: 2019/2/24/15:08</div><div class="line"> * <span class="doctag">@version</span>: 1.0</div><div class="line"> * 实现对节点内容的监听</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">watchDemo1_</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, KeeperException, InterruptedException </span>&#123;</div><div class="line">        <span class="comment">//设置集群地址</span></div><div class="line">        String connected = <span class="string">"node01:2181,node02:2181,node03:2181,node04:2181"</span>;</div><div class="line">        <span class="comment">//设置超时时间</span></div><div class="line">        <span class="keyword">int</span> timeout = <span class="number">2000</span>;</div><div class="line">        ZooKeeper zkCli = <span class="keyword">new</span> ZooKeeper(connected, timeout, <span class="keyword">new</span> Watcher() &#123;</div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent watchedEvent)</span> </span>&#123;</div><div class="line">                System.out.println(<span class="string">"正在监听....请注意言行"</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        <span class="keyword">byte</span>[] data = zkCli.getData(<span class="string">"/gakki"</span>, <span class="keyword">new</span> Watcher() &#123;</div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</div><div class="line">                System.out.println(<span class="string">"监听路径为："</span> + event.getPath());</div><div class="line">                System.out.println(<span class="string">"监听类型为："</span> + event.getType());</div><div class="line">            &#125;</div><div class="line">        &#125;, <span class="keyword">null</span>);</div><div class="line"></div><div class="line">        System.out.println(<span class="keyword">new</span> String(data));</div><div class="line">        Thread.sleep(Long.MAX_VALUE);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="3-实现持续监听"><a href="#3-实现持续监听" class="headerlink" title="3.实现持续监听"></a>3.实现持续监听</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> xyz.llsean.qq_;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.KeeperException;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.WatchedEvent;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooKeeper;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * <span class="doctag">@author</span>: Sean</div><div class="line"> * <span class="doctag">@date</span>: 2019/2/24/15:13</div><div class="line"> * <span class="doctag">@version</span>: 1.0</div><div class="line"> * 实现持续监听</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">zkClient_</span> </span>&#123;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, KeeperException, InterruptedException </span>&#123;</div><div class="line">        <span class="comment">//1.获取客户端</span></div><div class="line">        zkClient_ zkClient_ = <span class="keyword">new</span> zkClient_();</div><div class="line">        zkClient_.getConnect();</div><div class="line">        <span class="comment">//2.指定监听路径</span></div><div class="line">        zkClient_.getServer();</div><div class="line">        <span class="comment">//3.线程休眠</span></div><div class="line">        zkClient_.getWatchh();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">    * 获取zookeeper客户端连接</div><div class="line">    * */</div><div class="line">    <span class="comment">//设置集群地址</span></div><div class="line">    <span class="keyword">final</span> String connected = <span class="string">"node01:2181,node02:2181,node03:2181,node04:2181"</span>;</div><div class="line">    <span class="comment">//设置超时时间</span></div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> timeout = <span class="number">2000</span>;</div><div class="line"></div><div class="line">    ZooKeeper zkCli;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getConnect</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">        zkCli = <span class="keyword">new</span> ZooKeeper(connected, timeout, <span class="keyword">new</span> Watcher() &#123;</div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</div><div class="line">                <span class="comment">//System.out.println("当前正在监听...");</span></div><div class="line">                List&lt;String&gt; children;</div><div class="line"></div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    children = zkCli.getChildren(<span class="string">"/"</span>, <span class="keyword">true</span>);</div><div class="line">                    <span class="comment">//服务器列表</span></div><div class="line">                    ArrayList&lt;String&gt; serverList_ = <span class="keyword">new</span> ArrayList&lt;String&gt;();</div><div class="line">                    <span class="comment">//获取每个节点数据</span></div><div class="line">                    <span class="keyword">for</span>(String s:children)&#123;</div><div class="line">                        <span class="keyword">byte</span>[] data = zkCli.getData(<span class="string">"/"</span> + s, <span class="keyword">true</span>, <span class="keyword">null</span>);</div><div class="line">                        serverList_.add(<span class="keyword">new</span> String(data));</div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                    <span class="comment">//查看服务器列表</span></div><div class="line">                    System.out.println(serverList_);</div><div class="line">                &#125; <span class="keyword">catch</span> (KeeperException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 指定监听路径</div><div class="line">     * */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getServer</span><span class="params">()</span> <span class="keyword">throws</span> KeeperException, InterruptedException </span>&#123;</div><div class="line"></div><div class="line">        List&lt;String&gt; children = zkCli.getChildren(<span class="string">"/"</span>, <span class="keyword">true</span>);</div><div class="line"></div><div class="line">        <span class="comment">//存储服务器列表</span></div><div class="line">        ArrayList&lt;String&gt; serverList = <span class="keyword">new</span> ArrayList&lt;String&gt;();</div><div class="line"></div><div class="line">        <span class="keyword">for</span>(String s: children)&#123;</div><div class="line">            <span class="keyword">byte</span>[] data = zkCli.getData(<span class="string">"/"</span> + s, <span class="keyword">true</span>, <span class="keyword">null</span>);</div><div class="line">            serverList.add(<span class="keyword">new</span> String(data));</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">//打印服务器列表</span></div><div class="line">        System.out.println(serverList);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 实现一直监听</div><div class="line">     * */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getWatchh</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        Thread.sleep(Long.MAX_VALUE);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Zookeeper</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/08/Zookeeper监听API操作/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
@@ -1781,6 +1546,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Kibana</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Elasticsearch</a>
               </li>
              
@@ -1789,19 +1558,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HDFS</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Flume</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Hadoop</a>
+                <a href="javascript:void(0)" class="js-tag color5">MapReduce</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">MapReduce</a>
+                <a href="javascript:void(0)" class="js-tag color5">HDFS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Hadoop</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1821,11 +1590,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Scala</a>
+                <a href="javascript:void(0)" class="js-tag color5">Mapreduce</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Mapreduce</a>
+                <a href="javascript:void(0)" class="js-tag color1">Scala</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1833,15 +1602,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kibana</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Yarn</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Zookeeper</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1849,7 +1610,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Zookeeper</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">MemCached</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">kafka</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Redis</a>
               </li>
             
             <div class="clearfix"></div>

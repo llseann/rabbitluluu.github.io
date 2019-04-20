@@ -154,6 +154,616 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Scala进阶-高级特性" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/30/Scala进阶-高级特性/">Scala进阶--高级特性</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/30/Scala进阶-高级特性/" class="archive-article-date">
+  	<time datetime="2019-03-30T03:08:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1、泛型"><a href="#1、泛型" class="headerlink" title="1、泛型"></a>1、泛型</h2><p>1、泛型类：定义类的时候，可以带有一个泛型的参数</p>
+<p>2、泛型函数：定义一个函数，可以带有一个泛型的参数</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="function"><span class="keyword">def</span> <span class="title">mkIntArray</span></span>(elem:<span class="type">Int</span>*) = <span class="type">Array</span>[<span class="type">Int</span>](elem:_*)</div><div class="line">mkIntArray: (elem: <span class="type">Int</span>*)<span class="type">Array</span>[<span class="type">Int</span>]</div><div class="line"></div><div class="line">scala&gt; mkIntArray(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>)</div><div class="line">res1: <span class="type">Array</span>[<span class="type">Int</span>] = <span class="type">Array</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</div><div class="line"></div><div class="line">scala&gt; <span class="function"><span class="keyword">def</span> <span class="title">mkStringArray</span></span>(elem:<span class="type">String</span>*) = <span class="type">Array</span>[<span class="type">String</span>](elem:_*)</div><div class="line">mkStringArray: (elem: <span class="type">String</span>*)<span class="type">Array</span>[<span class="type">String</span>]</div><div class="line"></div><div class="line">scala&gt; mkStringArray(<span class="string">"a"</span>,<span class="string">"b"</span>,<span class="string">"c"</span>)</div><div class="line">res2: <span class="type">Array</span>[<span class="type">String</span>] = <span class="type">Array</span>(a, b, c)</div></pre></td></tr></table></figure>
+<p>使用泛型：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="keyword">import</span> scala.reflect.<span class="type">ClassTag</span></div><div class="line"><span class="keyword">import</span> scala.reflect.<span class="type">ClassTag</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">mkArray</span></span>[<span class="type">T</span>:<span class="type">ClassTag</span>](elem:<span class="type">T</span>*) = <span class="type">Array</span>[<span class="type">T</span>](elem:_*)</div><div class="line">mkArray: [<span class="type">T</span>](elem: <span class="type">T</span>*)(<span class="keyword">implicit</span> evidence$<span class="number">1</span>: scala.reflect.<span class="type">ClassTag</span>[<span class="type">T</span>])<span class="type">Array</span>[<span class="type">T</span>]</div><div class="line"></div><div class="line">scala&gt; mkArray(<span class="string">"Hello"</span>,<span class="string">"World"</span>)</div><div class="line">res3: <span class="type">Array</span>[<span class="type">String</span>] = <span class="type">Array</span>(<span class="type">Hello</span>, <span class="type">World</span>)</div><div class="line"></div><div class="line">scala&gt; mkArray(<span class="string">"Hello"</span>,<span class="number">123</span>)</div><div class="line">res4: <span class="type">Array</span>[<span class="type">Any</span>] = <span class="type">Array</span>(<span class="type">Hello</span>, <span class="number">123</span>)</div></pre></td></tr></table></figure>
+<p><code>ClassTag</code>： 表示scala在运行时候的状态信息，这里表示调用时候数据类型3\</p>
+<p>3、上界和下界</p>
+<p>规定整数Int x，规定x的取值范围  100 &lt;= x &lt;=1000        </p>
+<p>泛型T的取值范围：类的继承关系  A —&gt; B  —&gt; C —&gt; D 箭头指向子类<br>定义T的取值范围   D   &lt;:     T     &lt;:  B   ，T 的 取值范围 就是 B C D<br><code>&lt;:</code> 就是上下界的表示方法<br>概念<br>上界  S  &lt;： T  规定了 S的类型必须是 T的子类或本身<br>下界  U  &gt;： T  规定了 U的类型必须是 T的父类或本身</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> day_0327_my</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line">  *</div><div class="line">  * 上界和下界</div><div class="line">  */</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Vehicle</span> </span>&#123;</div><div class="line">  <span class="comment">//函数：驾驶</span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">drive</span></span>() = println(<span class="string">"driving"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Car</span> <span class="keyword">extends</span> <span class="title">Vehicle</span> </span>&#123;</div><div class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">drive</span></span>(): <span class="type">Unit</span> = println(<span class="string">"Car Driving"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bike</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">drive</span></span>(): <span class="type">Unit</span> = println(<span class="string">"Bike Driving"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">ScalaUpperBound</span> </span>&#123;</div><div class="line">  <span class="comment">//定义驾驶佳通工具的函数,规定了上界</span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">takeVehcli</span></span>[<span class="type">T</span> &lt;: <span class="type">Vehicle</span>](v: <span class="type">T</span>) = v.drive()</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</div><div class="line">    <span class="comment">//定义交通工具</span></div><div class="line">    <span class="keyword">var</span> v:<span class="type">Vehicle</span> = <span class="keyword">new</span> <span class="type">Vehicle</span></div><div class="line">    takeVehcli(v)</div><div class="line"></div><div class="line">    <span class="keyword">var</span> c:<span class="type">Car</span> = <span class="keyword">new</span> <span class="type">Car</span></div><div class="line">    takeVehcli(c)</div><div class="line"></div><div class="line">    <span class="comment">//语法没错，运行时出错</span></div><div class="line">    <span class="keyword">var</span> b:<span class="type">Bike</span> = <span class="keyword">new</span> <span class="type">Bike</span></div><div class="line">    takeVehcli(b)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>4、视图界定</p>
+<p>定义：上界和下界的扩展，除了接收上界和下界规定的类型以外，还可以接受通过隐式转换过去的类型，用<code>%</code>表示</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="function"><span class="keyword">def</span> <span class="title">addTwoString</span></span>[<span class="type">T</span> &lt;% <span class="type">String</span>](x:<span class="type">T</span>,y:<span class="type">T</span>) = x + <span class="string">"****"</span> + y</div><div class="line">addTwoString: [<span class="type">T</span>](x: <span class="type">T</span>, y: <span class="type">T</span>)(<span class="keyword">implicit</span> evidence$<span class="number">1</span>: <span class="type">T</span> =&gt; <span class="type">String</span>)<span class="type">String</span></div><div class="line"></div><div class="line">scala&gt; addTwoString(<span class="string">"hello"</span>,<span class="number">111</span>)</div><div class="line">&lt;console&gt;:<span class="number">13</span>: error: <span class="type">No</span> <span class="keyword">implicit</span> view available from <span class="type">Any</span> =&gt; <span class="type">String</span>.</div><div class="line">       addTwoString(<span class="string">"hello"</span>,<span class="number">111</span>)</div><div class="line">                   ^</div><div class="line"></div><div class="line">scala&gt; <span class="keyword">implicit</span> <span class="function"><span class="keyword">def</span> <span class="title">intToString</span></span>(n:<span class="type">Int</span>):<span class="type">String</span> = n.toString</div><div class="line">warning: there was one feature warning; re-run <span class="keyword">with</span> -feature <span class="keyword">for</span> details</div><div class="line">intToString: (n: <span class="type">Int</span>)<span class="type">String</span></div><div class="line"></div><div class="line">scala&gt; addTwoString(<span class="number">222</span>,<span class="number">111</span>)</div><div class="line">res5: <span class="type">String</span> = <span class="number">222</span>****<span class="number">111</span></div></pre></td></tr></table></figure>
+<p>​    隐式转换使用<code>implicit</code>关键字进行定义，一旦定义，后台一直运行，需要用的时候会自行调用，区别于上下界，隐式转换使用%,函数名任意取</p>
+<p>执行过程：</p>
+<ol>
+<li>调用了intToString   将Int=&gt;String</li>
+<li>addTwoString(“1”,”2”)</li>
+</ol>
+<p>5、协变和逆变(了解即可)</p>
+<p>协变：表示在类型参数前面加上<code>+</code>,泛型变量的值，可以是本身类型或者其子类类型</p>
+<p>逆变：表示在类型参数前面加上<code>-</code>,泛型变量的值，可以是本身类型或者其父类类型</p>
+<p>协变：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> day_0327_my</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bird</span> <span class="keyword">extends</span> <span class="title">Animal</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sparrow</span> <span class="keyword">extends</span> <span class="title">Bird</span></span></div><div class="line"></div><div class="line"><span class="comment">//定义第四个类：吃东西的类</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">EatSomeSthing</span>[+<span class="type">T</span>](<span class="params">t:<span class="type">T</span></span>)</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">Demo04</span> <span class="keyword">extends</span> <span class="title">App</span> </span>&#123;</div><div class="line">  <span class="comment">//定义一个鸟吃东西的对象</span></div><div class="line">  <span class="keyword">var</span> c1:<span class="type">EatSomeSthing</span>[<span class="type">Bird</span>] = <span class="keyword">new</span> <span class="type">EatSomeSthing</span>[<span class="type">Bird</span>](<span class="keyword">new</span> <span class="type">Bird</span>)</div><div class="line"></div><div class="line">  <span class="comment">//定义动物吃东西的对象</span></div><div class="line">  <span class="keyword">var</span> c2:<span class="type">EatSomeSthing</span>[<span class="type">Animal</span>] = c1</div><div class="line"></div><div class="line">  <span class="comment">/**</span></div><div class="line">    * 能否把c1赋给c2</div><div class="line">    * class EatSomeSthing[T](t:T)</div><div class="line">    * var c2:EatSomeSthing[Animal] = c1 报错</div><div class="line">    * 原因：EatSomeSthing[Bird]并没有继承EatSomeSthing[Animal]</div><div class="line">    * 修改为class EatSomeSthing[+T](t:T)</div><div class="line">    * 报错消失</div><div class="line">    */</div><div class="line"></div><div class="line">  <span class="keyword">var</span> c3:<span class="type">EatSomeSthing</span>[<span class="type">Sparrow</span>] = <span class="keyword">new</span> <span class="type">EatSomeSthing</span>[<span class="type">Sparrow</span>](<span class="keyword">new</span> <span class="type">Sparrow</span>)</div><div class="line">  <span class="keyword">var</span> c4:<span class="type">EatSomeSthing</span>[<span class="type">Animal</span>] = <span class="keyword">new</span> <span class="type">EatSomeSthing</span>[<span class="type">Animal</span>](<span class="keyword">new</span> <span class="type">Animal</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>逆变：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> day_0327_my</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line">  *</div><div class="line">  *逆变实例</div><div class="line">  */</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bird</span> <span class="keyword">extends</span> <span class="title">Animal</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sparrow</span> <span class="keyword">extends</span> <span class="title">Bird</span></span></div><div class="line"></div><div class="line"><span class="comment">//定义第四个类：吃东西的类</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">EatSomeSthing</span>[-<span class="type">T</span>](<span class="params">t:<span class="type">T</span></span>)</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">Demo05</span> <span class="keyword">extends</span> <span class="title">App</span></span>&#123;</div><div class="line">  <span class="comment">//定义一个鸟吃东西的对象</span></div><div class="line">  <span class="keyword">var</span> c1:<span class="type">EatSomeSthing</span>[<span class="type">Bird</span>] = <span class="keyword">new</span> <span class="type">EatSomeSthing</span>[<span class="type">Bird</span>](<span class="keyword">new</span> <span class="type">Bird</span>)</div><div class="line"></div><div class="line">  <span class="keyword">var</span> c2:<span class="type">EatSomeSthing</span>[<span class="type">Sparrow</span>] = c1</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="2、隐式转换"><a href="#2、隐式转换" class="headerlink" title="2、隐式转换"></a>2、隐式转换</h1><p>1、关键字<code>implicit</code></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> day_0327_my</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line">  *</div><div class="line">  * 隐式转换函数</div><div class="line">  */</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Fruit</span>(<span class="params">name: <span class="type">String</span></span>) </span>&#123;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">getFruitName</span></span>(): <span class="type">String</span> = name</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Monkey</span>(<span class="params">f: <span class="type">Fruit</span></span>) </span>&#123;</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">say</span></span>() = println(<span class="string">"Monkey like "</span> + f.getFruitName())</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ImplicitDemo</span> </span>&#123;</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</div><div class="line">    <span class="comment">//定义一个水果对象</span></div><div class="line">    <span class="keyword">var</span> f: <span class="type">Fruit</span> = <span class="keyword">new</span> <span class="type">Fruit</span>(<span class="string">"Banana"</span>)</div><div class="line"></div><div class="line">    f.say()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">//隐式转换</span></div><div class="line">  <span class="keyword">implicit</span> <span class="function"><span class="keyword">def</span> <span class="title">fruitToMonkey</span></span>(f: <span class="type">Fruit</span>): <span class="type">Monkey</span> = <span class="keyword">new</span> <span class="type">Monkey</span>(f)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>补充：隐式函数会在后台自行调用和检测</p>
+<p>2、隐式参数：使用<code>implicit</code> 修饰的函数参数</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="function"><span class="keyword">def</span> <span class="title">testPara</span></span>(<span class="keyword">implicit</span> name:<span class="type">String</span>) = println(<span class="string">"The value is "</span> + name)</div><div class="line">testPara: (<span class="keyword">implicit</span> name: <span class="type">String</span>)<span class="type">Unit</span></div><div class="line"></div><div class="line">scala&gt; testPara(<span class="string">"ssssssss"</span>)</div><div class="line"><span class="type">The</span> value is ssssssss</div><div class="line"></div><div class="line">scala&gt; <span class="keyword">implicit</span> <span class="keyword">val</span> name:<span class="type">String</span> = <span class="string">"Gakki"</span></div><div class="line">name: <span class="type">String</span> = <span class="type">Gakki</span></div><div class="line"></div><div class="line">scala&gt; testPara(<span class="string">""</span>)</div><div class="line"><span class="type">The</span> value is</div><div class="line"></div><div class="line"><span class="comment">//不给参数，调用隐式参数</span></div><div class="line">scala&gt; testPara</div><div class="line"><span class="type">The</span> value is <span class="type">Gakki</span></div></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="function"><span class="keyword">def</span> <span class="title">smaller</span></span>[<span class="type">T</span>](a:<span class="type">T</span>,b:<span class="type">T</span>)(<span class="keyword">implicit</span> order : <span class="type">T</span> =&gt; <span class="type">Ordered</span>[<span class="type">T</span>]) = <span class="keyword">if</span> (a &lt; b) a <span class="keyword">else</span> b</div><div class="line">smaller: [<span class="type">T</span>](a: <span class="type">T</span>, b: <span class="type">T</span>)(<span class="keyword">implicit</span> prder: <span class="type">T</span> =&gt; <span class="type">Ordered</span>[<span class="type">T</span>])<span class="type">T</span></div><div class="line"></div><div class="line">scala&gt; smaller(<span class="string">"Hello"</span>,<span class="string">"ABC"</span>)</div><div class="line">res10: <span class="type">String</span> = <span class="type">ABC</span></div></pre></td></tr></table></figure>
+<p>解释：order就是一个隐式参数，我们使用scala中的Ordered类，表示该值可以被排序，也就是可以被比较</p>
+<p>作用：扩充了属性的功能</p>
+<p>3、隐式类</p>
+<p>在类名加<code>implicit</code>，作用是扩充类的功能</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> day_0327_my</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line">  *</div><div class="line">  * 隐式类</div><div class="line">  */</div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">Demo06</span> </span>&#123;</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</div><div class="line">    <span class="comment">//执行两个数字的求和</span></div><div class="line">    println(<span class="string">"两个数字的和是："</span> + <span class="number">1.</span>add(<span class="number">2</span>))</div><div class="line"></div><div class="line">     <span class="comment">//定义一个隐式类，来增强1的功能</span></div><div class="line">    <span class="keyword">implicit</span> <span class="class"><span class="keyword">class</span> <span class="title">Calc</span>(<span class="params">x: <span class="type">Int</span></span>) </span>&#123;</div><div class="line">      <span class="function"><span class="keyword">def</span> <span class="title">add</span></span>(i: <span class="type">Int</span>): <span class="type">Int</span> = x + i</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>分析：   因为1是int类型，所以会被传递进来<br>执行过程：把1–&gt;Calc(x)执行 <code>var a = new Calc(1)</code>,最后调用了a.add方法，</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Scala</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/30/Scala进阶-高级特性/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Scala进阶-模式匹配-样本类" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/30/Scala进阶-模式匹配-样本类/">Scala进阶--模式匹配&amp;样本类</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/30/Scala进阶-模式匹配-样本类/" class="archive-article-date">
+  	<time datetime="2019-03-30T03:07:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1、模式匹配"><a href="#1、模式匹配" class="headerlink" title="1、模式匹配"></a>1、模式匹配</h1><p>情况1：相当于java的switch case</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">Demo01</span> </span>&#123;</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</div><div class="line"></div><div class="line">    <span class="keyword">var</span> chi = '-'</div><div class="line">    <span class="keyword">var</span> sign = <span class="number">0</span></div><div class="line"></div><div class="line">    chi <span class="keyword">match</span> &#123;</div><div class="line">      <span class="keyword">case</span> '+' =&gt; sign = <span class="number">1</span></div><div class="line">      <span class="keyword">case</span> '-' =&gt; sign = <span class="number">-1</span></div><div class="line">      <span class="keyword">case</span> _ =&gt; sign = <span class="number">0</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    println(sign)</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>情况2：使用了scala的守卫，形如<code>case _ if</code> 用来匹配某种类型的所有值</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//情况2：匹配所有数字,</span></div><div class="line">   <span class="comment">// scala中的守卫: case _ if 匹配某种类型的所有值</span></div><div class="line">   <span class="keyword">var</span> ch2 = '<span class="number">6</span>'</div><div class="line">   <span class="keyword">var</span> result : <span class="type">Int</span> = <span class="number">-1</span></div><div class="line"></div><div class="line">   ch2 <span class="keyword">match</span> &#123;</div><div class="line">     <span class="keyword">case</span> '+' =&gt; println(<span class="string">"这是一个加号"</span>)</div><div class="line">     <span class="keyword">case</span> '-' =&gt; println(<span class="string">"这是一个减号"</span>)</div><div class="line">     <span class="keyword">case</span> _ <span class="keyword">if</span> <span class="type">Character</span>.isDigit(ch2) =&gt; result = <span class="type">Character</span>.digit(ch2,<span class="number">10</span>)</div><div class="line">     <span class="keyword">case</span> _ =&gt; println(<span class="string">"其他"</span>)</div><div class="line">   &#125;</div><div class="line">   println(result)</div></pre></td></tr></table></figure>
+<p>情况3：在case中使用变量，如下<code>ch</code>是一个变量，代表传进来的变量值</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//情况3：在模式匹配中使用变量</span></div><div class="line">   <span class="keyword">var</span> mystr = <span class="string">"Hello World"</span></div><div class="line"></div><div class="line">   mystr(<span class="number">7</span>) <span class="keyword">match</span> &#123;</div><div class="line">     <span class="keyword">case</span> '+' =&gt; println(<span class="string">"这是一个加号"</span>)</div><div class="line">     <span class="keyword">case</span> '-' =&gt; println(<span class="string">"这是一个减号"</span>)</div><div class="line">     <span class="keyword">case</span> ch =&gt; println(ch)</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>情况4：类似于java的instance of  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//情况4：匹配instance of</span></div><div class="line">   <span class="keyword">var</span> v4 : <span class="type">Any</span>= <span class="number">100</span></div><div class="line">   v4 <span class="keyword">match</span> &#123;</div><div class="line">     <span class="keyword">case</span> x : <span class="type">Int</span> =&gt; println(<span class="string">"这是一个整数"</span>)</div><div class="line">     <span class="keyword">case</span> s : <span class="type">String</span> =&gt; println(<span class="string">"这是一个字符串"</span>)</div><div class="line">     <span class="keyword">case</span> _ =&gt; println(<span class="string">"这是其他类型"</span>)</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>情况5：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//情况5：匹配数组和列表，</span></div><div class="line">   <span class="keyword">var</span> myArray = <span class="type">Array</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>)</div><div class="line">   myArray <span class="keyword">match</span> &#123;</div><div class="line">     <span class="keyword">case</span> <span class="type">Array</span>(<span class="number">0</span>) =&gt; println(<span class="string">"数组中只有一个0"</span>)</div><div class="line">     <span class="keyword">case</span> <span class="type">Array</span>(x,y) =&gt; println(<span class="string">"数组中包含两个元素"</span>)</div><div class="line">     <span class="keyword">case</span> <span class="type">Array</span>(x,y,z) =&gt; println(<span class="string">"数组包含是三个元素"</span>)</div><div class="line">     <span class="keyword">case</span> <span class="type">Array</span>(_*) =&gt; println(<span class="string">"这是一个有多个元素的数组"</span>)</div><div class="line">   &#125;</div><div class="line"></div><div class="line">	<span class="keyword">var</span> myList = <span class="type">List</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</div><div class="line">   myList <span class="keyword">match</span> &#123;</div><div class="line">     <span class="keyword">case</span> <span class="type">List</span>(<span class="number">0</span>) =&gt; println(<span class="string">"数组中只有一个0"</span>)</div><div class="line">     <span class="keyword">case</span> <span class="type">List</span>(x, y) =&gt; println(<span class="string">"数组中包含两个元素,和为："</span> + (x + y))</div><div class="line">     <span class="keyword">case</span> <span class="type">List</span>(x, y, z) =&gt; println(<span class="string">"数组包含是三个元素,和为："</span> + (x + y + z))</div><div class="line">     <span class="keyword">case</span> <span class="type">List</span>(_*) =&gt; println(<span class="string">"这是一个有多个元素的数组,和为："</span> + myList.sum)</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<h1 id="2、样本类"><a href="#2、样本类" class="headerlink" title="2、样本类"></a>2、样本类</h1><p>定义：case class</p>
+<p>作用：</p>
+<ol>
+<li>支持模式匹配 instanceof</li>
+<li>定一个Spark Sql中的schema：表结构</li>
+</ol>
+<p><strong>不用样本类的情况下：</strong></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="class"><span class="keyword">class</span> <span class="title">Fruit</span></span></div><div class="line">defined <span class="class"><span class="keyword">class</span> <span class="title">Fruit</span></span></div><div class="line"></div><div class="line">scala&gt; <span class="class"><span class="keyword">class</span> <span class="title">Banana</span>(<span class="params">name:<span class="type">String</span></span>) <span class="keyword">extends</span> <span class="title">Fruit</span></span></div><div class="line">defined <span class="class"><span class="keyword">class</span> <span class="title">Banana</span></span></div><div class="line"></div><div class="line">scala&gt; <span class="class"><span class="keyword">class</span> <span class="title">Apple</span>(<span class="params">name:<span class="type">String</span></span>) <span class="keyword">extends</span> <span class="title">Fruit</span></span></div><div class="line">defined <span class="class"><span class="keyword">class</span> <span class="title">Apple</span></span></div><div class="line"></div><div class="line">scala&gt; <span class="keyword">var</span> a = <span class="keyword">new</span> <span class="type">Apple</span>(<span class="string">"Apple"</span>)</div><div class="line">a: <span class="type">Apple</span> = <span class="type">Apple</span>@<span class="number">7e446</span>d92</div><div class="line"></div><div class="line"><span class="comment">//注意使用大括号</span></div><div class="line">scala&gt; println(a.isInstanceOf[<span class="type">Fruit</span>])</div><div class="line"><span class="literal">true</span></div><div class="line"></div><div class="line">scala&gt; println(a.isInstanceOf[<span class="type">Banana</span>])</div><div class="line">&lt;console&gt;:<span class="number">16</span>: warning: fruitless <span class="class"><span class="keyword">type</span> <span class="title">test</span></span>: a value of <span class="class"><span class="keyword">type</span> <span class="title">Apple</span> <span class="title">cannot</span> <span class="title">also</span> <span class="title">be</span> <span class="title">a</span> <span class="title">Banana</span></span></div><div class="line">println(a.isInstanceOf[<span class="type">Banana</span>])</div><div class="line">^</div><div class="line"><span class="literal">false</span></div></pre></td></tr></table></figure>
+<p><strong>用样本类的情况：</strong></p>
+<p>用case class来做模式匹配</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> day_0327_my</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line">  *</div><div class="line">  *使用样本类</div><div class="line">  */</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Vehicle</span></span></div><div class="line"></div><div class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Car</span> (<span class="params">name : <span class="type">String</span></span>) <span class="keyword">extends</span> <span class="title">Vehicle</span></span></div><div class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Bike</span>(<span class="params">name : <span class="type">String</span></span>) <span class="keyword">extends</span> <span class="title">Vehicle</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">Demo02OfCase</span> </span>&#123;</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</div><div class="line">    <span class="keyword">var</span> aCar : <span class="type">Vehicle</span> = <span class="keyword">new</span> <span class="type">Car</span>(<span class="string">"Car"</span>)</div><div class="line"></div><div class="line">    aCar <span class="keyword">match</span> &#123;</div><div class="line">      <span class="keyword">case</span> <span class="type">Car</span>(name) =&gt; println(<span class="string">"汽车---: "</span> + name)</div><div class="line">      <span class="keyword">case</span> <span class="type">Bike</span>(name) =&gt; println(<span class="string">"自行车---: "</span> + name)</div><div class="line">      <span class="keyword">case</span> _ =&gt; println(<span class="string">"嘛也不是"</span>)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="3、类型区分"><a href="#3、类型区分" class="headerlink" title="3、类型区分"></a>3、类型区分</h1><p><code>Any</code>：表示任何类型，相当于java中的Object</p>
+<p><code>Unit</code>：表示没有值，void</p>
+<p><code>Nothing</code>：在函数抛出异常时，返回值就是Nothing，是scala类层级中的最低端，他是任何其他类型的子类型</p>
+<p><code>Null</code>：是所有引用类型的子类，值：null</p>
+<p>特殊类型：</p>
+<p><code>Option</code>：表示一个值是可选的（有/无值）</p>
+<p><code>Some</code>：如果值存在，Option[T]就是一个Some</p>
+<p><code>None</code>：如果值不存在，Option[T]就是None</p>
+<p>四个N的区分：</p>
+<p><code>None</code>：如果值不存在，Option[T]就是None</p>
+<p><code>Nothing</code>：在函数抛出异常时，返回值就是Nothing</p>
+<p><code>Null</code>：可以赋值给所有的引用类型，但不能赋值给值类型</p>
+<p><code>Nil</code>：空的List</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Scala</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/30/Scala进阶-模式匹配-样本类/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Scala进阶-集合" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/27/Scala进阶-集合/">Scala进阶--集合</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/27/Scala进阶-集合/" class="archive-article-date">
+  	<time datetime="2019-03-27T01:44:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>定位：类似于java集合</p>
+<h2 id="1、可变集合和不可变集合（map）"><a href="#1、可变集合和不可变集合（map）" class="headerlink" title="1、可变集合和不可变集合（map）"></a>1、可变集合和不可变集合（map）</h2><p>定义：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="function"><span class="keyword">def</span> <span class="title">math</span> </span>= scala.collection.immutable.<span class="type">Map</span>(<span class="string">"Gakki"</span> -&gt; <span class="number">80</span>, <span class="string">"Jojo"</span> -&gt; <span class="number">70</span>)</div><div class="line">math: scala.collection.immutable.<span class="type">Map</span>[<span class="type">String</span>,<span class="type">Int</span>]</div><div class="line"></div><div class="line">scala&gt; <span class="function"><span class="keyword">def</span> <span class="title">math</span> </span>= scala.collection.mutable.<span class="type">Map</span>(<span class="string">"Gakki"</span> -&gt; <span class="number">80</span>, <span class="string">"Jojo"</span> -&gt; <span class="number">70</span>)</div><div class="line">math: scala.collection.mutable.<span class="type">Map</span>[<span class="type">String</span>,<span class="type">Int</span>]</div></pre></td></tr></table></figure>
+<p>操作：</p>
+<ol>
+<li><p>获取集合中操作</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">scala&gt; math(<span class="string">"Gakki"</span>)</div><div class="line">res1: <span class="type">Int</span> = <span class="number">80</span></div><div class="line"></div><div class="line">scala&gt; math.get(<span class="string">"Gakki"</span>)</div><div class="line">res2: <span class="type">Option</span>[<span class="type">Int</span>] = <span class="type">Some</span>(<span class="number">80</span>)</div><div class="line"></div><div class="line">scala&gt; math.get(<span class="string">"Gakki111"</span>)</div><div class="line">res3: <span class="type">Option</span>[<span class="type">Int</span>] = <span class="type">None</span></div><div class="line"></div><div class="line">scala&gt; math(<span class="string">"Gakki111"</span>)</div><div class="line">java.util.<span class="type">NoSuchElementException</span>: key not found: <span class="type">Gakki111</span></div><div class="line">  at scala.collection.<span class="type">MapLike</span>$<span class="class"><span class="keyword">class</span>.<span class="title">default</span>(<span class="params"><span class="type">MapLike</span>.scala:228</span>)</span></div><div class="line">  at scala.collection.<span class="type">AbstractMap</span>.<span class="keyword">default</span>(<span class="type">Map</span>.scala:<span class="number">59</span>)</div><div class="line">  at scala.collection.mutable.<span class="type">HashMap</span>.apply(<span class="type">HashMap</span>.scala:<span class="number">65</span>)</div><div class="line">  ... <span class="number">32</span> elided</div></pre></td></tr></table></figure>
+</li>
+<li><p>更新集合中的值</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">scala&gt; math(<span class="string">"Gakki"</span>) = <span class="number">99</span></div><div class="line"></div><div class="line">scala&gt; math</div><div class="line">res9: scala.collection.mutable.<span class="type">Map</span>[<span class="type">String</span>,<span class="type">Int</span>] = <span class="type">Map</span>(<span class="type">Jojo</span> -&gt; <span class="number">70</span>, <span class="type">Gakki</span> -&gt; <span class="number">99</span>)</div></pre></td></tr></table></figure>
+</li>
+<li><p>添加元素</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">scala&gt; math += <span class="string">"Sean"</span> -&gt; <span class="number">99</span></div><div class="line">res10: scala.collection.mutable.<span class="type">Map</span>[<span class="type">String</span>,<span class="type">Int</span>] = <span class="type">Map</span>(<span class="type">Sean</span> -&gt; <span class="number">99</span>, <span class="type">Jojo</span> -&gt; <span class="number">70</span>, <span class="type">Gakki</span> -&gt; <span class="number">80</span>)</div><div class="line"></div><div class="line">scala&gt; math</div><div class="line">res11: scala.collection.mutable.<span class="type">Map</span>[<span class="type">String</span>,<span class="type">Int</span>] = <span class="type">Map</span>(<span class="type">Jojo</span> -&gt; <span class="number">70</span>, <span class="type">Gakki</span> -&gt; <span class="number">80</span>)</div></pre></td></tr></table></figure>
+</li>
+<li><p>移除元素</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">scala&gt; math -= <span class="string">"Sean"</span></div><div class="line">res12: scala.collection.mutable.<span class="type">Map</span>[<span class="type">String</span>,<span class="type">Int</span>] = <span class="type">Map</span>(<span class="type">Jojo</span> -&gt; <span class="number">70</span>, <span class="type">Gakki</span> -&gt; <span class="number">80</span>)</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="2、列表：可变列表，不可变列表"><a href="#2、列表：可变列表，不可变列表" class="headerlink" title="2、列表：可变列表，不可变列表"></a>2、列表：可变列表，不可变列表</h2><p><strong>不可变列表：</strong></p>
+<p>定义：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="keyword">var</span> myList  =  <span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>)</div><div class="line">myList: <span class="type">List</span>[<span class="type">Int</span>] = <span class="type">List</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</div><div class="line"></div><div class="line">scala&gt; <span class="keyword">var</span> nullList : <span class="type">List</span>[<span class="type">Nothing</span>] = <span class="type">List</span>()</div><div class="line">nullList: <span class="type">List</span>[<span class="type">Nothing</span>] = <span class="type">List</span>()</div><div class="line"></div><div class="line">scala&gt; <span class="keyword">var</span> dim : <span class="type">List</span>[<span class="type">List</span>[<span class="type">Int</span>]] = <span class="type">List</span>(<span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>),<span class="type">List</span>(<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>))</div><div class="line">dim: <span class="type">List</span>[<span class="type">List</span>[<span class="type">Int</span>]] = <span class="type">List</span>(<span class="type">List</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>), <span class="type">List</span>(<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>))</div></pre></td></tr></table></figure>
+<p>常见操作：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//首位元素</span></div><div class="line">scala&gt; myList.head</div><div class="line">res13: <span class="type">Int</span> = <span class="number">1</span></div><div class="line"></div><div class="line"><span class="comment">//除了第一个之外，其他的元素</span></div><div class="line">scala&gt; myList.tail</div><div class="line">res14: <span class="type">List</span>[<span class="type">Int</span>] = <span class="type">List</span>(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</div></pre></td></tr></table></figure>
+<p><strong>可变列表：</strong>在<code>scala.collection.mutable</code>中</p>
+<p>定义：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="keyword">var</span> myList = scala.collection.mutable.<span class="type">LinkedList</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>)</div><div class="line">warning: there was one deprecation warning; re-run <span class="keyword">with</span> -deprecation <span class="keyword">for</span> details</div><div class="line"></div><div class="line">myList: scala.collection.mutable.<span class="type">LinkedList</span>[<span class="type">Int</span>] = <span class="type">LinkedList</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</div></pre></td></tr></table></figure>
+<p>操作：</p>
+<p>将每个元素乘以2</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//声明指针</span></div><div class="line">scala&gt; <span class="keyword">var</span> cul = myList</div><div class="line">cul: scala.collection.mutable.<span class="type">LinkedList</span>[<span class="type">Int</span>] = <span class="type">LinkedList</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</div><div class="line"></div><div class="line"><span class="comment">//处理元素，Nil代表NULL，elem代表data，next是指向下一元素的指针</span></div><div class="line">scala&gt; <span class="keyword">while</span>(cul != <span class="type">Nil</span>)&#123;</div><div class="line">     | cul.elem *= <span class="number">2</span></div><div class="line">     | cul = cul.next</div><div class="line">     | &#125;</div><div class="line"></div><div class="line">scala&gt; myList</div><div class="line">res18: scala.collection.mutable.<span class="type">LinkedList</span>[<span class="type">Int</span>] = <span class="type">LinkedList</span>(<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">8</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//使用map，结合匿名函数进行运算</span></div><div class="line">scala&gt; myList.map(_ * <span class="number">2</span>)</div><div class="line">warning: there was one deprecation warning; re-run <span class="keyword">with</span> -deprecation <span class="keyword">for</span> details</div><div class="line"></div><div class="line">res19: scala.collection.mutable.<span class="type">LinkedList</span>[<span class="type">Int</span>] = <span class="type">LinkedList</span>(<span class="number">4</span>, <span class="number">8</span>, <span class="number">12</span>, <span class="number">16</span>)</div></pre></td></tr></table></figure>
+<h2 id="3、序列"><a href="#3、序列" class="headerlink" title="3、序列"></a>3、序列</h2><h3 id="3-1、数据库数列：sequence-、-auto-increment"><a href="#3-1、数据库数列：sequence-、-auto-increment" class="headerlink" title="3,1、数据库数列：sequence 、 auto increment"></a>3,1、数据库数列：sequence 、 auto increment</h3><ul>
+<li>作为主键，实现自动增长</li>
+<li>提高性能，序列在Oracle是在内存中的</li>
+</ul>
+<h3 id="3-2、Vector和Range"><a href="#3-2、Vector和Range" class="headerlink" title="3.2、Vector和Range"></a>3.2、Vector和Range</h3><p><strong>Vector</strong> ：是一个带下标的序列，我们可以通过下标来访问Vector中的元素</p>
+<p>定义：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="function"><span class="keyword">def</span> <span class="title">v</span> </span>= <span class="type">Vector</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>)</div><div class="line">v: scala.collection.immutable.<span class="type">Vector</span>[<span class="type">Int</span>]</div></pre></td></tr></table></figure>
+<p><strong>Range</strong> ： 是一个整数的序列</p>
+<p>定义：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//含头不含尾</span></div><div class="line">scala&gt; <span class="type">Range</span>(<span class="number">0</span>,<span class="number">5</span>)</div><div class="line">res21: scala.collection.immutable.<span class="type">Range</span> = <span class="type">Range</span>(<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</div><div class="line"></div><div class="line">scala&gt; println(<span class="number">0</span> until <span class="number">5</span>)</div><div class="line">		<span class="type">Range</span>(<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//包含头尾</span></div><div class="line">scala&gt; println(<span class="number">0</span> to <span class="number">5</span>)</div><div class="line">		<span class="type">Range</span>(<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</div></pre></td></tr></table></figure>
+<p>Range可以相加：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">scala&gt; ('<span class="number">0</span>' to '<span class="number">9</span>') ++ ('<span class="type">A</span>' to '<span class="type">Z</span>')</div><div class="line">res22: scala.collection.immutable.<span class="type">IndexedSeq</span>[<span class="type">Char</span>] = <span class="type">Vector</span>(<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="type">A</span>, <span class="type">B</span>, <span class="type">C</span>, <span class="type">D</span>, <span class="type">E</span>, <span class="type">F</span>, <span class="type">G</span>, <span class="type">H</span>, <span class="type">I</span>, <span class="type">J</span>, <span class="type">K</span>, <span class="type">L</span>, <span class="type">M</span>, <span class="type">N</span>, <span class="type">O</span>, <span class="type">P</span>, <span class="type">Q</span>, <span class="type">R</span>, <span class="type">S</span>, <span class="type">T</span>, <span class="type">U</span>, <span class="type">V</span>, <span class="type">W</span>, <span class="type">X</span>, <span class="type">Y</span>, <span class="type">Z</span>)</div></pre></td></tr></table></figure>
+<p>Range可以转换为List</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="number">1</span> to <span class="number">5</span> toList</div><div class="line">warning: there was one feature warning; re-run <span class="keyword">with</span> -feature <span class="keyword">for</span> details</div><div class="line">res23: <span class="type">List</span>[<span class="type">Int</span>] = <span class="type">List</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</div></pre></td></tr></table></figure>
+<h2 id="3、集（Set）"><a href="#3、集（Set）" class="headerlink" title="3、集（Set）"></a>3、集（Set）</h2><p><strong>Set：</strong></p>
+<p>概念：不重复元素的集合，默认是HashSet，与java类似</p>
+<p>定义：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="keyword">var</span> s = <span class="type">Set</span>(<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>)</div><div class="line">s: scala.collection.mutable.<span class="type">Set</span>[<span class="type">Int</span>] = <span class="type">Set</span>(<span class="number">1</span>, <span class="number">5</span>, <span class="number">3</span>)</div><div class="line"></div><div class="line">scala&gt; s + <span class="number">1</span></div><div class="line">res24: scala.collection.mutable.<span class="type">Set</span>[<span class="type">Int</span>] = <span class="type">Set</span>(<span class="number">1</span>, <span class="number">5</span>, <span class="number">3</span>)</div><div class="line"></div><div class="line">scala&gt; s + <span class="number">2</span></div><div class="line">res25: scala.collection.mutable.<span class="type">Set</span>[<span class="type">Int</span>] = <span class="type">Set</span>(<span class="number">1</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">3</span>)</div><div class="line"></div><div class="line">scala&gt; s</div><div class="line">res26: scala.collection.mutable.<span class="type">Set</span>[<span class="type">Int</span>] = <span class="type">Set</span>(<span class="number">1</span>, <span class="number">5</span>, <span class="number">3</span>)</div></pre></td></tr></table></figure>
+<p>运算后返回新的集，不改变原来集的元素</p>
+<p><strong>SortedSet：</strong></p>
+<p>概念：可排序的Set</p>
+<p>定义：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="keyword">var</span> s2 = scala.collection.mutable.<span class="type">SortedSet</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">10</span>,<span class="number">8</span>)</div><div class="line">s2: scala.collection.mutable.<span class="type">SortedSet</span>[<span class="type">Int</span>] = <span class="type">TreeSet</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">8</span>, <span class="number">10</span>)</div></pre></td></tr></table></figure>
+<p>操作：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//判断元素是否存在</span></div><div class="line">scala&gt; s2.contains(<span class="number">1</span>)</div><div class="line">res53: <span class="type">Boolean</span> = <span class="literal">true</span></div><div class="line"></div><div class="line"><span class="comment">//定义两个Set</span></div><div class="line">scala&gt; <span class="keyword">var</span> s1 = <span class="type">Set</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>)</div><div class="line">s1: scala.collection.immutable.<span class="type">Set</span>[<span class="type">Int</span>] = <span class="type">Set</span>(<span class="number">5</span>, <span class="number">1</span>, <span class="number">6</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</div><div class="line"></div><div class="line">scala&gt; <span class="keyword">var</span> s2 = <span class="type">Set</span>(<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>)</div><div class="line">s2: scala.collection.immutable.<span class="type">Set</span>[<span class="type">Int</span>] = <span class="type">Set</span>(<span class="number">5</span>, <span class="number">10</span>, <span class="number">6</span>, <span class="number">9</span>, <span class="number">7</span>, <span class="number">8</span>)</div><div class="line"></div><div class="line"><span class="comment">//union操作：两个集相加</span></div><div class="line">scala&gt; s1 union s2</div><div class="line">res55: scala.collection.immutable.<span class="type">Set</span>[<span class="type">Int</span>] = <span class="type">Set</span>(<span class="number">5</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">6</span>, <span class="number">9</span>, <span class="number">2</span>, <span class="number">7</span>, <span class="number">3</span>, <span class="number">8</span>, <span class="number">4</span>)</div><div class="line"><span class="comment">//intersect：交集</span></div><div class="line">scala&gt; s1 intersect s2</div><div class="line">res56: scala.collection.immutable.<span class="type">Set</span>[<span class="type">Int</span>] = <span class="type">Set</span>(<span class="number">5</span>, <span class="number">6</span>)</div><div class="line"><span class="comment">//diff：差集</span></div><div class="line">scala&gt; s1 diff s2</div><div class="line">res57: scala.collection.immutable.<span class="type">Set</span>[<span class="type">Int</span>] = <span class="type">Set</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Scala</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/27/Scala进阶-集合/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Scala进阶-函数式编程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/27/Scala进阶-函数式编程/">Scala进阶--函数式编程</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/27/Scala进阶-函数式编程/" class="archive-article-date">
+  	<time datetime="2019-03-27T01:43:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>多范式：面相对象，函数式编程（程序实现起来简单）</p>
+<p>举例：wordcount</p>
+<p>sc是SparkContext对象，非常重要！！</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> result = sc.textFile(<span class="string">"hdfs://xxxx//xxx/data.txt"</span>)</div><div class="line">.flatMap(_.split(<span class="string">" "</span>))</div><div class="line">.map((_,<span class="number">1</span>))</div><div class="line">.reduceByKey(_+_)</div><div class="line">.collect</div></pre></td></tr></table></figure>
+<h1 id="1、匿名函数"><a href="#1、匿名函数" class="headerlink" title="1、匿名函数"></a>1、匿名函数</h1><figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="keyword">var</span> myarry = <span class="type">Array</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</div><div class="line">myarry: <span class="type">Array</span>[<span class="type">Int</span>] = <span class="type">Array</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</div><div class="line"></div><div class="line">scala&gt; <span class="function"><span class="keyword">def</span> <span class="title">fun1</span></span>(x:<span class="type">Int</span>):<span class="type">Int</span> = x * <span class="number">3</span></div><div class="line">fun1: (x: <span class="type">Int</span>)<span class="type">Int</span></div><div class="line"></div><div class="line">scala&gt; (x:<span class="type">Int</span>) =&gt; x * <span class="number">3</span></div><div class="line">res0: <span class="type">Int</span> =&gt; <span class="type">Int</span> = &lt;function1&gt;</div><div class="line"></div><div class="line">scala&gt; myarry.map((x:<span class="type">Int</span>) =&gt; x * <span class="number">3</span>)</div><div class="line">res2: <span class="type">Array</span>[<span class="type">Int</span>] = <span class="type">Array</span>(<span class="number">3</span>, <span class="number">6</span>, <span class="number">9</span>)</div></pre></td></tr></table></figure>
+<p><code>(x:Int) =&gt; x * 3</code>作为参数，传到了另一个函数里面，同理<code>(_,1)</code>   <code>(_+_)</code>都是匿名函数</p>
+<h1 id="2、高阶函数"><a href="#2、高阶函数" class="headerlink" title="2、高阶函数"></a>2、高阶函数</h1><p>定义：带有<strong>函数参数</strong>的<strong>函数</strong>，把一个函数作为另一个函数的参数值</p>
+<p>如：定义一个高阶函数</p>
+<p>对10做<strong>某种</strong>运算：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="function"><span class="keyword">def</span> <span class="title">someAction</span></span>(f:(<span class="type">Double</span>) =&gt; (<span class="type">Double</span>)) = f(<span class="number">10</span>)</div><div class="line">someAction: (f: <span class="type">Double</span> =&gt; <span class="type">Double</span>)<span class="type">Double</span></div><div class="line">scala&gt; <span class="keyword">import</span> scala.math._</div><div class="line"><span class="keyword">import</span> scala.math._</div><div class="line"></div><div class="line">scala&gt; someAction(sqrt)</div><div class="line">res3: <span class="type">Double</span> = <span class="number">3.1622776601683795</span></div><div class="line"></div><div class="line">scala&gt; someAction(sin)</div><div class="line">res4: <span class="type">Double</span> = <span class="number">-0.5440211108893698</span></div></pre></td></tr></table></figure>
+<p><code>(Double) =&gt; (Double)</code>  代表f的类型，入参是double，返回值也是double</p>
+<p><code>f(10)   ---&gt;  sqrt(10)</code></p>
+<h2 id="2-1、高阶函数实例"><a href="#2-1、高阶函数实例" class="headerlink" title="2.1、高阶函数实例"></a>2.1、高阶函数实例</h2><p><strong>map：</strong>相当于一个循环，对某个集合中的每个元素都进行操作（接收一个函数），返回一个<strong>新的集合</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">scala&gt; var numbers = List(1,2,3,4,5,6,7,8)</div><div class="line">numbers: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8)</div><div class="line"></div><div class="line">scala&gt; numbers.map((i:Int) =&gt; i*2)</div><div class="line">res6: List[Int] = List(2, 4, 6, 8, 10, 12, 14, 16)</div><div class="line"></div><div class="line">scala&gt; numbers.map(_ * 2)</div><div class="line">res7: List[Int] = List(2, 4, 6, 8, 10, 12, 14, 16)</div></pre></td></tr></table></figure>
+<ol>
+<li><code>(i:Int) =&gt; i*2</code>  和  <code>_ * 2</code>   等价</li>
+<li>两次结果相同，表名map操作并没有改变原来的值，而是返回了一个<strong>新的集合</strong>!!</li>
+</ol>
+<p><strong>foreach:</strong>相当于一个循环，对某个集合中的每个元素都进行操作（接收一个函数），不返回结果</p>
+<p><strong>filter：</strong>过滤操作，选择满足的数据，返回bool值为true的数据</p>
+<p>如下：查找能被2整除的</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">scala&gt; numbers.filter((i:<span class="type">Int</span>) =&gt; i%<span class="number">2</span> ==<span class="number">0</span>)</div><div class="line">res12: <span class="type">List</span>[<span class="type">Int</span>] = <span class="type">List</span>(<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">8</span>)</div></pre></td></tr></table></figure>
+<p><strong>zip：</strong>合并数据，少的不合并</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>).zip(<span class="type">List</span>(<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>))</div><div class="line">res13: <span class="type">List</span>[(<span class="type">Int</span>, <span class="type">Int</span>)] = <span class="type">List</span>((<span class="number">1</span>,<span class="number">5</span>), (<span class="number">2</span>,<span class="number">6</span>), (<span class="number">3</span>,<span class="number">7</span>))</div><div class="line"></div><div class="line">scala&gt; <span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>).zip(<span class="type">List</span>(<span class="number">5</span>,<span class="number">6</span>))</div><div class="line">res14: <span class="type">List</span>[(<span class="type">Int</span>, <span class="type">Int</span>)] = <span class="type">List</span>((<span class="number">1</span>,<span class="number">5</span>), (<span class="number">2</span>,<span class="number">6</span>))</div></pre></td></tr></table></figure>
+<p><strong>partition：</strong>根据断言（就是<strong>某个条件</strong>，可以通过匿名函数来实现），来进行分区</p>
+<p>如下：能被2整除的分成一个区，否则为另一个区</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">scala&gt; numbers.partition((i:<span class="type">Int</span>) =&gt; i%<span class="number">2</span> ==<span class="number">0</span>)</div><div class="line">res15: (<span class="type">List</span>[<span class="type">Int</span>], <span class="type">List</span>[<span class="type">Int</span>]) = (<span class="type">List</span>(<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">8</span>),<span class="type">List</span>(<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>))</div></pre></td></tr></table></figure>
+<p><strong>find：</strong>查找第一个满足条件的元素</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">scala&gt; numbers.find(_%<span class="number">3</span> == <span class="number">0</span>)</div><div class="line">res16: <span class="type">Option</span>[<span class="type">Int</span>] = <span class="type">Some</span>(<span class="number">3</span>)</div></pre></td></tr></table></figure>
+<p><strong>flatten：</strong>把嵌套的结果展开</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="type">List</span>(<span class="type">List</span>(<span class="number">2</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">8</span>,<span class="number">10</span>),<span class="type">List</span>(<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">7</span>,<span class="number">9</span>)).flatten</div><div class="line">res17: <span class="type">List</span>[<span class="type">Int</span>] = <span class="type">List</span>(<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">9</span>)</div></pre></td></tr></table></figure>
+<p><strong>flatmap：</strong>相当于一个map+flatten</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="keyword">var</span> myList = <span class="type">List</span>(<span class="type">List</span>(<span class="number">2</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">8</span>,<span class="number">10</span>),<span class="type">List</span>(<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">7</span>,<span class="number">9</span>))</div><div class="line">myList: <span class="type">List</span>[<span class="type">List</span>[<span class="type">Int</span>]] = <span class="type">List</span>(<span class="type">List</span>(<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">10</span>), <span class="type">List</span>(<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">9</span>))</div><div class="line"></div><div class="line">scala&gt; myList.flatMap(x =&gt; x.map(_*<span class="number">2</span>))</div><div class="line">res18: <span class="type">List</span>[<span class="type">Int</span>] = <span class="type">List</span>(<span class="number">4</span>, <span class="number">8</span>, <span class="number">12</span>, <span class="number">16</span>, <span class="number">20</span>, <span class="number">2</span>, <span class="number">6</span>, <span class="number">10</span>, <span class="number">14</span>, <span class="number">18</span>)</div><div class="line"></div><div class="line">scala&gt; myList.flatMap(_.map(_*<span class="number">2</span>))</div><div class="line">res4: <span class="type">List</span>[<span class="type">Int</span>] = <span class="type">List</span>(<span class="number">4</span>, <span class="number">8</span>, <span class="number">12</span>, <span class="number">16</span>, <span class="number">20</span>, <span class="number">2</span>, <span class="number">6</span>, <span class="number">10</span>, <span class="number">14</span>, <span class="number">18</span>)</div></pre></td></tr></table></figure>
+<p>执行过程：</p>
+<ol>
+<li>将<code>List(List(2,4,6,8,10),List(1,3,5,7,9))</code>调用<code>map(_*2)</code>方法，x代表一个List</li>
+<li>使用flatten来展开</li>
+</ol>
+<p>两者对比：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> day03</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line">  *</div><div class="line">  * 对比flatmap和map</div><div class="line">  */</div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">Demo02</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="comment">/**</span></div><div class="line">    * .flatMap执行分析：</div><div class="line">    * x = 1 时，List(x * 2)  = List(2)</div><div class="line">    * x = 2 时，List(x * 2)  = List(4)</div><div class="line">    * x = 3 时，List('a', 'b')  = List('a', 'b')</div><div class="line">    *List(List(2),List(4),List('a', 'b')).flatmap ===&gt; List(2, 4, a, b)</div><div class="line">    * */</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">flatMap1</span></span>() = &#123;</div><div class="line">    <span class="keyword">val</span> li = <span class="type">List</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</div><div class="line">    <span class="keyword">val</span> res = li.flatMap(x =&gt;</div><div class="line">      x <span class="keyword">match</span> &#123;</div><div class="line">        <span class="keyword">case</span> <span class="number">3</span> =&gt; <span class="type">List</span>('a', 'b')</div><div class="line">        <span class="keyword">case</span> _ =&gt; <span class="type">List</span>(x * <span class="number">2</span>)</div><div class="line">      &#125;)</div><div class="line"></div><div class="line">    println(res)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">/**</span></div><div class="line">    * .map执行过程</div><div class="line">    * x = 1 时，x * 2  = 2 , List(2,2,3)</div><div class="line">    * x = 2 时，x * 2  = 4 , List(2,4,3)</div><div class="line">    * x = 3 时，List('a', 'b')  = List('a', 'b') , List(List(2), List(4), List(a, b))</div><div class="line">    * */</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">map1</span></span>() = &#123;</div><div class="line">    <span class="keyword">val</span> li = <span class="type">List</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</div><div class="line">    <span class="keyword">val</span> res = li.map(x =&gt;</div><div class="line">      x <span class="keyword">match</span> &#123;</div><div class="line">        <span class="keyword">case</span> <span class="number">3</span> =&gt; <span class="type">List</span>('a', 'b')</div><div class="line">        <span class="keyword">case</span> _ =&gt; <span class="type">List</span>(x * <span class="number">2</span>)</div><div class="line">      &#125;)</div><div class="line"></div><div class="line">    println(res)</div><div class="line">  &#125;</div><div class="line"></div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</div><div class="line">    flatMap1()</div><div class="line">    map1()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="3、闭包、柯里化"><a href="#3、闭包、柯里化" class="headerlink" title="3、闭包、柯里化"></a>3、闭包、柯里化</h1><ol>
+<li>闭包：就是函数的嵌套，</li>
+</ol>
+<p>​    在一个函数里面，包含了另一个函数的定义</p>
+<p>​    可以在内函数中访问外函数的变量</p>
+<p>如：<code>def mulBy(factor:Double) = (x:Double) =&gt; x*factor</code></p>
+<p>​                 外层                内层</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="function"><span class="keyword">def</span> <span class="title">mulBy</span></span>(factor:<span class="type">Double</span>) = (x:<span class="type">Double</span>) =&gt; x*factor</div><div class="line">mulBy: (factor: <span class="type">Double</span>)<span class="type">Double</span> =&gt; <span class="type">Double</span></div><div class="line"></div><div class="line">scala&gt; <span class="keyword">var</span> triple = mulBy(<span class="number">3</span>)</div><div class="line">triple: <span class="type">Double</span> =&gt; <span class="type">Double</span> = &lt;function1&gt;</div><div class="line"></div><div class="line">scala&gt; triple(<span class="number">10</span>)</div><div class="line">res0: <span class="type">Double</span> = <span class="number">30.0</span></div><div class="line"></div><div class="line">scala&gt; triple(<span class="number">20</span>)</div><div class="line">res1: <span class="type">Double</span> = <span class="number">60.0</span></div><div class="line"></div><div class="line">scala&gt; <span class="keyword">var</span> half = mulBy(<span class="number">0.5</span>)</div><div class="line">half: <span class="type">Double</span> =&gt; <span class="type">Double</span> = &lt;function1&gt;</div><div class="line"></div><div class="line">scala&gt; half(<span class="number">10</span>)</div><div class="line">res2: <span class="type">Double</span> = <span class="number">5.0</span></div><div class="line"></div><div class="line">scala&gt; mulBy(<span class="number">0.5</span>)(<span class="number">10</span>)</div><div class="line">res3: <span class="type">Double</span> = <span class="number">5.0</span></div></pre></td></tr></table></figure>
+<ol>
+<li>柯里化：具有多个参数的函数转化为一个函数链，每个节点上都是单一函数</li>
+</ol>
+<p>如：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="function"><span class="keyword">def</span> <span class="title">add</span></span>(x:<span class="type">Int</span>,y:<span class="type">Int</span>) = x + y</div><div class="line">add: (x: <span class="type">Int</span>, y: <span class="type">Int</span>)<span class="type">Int</span></div><div class="line"></div><div class="line">scala&gt; <span class="function"><span class="keyword">def</span> <span class="title">add</span></span>(x:<span class="type">Int</span>)(y:<span class="type">Int</span>) = x + y</div><div class="line">add: (x: <span class="type">Int</span>)(y: <span class="type">Int</span>)<span class="type">Int</span></div></pre></td></tr></table></figure>
+<p>转化过程如下：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">原始：<span class="function"><span class="keyword">def</span> <span class="title">add</span></span>(x:<span class="type">Int</span>,y:<span class="type">Int</span>) = x+y</div><div class="line">闭包：<span class="function"><span class="keyword">def</span> <span class="title">add</span></span>(x:<span class="type">Int</span>) = (y:<span class="type">Int</span>) =&gt; x+y</div><div class="line">简写：<span class="function"><span class="keyword">def</span> <span class="title">add</span></span>(x:<span class="type">Int</span>)(y:<span class="type">Int</span>) = x+y</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Scala</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/27/Scala进阶-函数式编程/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Scala进阶-面向对象" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/25/Scala进阶-面向对象/">Scala进阶--面向对象</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/25/Scala进阶-面向对象/" class="archive-article-date">
+  	<time datetime="2019-03-25T02:32:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1、面向对象"><a href="#1、面向对象" class="headerlink" title="1、面向对象"></a>1、面向对象</h1><p>概念：</p>
+<ul>
+<li>封装：把属性和操作属性的方法写在一起，定义为class</li>
+<li>继承</li>
+<li>多态</li>
+</ul>
+<p>java中面向对象的概念，适用于scala</p>
+<h1 id="2、定义类"><a href="#2、定义类" class="headerlink" title="2、定义类"></a>2、定义类</h1><p>案例1：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> day02</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student01</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="comment">//定义学生属性</span></div><div class="line">  <span class="keyword">private</span>  <span class="keyword">var</span> stuId:<span class="type">Int</span> = <span class="number">0</span></div><div class="line">  <span class="keyword">private</span>  <span class="keyword">var</span> stuAge:<span class="type">Int</span> = <span class="number">20</span></div><div class="line">  <span class="keyword">private</span>  <span class="keyword">var</span> stuName:<span class="type">String</span> = <span class="string">"Tom"</span></div><div class="line"></div><div class="line">  <span class="comment">//定义方法  set和get方法</span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">getStuName</span></span>():<span class="type">String</span> = stuName</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">setStuName</span></span>(newName:<span class="type">String</span>) = <span class="keyword">this</span>.stuName = newName</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">getStuAge</span></span>():<span class="type">Int</span> = stuAge</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">setStuAge</span></span>(newAge:<span class="type">Int</span>) = <span class="keyword">this</span>.stuAge = newAge</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line">  * 注意:object 和 class  名字可以不一样</div><div class="line">  * 如果一样的话，这个object就叫做class的伴生对象</div><div class="line">  * 伴生对象时，可以直接访问类中的私有属性</div><div class="line">  * */</div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">Student01</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</div><div class="line">    <span class="comment">//测试</span></div><div class="line">    <span class="comment">//创建学生独享</span></div><div class="line">    <span class="keyword">var</span> s1 = <span class="keyword">new</span> <span class="type">Student01</span></div><div class="line"></div><div class="line">    <span class="comment">//访问属性并输出</span></div><div class="line">    println(s1.getStuName() + <span class="string">"\t"</span> + s1.getStuAge())</div><div class="line"></div><div class="line">    <span class="comment">//访问set方法</span></div><div class="line">    s1.setStuName(<span class="string">"Gakki"</span>)</div><div class="line">    s1.setStuAge(<span class="number">18</span>)</div><div class="line">    println(s1.getStuName() + <span class="string">"\t"</span> + s1.getStuAge())</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">      * 直接访问私有属性</div><div class="line">      * */</div><div class="line">    println(<span class="string">"--------------访问私有属性---------------"</span>)</div><div class="line">    println(s1.stuName + <span class="string">"\t"</span> + s1.stuAge)</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>说明：</p>
+<p>为什么可以直接访问私有成员？</p>
+<ol>
+<li>当一个属性是private的时候，scala自动为其生成set和get方法，当进行<code>s1.stuName</code>或者<code>s1.stuAge</code>的时候默认调用了get方法，只不过恰好同名</li>
+<li>如果只希望生成get方法不需要get方法—只需要将其定义为常量<code>val</code>即可</li>
+<li>如果希望属性不能被外部访问  使用<code>private[this]</code>关键字</li>
+</ol>
+<h1 id="3、内部类（嵌套类）"><a href="#3、内部类（嵌套类）" class="headerlink" title="3、内部类（嵌套类）"></a>3、内部类（嵌套类）</h1><figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> day02</div><div class="line"></div><div class="line"><span class="keyword">import</span> scala.collection.mutable.<span class="type">ArrayBuffer</span></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line">  *</div><div class="line">  * 定义一个学生类，同时需要保存学生的成绩信息</div><div class="line">  */</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student02</span> </span>&#123;</div><div class="line">  <span class="comment">//定义学生的属性</span></div><div class="line">  <span class="keyword">private</span> <span class="keyword">var</span> stuName: <span class="type">String</span> = <span class="string">"Tom"</span></div><div class="line">  <span class="keyword">private</span> <span class="keyword">var</span> stuAge: <span class="type">Int</span> = <span class="number">20</span></div><div class="line"></div><div class="line">  <span class="comment">//定义数组保存课程成绩信息</span></div><div class="line">  <span class="keyword">private</span> <span class="keyword">var</span> courseList = <span class="keyword">new</span> <span class="type">ArrayBuffer</span>[<span class="type">Course</span>]()</div><div class="line"></div><div class="line">  <span class="comment">//定义一个函数，用来添加学生课程成绩</span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">addNewCourse</span></span>(cname: <span class="type">String</span>, grade: <span class="type">Int</span>) = &#123;</div><div class="line">    <span class="comment">//创建课程成绩信息</span></div><div class="line">    <span class="keyword">var</span> c = <span class="keyword">new</span> <span class="type">Course</span>(cname, grade)</div><div class="line"></div><div class="line">    <span class="comment">//添加到学生对象中</span></div><div class="line">    courseList += c</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">//定义课程类</span></div><div class="line">  <span class="comment">//括号里面写的就是定义的属性</span></div><div class="line">  <span class="class"><span class="keyword">class</span> <span class="title">Course</span>(<span class="params">var courseName: <span class="type">String</span>, var grade: <span class="type">Int</span></span>) </span>&#123;</div><div class="line"></div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">Student02</span> </span>&#123;</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</div><div class="line">    <span class="comment">//创建学生对象</span></div><div class="line">    <span class="keyword">var</span> s = <span class="keyword">new</span> <span class="type">Student02</span>()</div><div class="line">    s.stuName = <span class="string">"Gakki"</span></div><div class="line">    s.stuAge = <span class="number">21</span></div><div class="line"></div><div class="line">    <span class="comment">//添加课程信息</span></div><div class="line">    s.addNewCourse(<span class="string">"chinese"</span>, <span class="number">70</span>)</div><div class="line">    s.addNewCourse(<span class="string">"Math"</span>, <span class="number">80</span>)</div><div class="line">    s.addNewCourse(<span class="string">"English"</span>, <span class="number">50</span>)</div><div class="line">	println(<span class="string">"--------学生信息-------"</span>)</div><div class="line">    println(s.stuName + <span class="string">"\t"</span> + s.stuAge)</div><div class="line">    println(<span class="string">"--------课程信息-------"</span>)</div><div class="line">    <span class="keyword">for</span> (c &lt;- s.courseList) println(c.courseName + <span class="string">"\t"</span> + c.grade)</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="4、类的构造器"><a href="#4、类的构造器" class="headerlink" title="4、类的构造器"></a>4、类的构造器</h1><p>主构造器：和类的声明在一起，并且一个类只能有一个主构造器</p>
+<p><code>class Student03(var stuName: String, var age:Int){</code></p>
+<p>辅助构造器：一个类可以有多个辅助构造器，通过this来实现</p>
+<p><code>def this(age:Int){</code></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> day02</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line">  */</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student03</span>(<span class="params">var stuName: <span class="type">String</span>, var age:<span class="type">Int</span></span>) </span>&#123;</div><div class="line">  <span class="comment">//定义辅助构造器---实质上就是一个函数，只不过名字叫this</span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">this</span></span>(age:<span class="type">Int</span>)&#123;</div><div class="line">    <span class="keyword">this</span>(<span class="string">"no name"</span>, age)</div><div class="line">    println(<span class="string">"这是辅助构造器"</span>)</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">Student03</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</div><div class="line">    <span class="comment">//使用主构造器创建一个对象--声明的时候按照参数列表给值</span></div><div class="line">    <span class="keyword">var</span> s1 = <span class="keyword">new</span> <span class="type">Student03</span>(<span class="string">"Gakki"</span>,<span class="number">20</span>)</div><div class="line">    println(s1.stuName + <span class="string">"\t"</span> + s1.age)</div><div class="line">	</div><div class="line">    <span class="comment">//使用辅助构造器--根据给定参数自动推断使用哪一个辅助构造器</span></div><div class="line">    <span class="keyword">var</span> s2 = <span class="keyword">new</span> <span class="type">Student03</span>(<span class="number">25</span>)</div><div class="line">    println(s2.stuName + <span class="string">"\t"</span> + s2.age)</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="5、object对象：相当于java的static"><a href="#5、object对象：相当于java的static" class="headerlink" title="5、object对象：相当于java的static"></a>5、object对象：相当于java的static</h1><p><strong>总结：</strong></p>
+<ol>
+<li>Object对象中的内容都是<strong>静态</strong></li>
+<li>如果和类名相同，则称为<strong>伴生对象</strong></li>
+<li>scala中没有static关键字</li>
+</ol>
+<p><strong>举例：</strong></p>
+<ol>
+<li><p>使用object来实现单例模式：一个类中只有一个对象</p>
+<p>java中，把类的构造器定义成private，并提供一个getInstance,返回对象</p>
+<p>scala中，使用object来实现</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> day02</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line">  * 实现单例模式</div><div class="line">  **/</div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">CreditCard</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="comment">//定义一个变量来保存信用卡卡号</span></div><div class="line">  <span class="keyword">private</span> [<span class="keyword">this</span>] <span class="keyword">var</span> creditCardNumber : <span class="type">Long</span> = <span class="number">0</span></div><div class="line"></div><div class="line">  <span class="comment">//定义函数来产生卡号</span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">generateNum</span></span>() : <span class="type">Long</span> = &#123;</div><div class="line">    creditCardNumber += <span class="number">1</span></div><div class="line">    creditCardNumber</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</div><div class="line">    println(<span class="type">CreditCard</span>.generateNum())</div><div class="line">    println(<span class="type">CreditCard</span>.generateNum())</div><div class="line">    println(<span class="type">CreditCard</span>.generateNum())</div><div class="line">    println(<span class="type">CreditCard</span>.generateNum())</div><div class="line">    println(<span class="type">CreditCard</span>.generateNum())</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>使用App对象：应用程序对象</p>
+<p>好处：可以省略main方法</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> day02</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">HelloWorld</span> <span class="keyword">extends</span> <span class="title">App</span> </span>&#123;</div><div class="line">  <span class="comment">//不需要main函数，直接能运行</span></div><div class="line">  println(<span class="string">"hello world"</span>)</div><div class="line"></div><div class="line">  <span class="keyword">if</span>(args.length &gt; <span class="number">0</span>)&#123;</div><div class="line">    println(<span class="string">"有参数"</span>)</div><div class="line">  &#125;<span class="keyword">else</span>&#123;</div><div class="line">    println(<span class="string">"无参数"</span>)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">/*  def main(args: Array[String]): Unit = &#123;</span></div><div class="line">      println("hello world")</div><div class="line">    &#125;*/</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="6、apply方法"><a href="#6、apply方法" class="headerlink" title="6、apply方法"></a>6、apply方法</h1><p>当使用<code>val t1 = Tuple(&quot;gakki&quot;,20)</code>时，并没有new关键字，实质为调用<strong>apply方法</strong>创建对象</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> day02</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student04</span>(<span class="params">var stuName:<span class="type">String</span></span>)</span></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line">  * 定义student04的apply方法</div><div class="line">  * */</div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">Student04</span> </span>&#123;</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">apply</span></span>(name:<span class="type">String</span>) = &#123;</div><div class="line">    println(<span class="string">"调用apply方法"</span>)</div><div class="line">    <span class="keyword">new</span> <span class="type">Student04</span>(name)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</div><div class="line">    <span class="comment">//通过主构造器来创建学生对象</span></div><div class="line">    <span class="keyword">var</span> s1 = <span class="keyword">new</span> <span class="type">Student04</span>(<span class="string">"Jojo"</span>)</div><div class="line">    println(s1.stuName)</div><div class="line"></div><div class="line">    <span class="comment">//通过apply方法创建学生对象，省略new</span></div><div class="line">    <span class="keyword">var</span> s2 = <span class="type">Student04</span>(<span class="string">"Gakki"</span>)</div><div class="line">    println(s2.stuName)</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<font color="red"><strong>注意：apply方法必须写在伴生对象中，也就是object中</strong></font>
+
+<h1 id="7、继承"><a href="#7、继承" class="headerlink" title="7、继承"></a>7、继承</h1><ol>
+<li><p>使用<code>extends</code>关键字，和java类似</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> day02_my</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line">  * 定义父类和子类实现继承和重写</div><div class="line">  */</div><div class="line"></div><div class="line"><span class="comment">//定义父类</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span>(<span class="params">val name: <span class="type">String</span>, val age: <span class="type">Int</span></span>) </span>&#123;</div><div class="line"></div><div class="line">  <span class="comment">//定义函数</span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">sayHello</span></span>(): <span class="type">String</span> = <span class="string">"Hello "</span> + name + <span class="string">" and the age is "</span> + age</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//定义子类</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Employee</span>(<span class="params">override val name: <span class="type">String</span>, override val age: <span class="type">Int</span>, val salary: <span class="type">Int</span></span>) <span class="keyword">extends</span> <span class="title">Person</span>(<span class="params">name, age</span>) </span>&#123;</div><div class="line">  <span class="comment">//重写父类方法</span></div><div class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">sayHello</span></span>(): <span class="type">String</span> = <span class="string">"子类中的sayHello"</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">ExtendsTest</span> <span class="keyword">extends</span> <span class="title">App</span> </span>&#123;</div><div class="line">  <span class="comment">//定义父类对象</span></div><div class="line">  <span class="keyword">val</span> p1 : <span class="type">Person</span>= <span class="keyword">new</span> <span class="type">Person</span>(<span class="string">"Gakki"</span>,<span class="number">20</span>)</div><div class="line">  println(p1.name + <span class="string">"\t"</span> +p1.age)</div><div class="line">  println(p1.sayHello())</div><div class="line"></div><div class="line">  <span class="comment">//定义一个子类对象</span></div><div class="line">  <span class="keyword">val</span> p2 :<span class="type">Person</span> = <span class="keyword">new</span> <span class="type">Employee</span>(<span class="string">"Jojo"</span>,<span class="number">25</span>,<span class="number">1000</span>)</div><div class="line">  println(p2.sayHello())</div><div class="line"></div><div class="line">  <span class="comment">//匿名子类</span></div><div class="line">  <span class="keyword">val</span> p3 :<span class="type">Person</span> = <span class="keyword">new</span> <span class="type">Person</span>(<span class="string">"Mary"</span>, <span class="number">23</span>)&#123;</div><div class="line">    <span class="comment">//匿名子类中重写sayhello方法</span></div><div class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">sayHello</span></span>(): <span class="type">String</span> = <span class="string">"匿名子类中重写sayhello方法"</span></div><div class="line">  &#125;</div><div class="line">  println(p3.sayHello())</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>抽象类和抽象字段</p>
+<p>抽象类：只能用于继承的类，可以包含抽象方法</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> day02</div><div class="line"></div><div class="line"><span class="comment">//定义父类:交通工具</span></div><div class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Vehicle</span></span>&#123;</div><div class="line">  <span class="comment">//抽象方法</span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">checkType</span></span>() : <span class="type">String</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">//定义子类1：自行车</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Car</span> <span class="keyword">extends</span> <span class="title">Vehicle</span></span>&#123;</div><div class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">checkType</span></span>(): <span class="type">String</span> = <span class="string">"I am a car"</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//定义子类2：汽车</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bike</span> <span class="keyword">extends</span> <span class="title">Vehicle</span></span>&#123;</div><div class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">checkType</span></span>(): <span class="type">String</span> = <span class="string">"I am a Bike"</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">Demo2</span> </span>&#123;</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</div><div class="line">    <span class="keyword">var</span> v1 : <span class="type">Vehicle</span> = <span class="keyword">new</span> <span class="type">Car</span></div><div class="line">    println(v1.checkType())</div><div class="line"></div><div class="line">    <span class="keyword">var</span> v2 : <span class="type">Vehicle</span> = <span class="keyword">new</span> <span class="type">Bike</span></div><div class="line">    println(v2.checkType())</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>抽象字段：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> day02</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line">  *抽象字段</div><div class="line">  * 定义：没有初始值的字段</div><div class="line">  */</div><div class="line"></div><div class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Person1</span></span>&#123;</div><div class="line">  <span class="comment">//定义抽象字段</span></div><div class="line">  <span class="keyword">var</span> id : <span class="type">Int</span></div><div class="line">  <span class="keyword">var</span> name : <span class="type">String</span></div><div class="line">&#125;</div><div class="line"><span class="comment">//方法1：如果不加abstract会报错</span></div><div class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Employee1</span> <span class="keyword">extends</span> <span class="title">Person1</span></span>&#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"><span class="comment">//方法2：如果不加abstract，可以将抽象字段放在主构造器中</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Employee2</span>(<span class="params">var id:<span class="type">Int</span>, var name:<span class="type">String</span></span>) <span class="keyword">extends</span> <span class="title">Person1</span></span>&#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"><span class="comment">//方法3：也可以给抽象字段初始值</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Employee3</span> <span class="keyword">extends</span> <span class="title">Person1</span></span>&#123;</div><div class="line">  <span class="keyword">var</span> id : <span class="type">Int</span> = <span class="number">0</span></div><div class="line">  <span class="keyword">var</span> name : <span class="type">String</span> = <span class="string">""</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">Demo3</span> </span>&#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="8、特质：trait"><a href="#8、特质：trait" class="headerlink" title="8、特质：trait"></a>8、特质：trait</h1><p>本质：scala的一个<strong>抽象类</strong>,作用是用来多重继承</p>
+<p>继承的时候使用with关键字，需要重写抽象方法和给抽象字段赋值</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> day03</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line">  *</div><div class="line">  * trait:可以实现多重继承</div><div class="line">  *</div><div class="line">  * 定义两个父类,两个trait</div><div class="line">  * 父类：人  动作</div><div class="line">  * 子类：学生</div><div class="line">  */</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">trait</span> <span class="title">Human</span> </span>&#123;</div><div class="line">  <span class="comment">//抽象字段</span></div><div class="line">  <span class="keyword">val</span> id: <span class="type">Int</span></div><div class="line">  <span class="keyword">val</span> name: <span class="type">String</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">trait</span> <span class="title">Action</span></span>&#123;</div><div class="line">  <span class="comment">//抽象方法</span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">getActionName</span></span>():<span class="type">String</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line">* 使用trait实现了多重继承</div><div class="line">* */</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student1</span>(<span class="params">val id:<span class="type">Int</span>,val name: <span class="type">String</span></span>) <span class="keyword">extends</span> <span class="title">Human</span> <span class="keyword">with</span> <span class="title">Action</span> </span>&#123;</div><div class="line">    <span class="comment">//抽象字段写入到主构造器，重写抽象方法</span></div><div class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">getActionName</span></span>(): <span class="type">String</span> = <span class="string">"Action is running"</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">Demo01</span> </span>&#123;</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</div><div class="line">    <span class="comment">//创建学生对象</span></div><div class="line">    <span class="keyword">val</span> s1 = <span class="keyword">new</span> <span class="type">Student1</span>(<span class="number">1011</span>, <span class="string">"Gakki"</span>)</div><div class="line">    println(s1.id + <span class="string">"\t"</span> + s1.name)</div><div class="line">    println(s1.getActionName())</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="9、包和包对象"><a href="#9、包和包对象" class="headerlink" title="9、包和包对象"></a>9、包和包对象</h1><p><strong>包</strong>：package，Scala中依然使用<strong>import</strong>作为引用包的关键字，引入包时下划线<code>_</code>和java中的<code>*</code>同义，并且import可以写在任意地方</p>
+<p>​    包可以包含类、对象和特质，但不能包含函数或者变量的定义。很不幸，这是Java虚拟机的局限。</p>
+<p>把工具函数或者常量添加到包而不是某个Utils对象，这是更加合理的做法。Scala中，包对象的出现正是为了解决这个局限。</p>
+<p><strong>包对象</strong>：可以包含常量，变量，方法，类，对象，trait（特质）</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Scala</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/25/Scala进阶-面向对象/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-初识Scala" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -951,617 +1561,6 @@ message-id=&lt;20130101142543.5828399CCAF@mailserver1</code></p>
 
 
   
-    <article id="post-ELK之E-Elasticsearch安装和配置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/22/ELK之E-Elasticsearch安装和配置/">ELK之E--Elasticsearch安装和配置</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/22/ELK之E-Elasticsearch安装和配置/" class="archive-article-date">
-  	<time datetime="2019-03-22T02:45:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1、概述"><a href="#1、概述" class="headerlink" title="1、概述"></a>1、概述</h1><p>​    Elasticsearch，基于lucene，隐藏复杂性，提供简单易用的restful api接口、java api接口（还有其他语言的api接口）。</p>
-<p>​    关于elasticsearch的一个传说，有一个程序员失业了，陪着自己老婆去英国伦敦学习厨师课程。程序员在失业期间想给老婆写一个菜谱搜索引擎，觉得lucene实在太复杂了，就开发了一个封装了lucene的开源项目，compass。后来程序员找到了工作，是做分布式的高性能项目的，觉得compass不够，就写了elasticsearch，让lucene变成分布式的系统。</p>
-<p>​    Elasticsearch是一个实时分布式搜索和分析引擎。它用于全文搜索、结构化搜索、分析。</p>
-<h1 id="2、概念区分"><a href="#2、概念区分" class="headerlink" title="2、概念区分"></a>2、概念区分</h1><ol>
-<li><p>近实时</p>
-<p>近实时，两个意思，从写入数据到数据可以被搜索到有一个小延迟（大概1秒）；基于es执行搜索和分析可以达到秒级。</p>
-</li>
-<li><p>Cluster（集群）</p>
-<p>集群包含多个节点，每个节点属于哪个集群是通过一个配置（集群名称，默认是elasticsearch）来决定的，对于中小型应用来说，刚开始一个集群就一个节点很正常。</p>
-</li>
-<li><p>Node（节点）</p>
-<p>集群中的一个节点，节点也有一个名称（默认是随机分配的），节点名称很重要（在执行运维管理操作的时候），默认节点会去加入一个名称为“elasticsearch”的集群，如果直接启动一堆节点，那么它们会自动组成一个elasticsearch集群，当然一个节点也可以组成一个elasticsearch集群。</p>
-</li>
-<li><p>Index（索引-数据库）</p>
-<p>索引包含一堆有相似结构的文档数据，比如可以有一个客户索引，商品分类索引，订单索引，索引有一个名称。一个index包含很多document，一个index就代表了一类类似的或者相同的document。比如说建立一个product index，商品索引，里面可能就存放了所有的商品数据，所有的商品document。</p>
-</li>
-<li><p>Type（类型-表）</p>
-<p>每个索引里都可以有一个或多个type，type是index中的一个逻辑数据分类，一个type下的document，都有相同的field，比如博客系统，有一个索引，可以定义用户数据type，博客数据type，评论数据type。</p>
-</li>
-<li><p>Document（文档-行）</p>
-<p>文档是es中的最小数据单元，一个document可以是一条客户数据，一条商品分类数据，一条订单数据，通常用JSON数据结构表示，每个index下的type中，都可以去存储多个document。</p>
-</li>
-<li><p>Field（字段-列）</p>
-<p>Field是Elasticsearch的最小单位。一个document里面有多个field，每个field就是一个数据字段</p>
-</li>
-<li><p>mapping（映射-约束）</p>
-<p>数据如何存放到索引对象上，需要有一个映射配置，包括：数据类型、是否存储、是否分词等。</p>
-</li>
-</ol>
-<p><strong>elasticsearch与数据库的类比:</strong></p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">关系型数据库（比如Mysql）</th>
-<th style="text-align:center">非关系型数据库（Elasticsearch）</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">数据库Database</td>
-<td style="text-align:center">索引Index</td>
-</tr>
-<tr>
-<td style="text-align:center">表Table</td>
-<td style="text-align:center">类型Type</td>
-</tr>
-<tr>
-<td style="text-align:center">数据行Row</td>
-<td style="text-align:center">文档Document</td>
-</tr>
-<tr>
-<td style="text-align:center">数据列Column</td>
-<td style="text-align:center">字段Field</td>
-</tr>
-<tr>
-<td style="text-align:center">约束 Schema</td>
-<td style="text-align:center">映射Mapping</td>
-</tr>
-</tbody>
-</table>
-<h1 id="3、存数据和搜索机制"><a href="#3、存数据和搜索机制" class="headerlink" title="3、存数据和搜索机制"></a>3、存数据和搜索机制</h1><p><img src="https://raw.githubusercontent.com/rabbitluluu/pic_resource/master/ES%E5%AD%98%E6%95%B0%E6%8D%AE%E5%92%8C%E6%90%9C%E7%B4%A2%E6%9C%BA%E5%88%B6.png" alt=""></p>
-<h1 id="4、安装"><a href="#4、安装" class="headerlink" title="4、安装"></a>4、安装</h1><p><strong>单节点安装：</strong></p>
-<ol>
-<li><p>下载</p>
-</li>
-<li><p>解压</p>
-</li>
-<li><p>修改配置文件<code>elasticsearch.yml</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"># ---------------------------------- Cluster -------------------------------------</div><div class="line">cluster.name: my-application</div><div class="line"># ------------------------------------ Node --------------------------------------</div><div class="line">node.name: node-1</div><div class="line"># ----------------------------------- Paths ---------------------------------------</div><div class="line">path.data: /opt/modules/elasticsearch-5.6.1/data</div><div class="line">path.logs: /opt/modules/elasticsearch-5.6.1/logs</div><div class="line"># ----------------------------------- Memory -----------------------------------</div><div class="line">bootstrap.memory_lock: false</div><div class="line">bootstrap.system_call_filter: false</div><div class="line"># ---------------------------------- Network ------------------------------------</div><div class="line">network.host: 192.168.10.201 </div><div class="line"># --------------------------------- Discovery ------------------------------------</div><div class="line">discovery.zen.ping.unicast.hosts: [&quot;node01&quot;]</div></pre></td></tr></table></figure>
-<p>注意事项：</p>
-<ol>
-<li>cluster.name</li>
-</ol>
-<p>如果要配置集群需要两个节点上的elasticsearch配置的cluster.name相同，都启动可以自动组成集群，这里如果不改cluster.name则默认是cluster.name=my-application，</p>
-<ol>
-<li>nodename随意取但是集群内的各节点不能相同</li>
-<li>修改后的每行前面不能有空格，修改后的“：”后面必须有一个空格</li>
-</ol>
-</li>
-<li><p>修改服务器相关配置</p>
-<ol>
-<li><p><code>/etc/security/limits.conf</code>中添加如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">* soft nofile 65536</div><div class="line">* hard nofile 131072</div><div class="line">* soft nproc 4096</div><div class="line">* hard nproc 4096</div></pre></td></tr></table></figure>
-</li>
-<li><p><code>/etc/security/limits.conf</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* soft nproc 4096</div></pre></td></tr></table></figure>
-</li>
-<li><p><code>/etc/sysctl.conf</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vm.max_map_count=655360</div></pre></td></tr></table></figure>
-<p>添加完后运行<code>sudo sysctl -p</code>查看是否生效</p>
-</li>
-</ol>
-</li>
-<li><p>安装web监控端</p>
-<p>谷歌浏览器添加<code>elasticsearch-head.crx</code>即可</p>
-</li>
-<li><p>启动</p>
-<p><code>bin/elasticsearch</code></p>
-</li>
-</ol>
-<p><strong>集群安装：</strong></p>
-<p>将安装包scp到其他机器</p>
-<p>再在主节点配置中添加如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">node.master: true</div><div class="line">node.data: true</div></pre></td></tr></table></figure>
-<p>其他节点配置中添加</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">node.master: false</div><div class="line">node.data: true</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Elasticsearch</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/22/ELK之E-Elasticsearch安装和配置/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Kafka的API及其使用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/22/Kafka的API及其使用/">Kafka的API及其使用</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/22/Kafka的API及其使用/" class="archive-article-date">
-  	<time datetime="2019-03-22T02:45:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1、命令行操作"><a href="#1、命令行操作" class="headerlink" title="1、命令行操作"></a>1、命令行操作</h1><ol>
-<li><p>查看当前集群中已存在的主题topic<br><code>bin/kafka-topics.sh --zookeeper node01:2181 --list</code></p>
-</li>
-<li><p>创建topic<br><code>bin/kafka-topics.sh --zookeeper node01:2181 --create --replication-factor 3 --partitions 1 --topic gakki</code></p>
-<p>–zookeeper 连接zk集群<br>–create 创建<br>–replication-factor 副本<br>–partitions 分区<br>–topic 主题名</p>
-</li>
-<li><p>删除主题<br><code>bin/kafka-topics.sh --zookeeper node01:2181 --delete --topic gakki</code></p>
-</li>
-<li><p>发送消息<br>生产者启动：<br><code>bin/kafka-console-producer.sh --broker-list node01:9092 --topic gakki</code><br>消费者启动：<br><code>bin/kafka-console-consumer.sh --bootstrap-server node01:9092 --topi
-c gakki --from-beginning</code><br>5）查看主题详细信息<br><code>bin/kafka-topics.sh --zookeeper node01:2181 --describe --topic gakki</code></p>
-</li>
-</ol>
-<h1 id="2、API操作"><a href="#2、API操作" class="headerlink" title="2、API操作"></a>2、API操作</h1><h2 id="2-1、Producer"><a href="#2-1、Producer" class="headerlink" title="2.1、Producer"></a>2.1、Producer</h2><p>写法一：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> xyz.llsean.kafka_producer;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.kafka.clients.producer.KafkaProducer;</div><div class="line"><span class="keyword">import</span> org.apache.kafka.clients.producer.ProducerRecord;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.Properties;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * <span class="doctag">@author</span>: Sean</div><div class="line"> * <span class="doctag">@date</span>: 2019/3/18/10:13</div><div class="line"> * <span class="doctag">@version</span>: 1.0</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Producer</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="comment">//1.配置生产者属性（指定多个参数）</span></div><div class="line">        Properties prpo = <span class="keyword">new</span> Properties();</div><div class="line"></div><div class="line">        <span class="comment">//参数配置</span></div><div class="line">        <span class="comment">//kafka节点的地址</span></div><div class="line">        prpo.put(<span class="string">"bootstrap.servers"</span>,<span class="string">"node01:9092"</span>);</div><div class="line">        </div><div class="line">        <span class="comment">/**</span></div><div class="line">         * 可选项</div><div class="line">         * */</div><div class="line">        <span class="comment">//发送消息是否等待应答</span></div><div class="line">        prpo.put(<span class="string">"acks"</span>,<span class="string">"all"</span>);</div><div class="line">        <span class="comment">//配置发送消息失败重试</span></div><div class="line">        prpo.put(<span class="string">"retries"</span>,<span class="string">"0"</span>);</div><div class="line">        <span class="comment">//配置批量处理消息大小</span></div><div class="line">        prpo.put(<span class="string">"batch.size"</span>,<span class="string">"10241"</span>);</div><div class="line">        <span class="comment">//配置批量处理数据延迟--ms</span></div><div class="line">        prpo.put(<span class="string">"linger.ms"</span>,<span class="string">"5"</span>);</div><div class="line">        <span class="comment">//配置内存缓冲大小</span></div><div class="line">        prpo.put(<span class="string">"buffer.memory"</span>,<span class="string">"123412"</span>);</div><div class="line">        </div><div class="line">        <span class="comment">//消息在发送前必须序列化</span></div><div class="line">        prpo.put(<span class="string">"key.serializer"</span>,<span class="string">"org.apache.kafka.common.serialization.StringSerializer"</span>);</div><div class="line">        prpo.put(<span class="string">"value.serializer"</span>,<span class="string">"org.apache.kafka.common.serialization.StringSerializer"</span>);</div><div class="line"></div><div class="line">        <span class="comment">//2.实例化producer</span></div><div class="line">        KafkaProducer&lt;String, String&gt; producer = <span class="keyword">new</span> KafkaProducer&lt;&gt;(prpo);</div><div class="line"></div><div class="line">        <span class="comment">//3.发送消息</span></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">99</span>; i++) &#123;</div><div class="line">            producer.send(<span class="keyword">new</span> ProducerRecord&lt;String, String&gt;(<span class="string">"jojo"</span>,<span class="string">"sean's love"</span> + i));</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">//4.释放资源</span></div><div class="line">        producer.close();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>写法二：</p>
-<p>接口回调，可以在idea控制台直接看到运行信息，便于管理者查看任务运行的状态</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> xyz.llsean.kafka_producer;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.kafka.clients.producer.Callback;</div><div class="line"><span class="keyword">import</span> org.apache.kafka.clients.producer.KafkaProducer;</div><div class="line"><span class="keyword">import</span> org.apache.kafka.clients.producer.ProducerRecord;</div><div class="line"><span class="keyword">import</span> org.apache.kafka.clients.producer.RecordMetadata;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.Properties;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * <span class="doctag">@author</span>: Sean</div><div class="line"> * <span class="doctag">@date</span>: 2019/3/18/10:13</div><div class="line"> * <span class="doctag">@version</span>: 1.0</div><div class="line"> * 接口回调--用来监控当前的运行状态</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Producer2</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="comment">//1.配置生产者属性（指定多个参数）</span></div><div class="line">        Properties prpo = <span class="keyword">new</span> Properties();</div><div class="line"></div><div class="line">        <span class="comment">//参数配置</span></div><div class="line">        <span class="comment">//kafka节点的地址</span></div><div class="line">        prpo.put(<span class="string">"bootstrap.servers"</span>, <span class="string">"node01:9092"</span>);</div><div class="line"></div><div class="line">        <span class="comment">/**</span></div><div class="line">         * 可选项</div><div class="line">         * */</div><div class="line">        <span class="comment">//发送消息是否等待应答</span></div><div class="line">        prpo.put(<span class="string">"acks"</span>, <span class="string">"all"</span>);</div><div class="line">        <span class="comment">//配置发送消息失败重试</span></div><div class="line">        prpo.put(<span class="string">"retries"</span>, <span class="string">"0"</span>);</div><div class="line">        <span class="comment">//配置批量处理消息大小</span></div><div class="line">        prpo.put(<span class="string">"batch.size"</span>, <span class="string">"10241"</span>);</div><div class="line">        <span class="comment">//配置批量处理数据延迟--ms</span></div><div class="line">        prpo.put(<span class="string">"linger.ms"</span>, <span class="string">"5"</span>);</div><div class="line">        <span class="comment">//配置内存缓冲大小</span></div><div class="line">        prpo.put(<span class="string">"buffer.memory"</span>, <span class="string">"123412"</span>);</div><div class="line"></div><div class="line">        <span class="comment">//消息在发送前必须序列化</span></div><div class="line">        prpo.put(<span class="string">"key.serializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringSerializer"</span>);</div><div class="line">        prpo.put(<span class="string">"value.serializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringSerializer"</span>);</div><div class="line">        <span class="comment">//加载分区逻辑</span></div><div class="line">        <span class="comment">//prpo.put("partitioner.class","xyz.llsean.kafka_producer.Partition");</span></div><div class="line"></div><div class="line">        <span class="comment">//2.实例化producer</span></div><div class="line">        KafkaProducer&lt;String, String&gt; producer = <span class="keyword">new</span> KafkaProducer&lt;&gt;(prpo);</div><div class="line"></div><div class="line">        <span class="comment">//3.发送消息</span></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">99</span>; i++) &#123;</div><div class="line">            producer.send(<span class="keyword">new</span> ProducerRecord&lt;String, String&gt;(<span class="string">"llsean"</span>, <span class="string">"sean's love emmm"</span> + i),</div><div class="line">                    <span class="keyword">new</span> Callback() &#123;</div><div class="line">                        <span class="meta">@Override</span></div><div class="line">                        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCompletion</span><span class="params">(RecordMetadata metadata, Exception e)</span> </span>&#123;</div><div class="line">                            <span class="comment">//如果有metadata不为null 拿到当前的数据偏移量和分区</span></div><div class="line">                            <span class="keyword">if</span> (metadata != <span class="keyword">null</span>) &#123;</div><div class="line">                                System.out.println(metadata.topic() + <span class="string">"-----"</span> +</div><div class="line">                                        metadata.offset() + <span class="string">"-----"</span> + metadata.partition());</div><div class="line">                            &#125;</div><div class="line">                        &#125;</div><div class="line">                    &#125;);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">//4.释放资源</span></div><div class="line">        producer.close();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>设置加载自定义分区：</p>
-<p>实现Partitioner接口，重写方法即可</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> xyz.llsean.kafka_producer;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.kafka.clients.producer.Partitioner;</div><div class="line"><span class="keyword">import</span> org.apache.kafka.common.Cluster;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.Map;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * <span class="doctag">@author</span>: Sean</div><div class="line"> * <span class="doctag">@date</span>: 2019/3/18/10:56</div><div class="line"> * <span class="doctag">@version</span>: 1.0</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Partition</span> <span class="keyword">implements</span> <span class="title">Partitioner</span></span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">//设置</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(Map&lt;String, ?&gt; map)</span> </span>&#123;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//分区逻辑</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(String s, Object o, <span class="keyword">byte</span>[] bytes, Object o1, <span class="keyword">byte</span>[] bytes1, Cluster cluster)</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//释放资源</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="2-2、Consumer"><a href="#2-2、Consumer" class="headerlink" title="2.2、Consumer"></a>2.2、Consumer</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> xyz.llsean.kafka_consumer;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecord;</div><div class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecords;</div><div class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.KafkaConsumer;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.Arrays;</div><div class="line"><span class="keyword">import</span> java.util.Properties;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * <span class="doctag">@author</span>: Sean</div><div class="line"> * <span class="doctag">@date</span>: 2019/3/18/11:16</div><div class="line"> * <span class="doctag">@version</span>: 1.0</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Consumer</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">//1.配置消费者属性</span></div><div class="line">        Properties prpo = <span class="keyword">new</span> Properties();</div><div class="line"></div><div class="line">        <span class="comment">//配置属性</span></div><div class="line">        <span class="comment">//服务器地址</span></div><div class="line">        prpo.put(<span class="string">"bootstrap.servers"</span>, <span class="string">"node01:9092"</span>);</div><div class="line">        <span class="comment">//配置消费者组</span></div><div class="line">        prpo.put(<span class="string">"group.id"</span>,<span class="string">"g1"</span>);</div><div class="line">        <span class="comment">//配置是否自动确认offset</span></div><div class="line">        prpo.put(<span class="string">"enable.auto.commit"</span>,<span class="string">"true"</span>);</div><div class="line">        <span class="comment">//序列化和反序列化</span></div><div class="line">        prpo.put(<span class="string">"key.deserializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringDeserializer"</span>);</div><div class="line">        prpo.put(<span class="string">"value.deserializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringDeserializer"</span>);</div><div class="line"></div><div class="line">        <span class="comment">//2.实例化消费者</span></div><div class="line">        <span class="keyword">final</span> KafkaConsumer consumer = <span class="keyword">new</span> KafkaConsumer&lt;String,String&gt;(prpo);</div><div class="line"></div><div class="line">        <span class="comment">//4.释放资源</span></div><div class="line">        Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                <span class="keyword">if</span> (consumer != <span class="keyword">null</span>)&#123;</div><div class="line">                    consumer.close();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;));</div><div class="line"></div><div class="line">        <span class="comment">//订阅消息主题</span></div><div class="line">        consumer.subscribe(Arrays.asList(<span class="string">"jojo"</span>));</div><div class="line"></div><div class="line">        <span class="comment">//3.拉取消息</span></div><div class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>)&#123;</div><div class="line">            ConsumerRecords&lt;String,String&gt; record = consumer.poll(<span class="number">500</span>);</div><div class="line">            <span class="comment">//遍历消息</span></div><div class="line">            <span class="keyword">for</span>(ConsumerRecord&lt;String,String&gt; c:record)&#123;</div><div class="line">                System.out.println(c.topic()+<span class="string">"---"</span>+c.value());</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Kafka</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/22/Kafka的API及其使用/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-kafka概述和安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/22/kafka概述和安装/">kafka概述和安装</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/22/kafka概述和安装/" class="archive-article-date">
-  	<time datetime="2019-03-22T02:45:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1、kafka概述"><a href="#1、kafka概述" class="headerlink" title="1、kafka概述"></a>1、kafka概述</h1><h2 id="1-1、概述"><a href="#1-1、概述" class="headerlink" title="1.1、概述"></a>1.1、概述</h2><p>官网：<br><a href="http://kafka.apache.org/" target="_blank" rel="external">http://kafka.apache.org/</a><br>ApacheKafka®是一个分布式流媒体平台<br>流媒体平台有三个关键功能：</p>
-<ul>
-<li>发布和订阅记录流，类似于消息队列或企业消息传递系统。</li>
-<li>以容错的持久方式存储记录流。</li>
-<li>记录发生时处理流</li>
-</ul>
-<p>Kafka通常用于两大类应用：</p>
-<ul>
-<li>构建可在系统或应用程序之间可靠获取数据的实时流数据管道</li>
-<li>构建转换或响应数据流的实时流应用程序</li>
-</ul>
-<p>在流计算中，kafka主要功能是用来缓存数据，storm可以通过消费kafka中的数据进行流计算。<br>是一套开源的消息系统，由scala写成。支持javaAPI的。<br>kafka最初由LinkedIn公司开发，2011年开源。<br>是一个<strong>分布式消息队列</strong>，kafka读消息保存采用Topic进行归类。</p>
-<h2 id="1-2、角色组成"><a href="#1-2、角色组成" class="headerlink" title="1.2、角色组成"></a>1.2、角色组成</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">发送消息：Producer(生产者)</div><div class="line">接收消息：Consumer(消费者)</div></pre></td></tr></table></figure>
-<h2 id="1-3、作用"><a href="#1-3、作用" class="headerlink" title="1.3、作用"></a>1.3、作用</h2><ul>
-<li>解耦<br>为了避免出现问题，一个组件专业做一件事</li>
-<li>拓展性<br>可增加处理过程</li>
-<li>灵活<br>面对访问量剧增，不会因为超负荷请求而完全瘫痪。</li>
-<li>可恢复<br>一部分组件失效，不会影响整个系统。可以进行恢复。</li>
-<li>缓冲<br>控制数据流经过系统的速度。</li>
-<li>顺序保证<br>对消息进行有序处理。</li>
-<li>异步通信<br>akka,消息队列提供了异步处理的机制。允许用户把消息放到队列，不立刻处理。</li>
-</ul>
-<h1 id="2、架构"><a href="#2、架构" class="headerlink" title="2、架构"></a>2、架构</h1><h1 id="3、安装部署"><a href="#3、安装部署" class="headerlink" title="3、安装部署"></a>3、安装部署</h1><p>提前准备：搭建kafka集群要先搭建zookeeper集群</p>
-<ol>
-<li><p>官网下载安装包</p>
-</li>
-<li><p>上传安装包</p>
-</li>
-<li><p>解压安装包</p>
-</li>
-<li><p>重命名</p>
-</li>
-<li><p>修改配置文件<br><code>config/server.properties</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">broker.id=0 #每台机器的id不同即可</div><div class="line">delete.topic.enable=true #是否允许删除主题</div><div class="line">log.dirs=/root/hd/kafka/logs #运行日志保存位置</div><div class="line">zookeeper.connect=hd09-01:2181,hd09-02:2181,</div></pre></td></tr></table></figure>
-</li>
-<li><p>启动集群<br><code>bin/kafka-server-start.sh config/server.properties &amp;</code></p>
-</li>
-<li><p>关闭<br><code>bin/kafka-server-stop.sh</code></p>
-</li>
-</ol>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">kafka</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/22/kafka概述和安装/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Hbase调优" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/22/Hbase调优/">Hbase调优</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/22/Hbase调优/" class="archive-article-date">
-  	<time datetime="2019-03-22T02:44:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Hbase优化技巧"><a href="#Hbase优化技巧" class="headerlink" title="Hbase优化技巧"></a>Hbase优化技巧</h1><ol>
-<li><p>预分区问题</p>
-<p>region分片的原因，表十分大</p>
-<p>region存储数据，如果有多个region，每个region负责维护一部分的rowkey{startrowkey，endrowkey}</p>
-<p>分多少片？提前规划，有效提高hbase性能，进行存储数据前做好rowkey的预分区优化hbase</p>
-<p>实际操作：</p>
-<p>​    <code>create &#39;user_pp&#39;,&#39;info&#39;,partition&#39;,SPLITS =&gt;[&#39;201&#39;,&#39;202&#39;,&#39;203&#39;,&#39;204&#39;]</code></p>
-<p>添加上列族名，便于添加数据，下者同理</p>
-<p>提前将分区信息写入文件，</p>
-<p>​    <code>create &#39;user_ppp&#39;,&#39;partition&#39;,SPLITS_FILE=&gt;&#39;/root/temp/partitions.txt&#39;</code></p>
-</li>
-</ol>
-<ol>
-<li><p>rowkey如何设计？</p>
-<p>rowkey是数据的唯一标识，这条数据存储在哪个分区由预分区范围决定</p>
-<p>合理设计rowkey：一份数据分为5个region存储，但是我们需要尽可能的保证每个region中数据量差不多</p>
-<p>尽可能的打散数据，平均分配到每个region中即可</p>
-<p>解决方案：</p>
-<p>​    生成随机数、Hash/散列值、字符串拼接/反转</p>
-<p>如：原来的rowkey是201，hash后104526607，</p>
-<p>​                    202，hash后104526606，</p>
-<p>​    字符串拼接：20190316_dsa1  20190316_gdss</p>
-<p>​    字符串反转：20190316-&gt;61309102</p>
-</li>
-</ol>
-<ol>
-<li><p>hbase基础优化</p>
-<p>因为hbase用的hdfs存储，datanode允许最大文件打开数，默认是4096，将其<strong>调大</strong>，修改<code>hdfs-site.xml</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dfs.datanode.max.transfer.threads</div></pre></td></tr></table></figure>
-<p>优化等待时间,默认60000毫秒，将数值<strong>调大</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dfs.image.transfer.timeout</div></pre></td></tr></table></figure>
-<p>内存优化：修改<code>hadoop-env.sh</code>设置内存的堆大小</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">export HADOOP_PORTMAP_OPTS=&apos;-Xmx512m $HADOOP_PORTMAP_OPTS&apos;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Hbase</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/22/Hbase调优/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Hbase的API和MR实例" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/22/Hbase的API和MR实例/">Hbase的API和MR实例</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/22/Hbase的API和MR实例/" class="archive-article-date">
-  	<time datetime="2019-03-22T02:44:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>package xyz.llsean.HbaseMR2_;</p>
-<p>import org.apache.hadoop.conf.Configuration;<br>import org.apache.hadoop.fs.Path;<br>import org.apache.hadoop.hbase.HBaseConfiguration;<br>import org.apache.hadoop.hbase.client.Put;<br>import org.apache.hadoop.hbase.io.ImmutableBytesWritable;<br>import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;<br>import org.apache.hadoop.mapreduce.Job;<br>import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;<br>import org.apache.hadoop.util.Tool;<br>import org.apache.hadoop.util.ToolRunner;</p>
-<p>/**</p>
-<ul>
-<li>@author: Sean</li>
-<li>@date: 2019/3/17/9:54</li>
-<li><p>@version: 1.0<br> */<br> public class ReadHdfsDriver implements Tool{<br> private Configuration conf;</p>
-<p> @Override<br> public void setConf(Configuration conf) {</p>
-<pre><code>this.conf = HBaseConfiguration.create(conf);
-</code></pre><p> }</p>
-<p> @Override<br> public Configuration getConf() {</p>
-<pre><code>return this.conf;
-</code></pre><p> }</p>
-<p> @Override<br> public int run(String[] args) throws Exception {</p>
-<pre><code>//1.创建job
-Job job = Job.getInstance(conf);
-job.setJarByClass(ReadHdfsDriver.class);
-
-//2.设置Mapper
-job.setMapperClass(ReadHdfsMapper_.class);
-job.setMapOutputKeyClass(ImmutableBytesWritable.class);
-job.setMapOutputValueClass(Put.class);
-
-//3.设置Reducer
-TableMapReduceUtil.initTableReducerJob(&quot;user_hdfs&quot;,
-        WriterHdfsReducer_.class,
-        job);
-
-//4.输入配置
-FileInputFormat.addInputPath(job,new Path(&quot;/temp/love.txt&quot;));
-
-boolean rs = job.waitForCompletion(true);
-return rs?0:1;
-</code></pre><p> }</p>
-<p> public static void main(String[] args) {</p>
-<pre><code>try {
-    int run = ToolRunner.run(new ReadHdfsDriver(), args);
-    System.exit(run);
-} catch (Exception e) {
-    e.printStackTrace();
-}
-</code></pre><p> }<br> }</p>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Hbase</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/22/Hbase的API和MR实例/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -1663,6 +1662,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Kibana</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Elasticsearch</a>
               </li>
              
@@ -1671,19 +1674,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HDFS</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Flume</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Hadoop</a>
+                <a href="javascript:void(0)" class="js-tag color5">MapReduce</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">MapReduce</a>
+                <a href="javascript:void(0)" class="js-tag color5">HDFS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Hadoop</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1703,11 +1706,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Scala</a>
+                <a href="javascript:void(0)" class="js-tag color5">Mapreduce</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Mapreduce</a>
+                <a href="javascript:void(0)" class="js-tag color1">Scala</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1715,15 +1718,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kibana</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Yarn</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Zookeeper</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1731,7 +1726,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Zookeeper</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">MemCached</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">kafka</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Redis</a>
               </li>
             
             <div class="clearfix"></div>
